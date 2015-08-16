@@ -41,7 +41,7 @@ Function which accepts error object as first argument and result of file upload 
 Upload file `file.txt` to SharePoint online site into the SiteAssets library: 
 
 ```javascript
-var spsave = require("./spsave");
+var spsave = require("spsave");
 
 spsave({
 	siteUrl: "https://[domain].sharepoint.com/sites/dev",
@@ -61,7 +61,7 @@ spsave({
 
 SharePoint on premise version: 
 ```javascript
-var spsave = require("./spsave");
+var spsave = require("spsave");
 
 spsave({
 	siteUrl: "[siteurl]",
