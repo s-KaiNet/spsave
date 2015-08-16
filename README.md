@@ -23,7 +23,7 @@ spsave(options, callback);
 - `siteUrl` - required, string url of the site
 - `username` - required, string user name
 - `password` - required, string password
-- - `folder` - required, site-relative url to folder, which will be used to save your file. For example for library `http://sp2013/sites/dev/SiteAssets` folder will be equal `SiteAssets`
+- `folder` - required, site-relative url to folder, which will be used to save your file. For example for library `http://sp2013/sites/dev/SiteAssets` folder will be equal `SiteAssets`
 - `fileName` - required, string file name
 - `fileContent` - required, string file content
 - `domain` - for on premise only, string domain name
