@@ -67,7 +67,7 @@ spsave({
 	siteUrl: "[siteurl]",
 	username: "[username]",
 	password: "[password]",
-	workstation: "[workstation name]"
+	workstation: "[workstation name]",
 	folder: "SiteAssets",
 	fileName: "file.txt",
 	fileContent: "hello world"	
