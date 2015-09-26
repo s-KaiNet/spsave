@@ -4,12 +4,14 @@ Nodejs module for saving files in SharePoint (both on premise and online).
 
 ----------
 
-###Install: 
+Install: 
+------
 
 `npm install spsave`  
 
 
-###Usage: 
+Usage: 
+----
 
 ```javascript
 var spsave = require("spsave");
@@ -18,7 +20,8 @@ spsave(options, callback);
 
 
 
-###Options:   
+Options:  
+----- 
 
 - `siteUrl` - required, string url of the site
 - `username` - required, string user name
@@ -33,11 +36,13 @@ spsave(options, callback);
 - `appWebUrl` - optional, site-relative string url to your app web (for apps development). For example if your root web is `http://sp2013.com/sites/dev` and app full url is `http://sp2013-apps.[guid].com/sites/dev/yourapp`, then `appWebUrl` will be `yourapp`
 
 
-###Callback
+Callback
+-----
 Function which accepts error object as first argument and result of file upload as second. 
 
 
-###Samples
+Samples
+---
 Upload file `file.txt` to SharePoint online site into the SiteAssets library: 
 
 ```javascript
