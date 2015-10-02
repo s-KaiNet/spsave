@@ -1,1 +1,5 @@
 **/node_modules
+.vscode
+typings
+npm-debug.log
+index.js
