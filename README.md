@@ -88,6 +88,8 @@ spsave({
 Develop
 ---
 
+`npm install -g mocha supervisor`
+
 test:
 -
 
