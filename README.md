@@ -26,7 +26,7 @@ Options:
 - `siteUrl` - required, string url of the site
 - `username` - required, string user name
 - `password` - required, string password
-- `folder` - required, site-relative url to folder, which will be used to save your file. For example for library `http://sp2013/sites/dev/SiteAssets` folder will be equal `SiteAssets`, `SiteAssets/subfolder` for subfolder (but all folders should exist)
+- `folder` - required, site-relative url to folder, which will be used to save your file. For example for library `http://sp2013/sites/dev/SiteAssets` folder will be equal `SiteAssets`, `SiteAssets/subfolder` for subfolder. Now you can pass any path, if its not exist, spsave will attempt to create it
 - `fileName` - required, string file name
 - `fileContent` - required, string file content
 - `domain` - for on premise only, string domain name
@@ -85,6 +85,14 @@ spsave({
 	}
 });
 ``` 
+Develop
+---
 
+`npm install -g mocha supervisor`
 
+test:
+-
+
+`mocha` - will run tests in `test` folder
+`npm run autotest` - will run autotesting
  
