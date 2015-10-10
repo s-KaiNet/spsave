@@ -1,7 +1,7 @@
 {
   "name": "spsave",
   "description": "Save files in SharePoint using node.js easily",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "author": {
     "name": "s-KaiNet",
     "url": "https://github.com/s-KaiNet"
