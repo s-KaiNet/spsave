@@ -32,7 +32,7 @@ Options:
 - `domain` - for on premise only, string domain name
 - `workstation` - for on premise only, string workstation name
 - `isOnPrem` - optional, function returns boolean, used to determine if the site is SharePoint online or on premise, default implementation - `return (urlparse(url)).host.indexOf(".sharepoint.com") === -1;`
-- `log` - optional, boolean to enable verbose logging inside spsave, default is true
+- `log` - optional, boolean to enable verbose logging inside spsave, default is false
 - `appWebUrl` - optional, site-relative string url to your app web (for apps development). For example if your root web is `http://sp2013.com/sites/dev` and app full url is `http://sp2013-apps.[guid].com/sites/dev/yourapp`, then `appWebUrl` will be `yourapp`
 
 
