@@ -1,7 +1,7 @@
 {
   "name": "spsave",
   "description": "Save files in SharePoint using node.js easily",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "author": {
     "name": "s-KaiNet",
     "url": "https://github.com/s-KaiNet"
@@ -25,7 +25,7 @@
     "httpreq": "^0.4.13",
     "node-spoauth": "^1.0.0",
     "q": "^1.4.1",
-	"colors": "^1.1.2"
+    "colors": "^1.1.2"
   },
   "scripts": {
     "autotest": "supervisor -q -n exit -x mocha -- -b"
