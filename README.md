@@ -90,7 +90,7 @@ Develop
 
 `npm install -g mocha supervisor`
 
-test:
+Test:
 -
 
 `mocha` - will run tests in `test` folder
