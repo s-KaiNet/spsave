@@ -34,7 +34,11 @@ Options:
 - `isOnPrem` - optional, function returns boolean, used to determine if the site is SharePoint online or on premise, default implementation - `return (urlparse(url)).host.indexOf(".sharepoint.com") === -1;`
 - `log` - optional, boolean to enable verbose logging inside spsave, default is false
 - `appWebUrl` - optional, site-relative string url to your app web (for apps development). For example if your root web is `http://sp2013.com/sites/dev` and app full url is `http://sp2013-apps.[guid].com/sites/dev/yourapp`, then `appWebUrl` will be `yourapp`
-
+- `checkin` - optional, boolean to allow the files to be checked in/published.
+- `checkinType` - optional when using checkin, 
+    // 1 or 'major'        => majorCheckIn (A major version of the file is published. )
+    // 0 or 'minor'        => minorCheckIn (A minor version of the file is added)
+    // 2 or 'overwrite'    => overwriteCheckIn ( the contents of the current file version are overwritten)
 
 Callback
 -----
