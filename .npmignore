@@ -1,0 +1,9 @@
+/src
+/reports
+test
+/build
+/typings
+/typings-custom
+.vscode
+*.js.map
+!/lib

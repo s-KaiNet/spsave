@@ -1,38 +1,62 @@
 {
   "name": "spsave",
   "description": "Save files in SharePoint using node.js easily",
-  "version": "1.0.15",
-  "author": {
-    "name": "s-KaiNet",
-    "url": "https://github.com/s-KaiNet"
+  "version": "2.0.0",
+  "author": "Sergei Sergeev <sergeev.srg@gmail.com>",
+  "main": "./lib/src/index.js",
+  "typings": "./lib/src/index.d.ts",
+  "engines": {
+    "node": ">=5.0.0 <5.12.0"
+  },
+  "scripts": {
+    "test": "gulp test-ci",
+    "build": "npm install && gulp tsc",
+    "dev": "gulp live-dev"
   },
   "bugs": {
     "url": "https://github.com/s-KaiNet/spsave/issues"
   },
+  "keywords": [
+    "request",
+    "sharepoint",
+    "rest",
+    "save file"
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/s-KaiNet/spsave.git"
   },
-  "main": "./lib/spsave.js",
   "licenses": [
     {
       "type": "MIT",
       "url": "http://www.opensource.org/licenses/mit-license.php"
     }
   ],
-  "dependencies": {
-    "httpntlm": "^1.5.2",
-    "httpreq": "^0.4.13",
-    "node-spoauth": "^1.0.0",
-    "q": "^1.4.1",
-    "colors": "^1.1.2"
-  },
-  "scripts": {
-    "autotest": "supervisor -q -n exit -x mocha -- -b"
-  },
   "devDependencies": {
-    "mocha": "~1.10.0",
-    "chai": "^3.3.0",
-    "supervisor": "~0.5.2"
+    "chai": "^3.5.0",
+    "coveralls": "^2.11.9",
+    "del": "^2.2.0",
+    "gulp": "^3.9.1",
+    "gulp-debug": "^2.1.2",
+    "gulp-istanbul": "^0.10.4",
+    "gulp-load-plugins": "^1.2.2",
+    "gulp-mocha": "^2.2.0",
+    "gulp-plumber": "^1.1.0",
+    "gulp-sourcemaps": "^2.0.0-alpha",
+    "gulp-tslint": "^5.0.0",
+    "gulp-typescript": "^2.13.0",
+    "merge-stream": "^1.0.0",
+    "mocha-junit-reporter": "^1.11.1",
+    "mockery": "^1.6.2",
+    "remap-istanbul": "^0.6.3",
+    "run-sequence": "^1.1.5",
+    "sinon": "^1.17.3",
+    "tslint": "^3.8.1",
+    "typings": "^0.8.1",
+    "yargs": "^4.6.0"
+  },
+  "dependencies": {
+    "sp-request": "^1.0.5",
+    "vinyl": "^1.1.1"
   }
 }

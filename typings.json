@@ -1,0 +1,18 @@
+{
+  "name": "spsave",
+  "version": false,
+  "dependencies": {
+    "bluebird": "registry:npm/bluebird#3.3.4+20160427051630",
+    "sp-request": "npm:sp-request"
+  },
+  "ambientDependencies": {
+    "node": "registry:env/node#4.0.0+20160507210304",
+    "vinyl": "registry:dt/vinyl#1.1.0+20160316155526"
+  },
+  "devDependencies": {
+    "chai": "registry:npm/chai#3.5.0+20160415060238"
+  },
+  "ambientDevDependencies": {
+    "mocha": "registry:env/mocha#2.2.5+20160321223601"
+  }
+}

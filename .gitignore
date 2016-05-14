@@ -1,5 +1,9 @@
-**/node_modules
-.vscode
-typings
-npm-debug.log
-index.js
+demo
+node_modules
+reports
+test/integration/config.ts
+/lib
+*.js
+*.js.map
+!gulpfile.js
+!build/**
