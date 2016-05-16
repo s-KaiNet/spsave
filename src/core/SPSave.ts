@@ -2,12 +2,11 @@ import * as Promise from 'bluebird';
 import * as sprequest from 'sp-request';
 
 import {SPSaveOptions, FileContentOptions, isFileContentOptions} from './ISPSaveOptions';
-import {SaveRequest} from './SaveRequest';
+import {FileSaver} from './FileSaver';
 
-function spsave(options: SPSaveOptions): Promise<any> {
+export function spsave(options: SPSaveOptions): Promise<any> {
   if (isFileContentOptions(options)) {
-    return new SaveRequest(options).execute();
+    return new FileSaver(options).execute();
   }
 }
 
-export = spsave;

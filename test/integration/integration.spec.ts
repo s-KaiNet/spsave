@@ -3,7 +3,8 @@ import * as Promise from 'bluebird';
 import * as fs from 'fs';
 import {IEnvironment, IUserCredentials} from 'sp-request';
 
-import spsave = require('./../../src/core/SPSave');
+import {spsave} from './../../src/core/SPSave';
+
 import {FileContentOptions} from './../../src/core/ISPSaveOptions';
 
 let config: any = require('./config');
@@ -25,13 +26,19 @@ describe('spsave: integration - on-premise', () => {
       folder: 'SiteAssets'
     };
 
-    spsave(opts)
-      .then(data => {
-        console.log(data.d);
-        done();
-      })
-      .catch(err => {
-        done(err);
-      });
+    let save = (options: FileContentOptions): void => {
+      spsave(options)
+        .then(data => {
+          //done();
+        })
+        .catch(err => {
+          done(err);
+        });
+    };
+
+    for (var i = 0; i < 9; i++) {
+      save(opts);
+    }
+
   });
 });

@@ -4,6 +4,8 @@ import {IEnvironment, IUserCredentials} from 'sp-request';
 
 export interface ICoreOptions {
   siteUrl: string;
+  checkin?: boolean;
+  checkinType?: number | string;
 }
 
 export interface IPathOptions {
