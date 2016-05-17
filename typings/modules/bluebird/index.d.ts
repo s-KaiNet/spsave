@@ -725,10 +725,10 @@ namespace Bluebird {
 export = Bluebird;
 }
 declare module 'bluebird/bluebird' {
-import main = require('~bluebird/bluebird');
-export = main;
+import alias = require('~bluebird/bluebird');
+export = alias;
 }
 declare module 'bluebird' {
-import main = require('~bluebird/bluebird');
-export = main;
+import alias = require('~bluebird/bluebird');
+export = alias;
 }

@@ -52,10 +52,11 @@
     "run-sequence": "^1.1.5",
     "sinon": "^1.17.3",
     "tslint": "^3.8.1",
-    "typings": "^0.8.1",
+    "typings": "^1.0.0",
     "yargs": "^4.6.0"
   },
   "dependencies": {
+    "colors": "^1.1.2",
     "sp-request": "^1.0.5",
     "vinyl": "^1.1.1"
   }

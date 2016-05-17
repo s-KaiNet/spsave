@@ -4,7 +4,10 @@ import {ISPRequest} from 'sp-request';
 import * as url from 'url';
 
 import {FileContentOptions} from './ISPSaveOptions';
-import {UrlHelper} from './UrlHelper';
+import {UrlHelper} from './../utils/UrlHelper';
+import {FoldersCreator} from './../utils/FoldersCreator';
+import {ILogger} from './../utils/ILogger';
+import {ConsoleLogger} from './../utils/ConsoleLogger';
 
 export class FileSaver {
   private static saveConfilctCode: string = '-2130246326';
@@ -19,15 +22,21 @@ export class FileSaver {
   private checkoutFileRestUrl: string;
   private checkinFileRestUrl: string;
   private path: string;
+  private foldersCreator: FoldersCreator;
+  private logger: ILogger;
 
   // TODO - logging for all failers
 
   constructor(private options: FileContentOptions) {
     this.sprequest = sprequest.create({ username: this.options.username, password: this.options.password },
       { domain: this.options.domain, workstation: this.options.workstation });
+
     this.options.siteUrl = UrlHelper.removeTrailingSlash(this.options.siteUrl);
-    this.options.folder = UrlHelper.removeTrailingSlash(this.options.folder);
+    this.options.folder = UrlHelper.trimSlashes(this.options.folder);
     this.path = UrlHelper.removeTrailingSlash(url.parse(this.options.siteUrl).path);
+
+    this.foldersCreator = new FoldersCreator(this.sprequest, this.options.folder, this.options.siteUrl);
+    this.logger = new ConsoleLogger();
 
     this.buildRestUrls();
   }
@@ -35,17 +44,24 @@ export class FileSaver {
   public execute(): Promise<any> {
     let requestDeferred: Promise.Resolver<any> = Promise.defer<any>();
 
-    this.saveFile(requestDeferred);
+    this.foldersCreator.createFoldersHierarchy()
+      .then(() => {
+        this.saveFile(requestDeferred);
+      })
+      .catch(err => {
+        requestDeferred.reject(err);
+      });
 
     return requestDeferred.promise;
   }
 
-  /* saves file in a fodler. If save conflict or cobalt error is thrown, tries to reupload file `maxAttempts` times */
+  /* saves file in a folder. If save conflict or cobalt error is thrown, tries to reupload file `maxAttempts` times */
   private saveFile(requestDeferred: Promise.Resolver<any>, attempts: number = 1): void {
 
     if (attempts > FileSaver.maxAttempts) {
-      console.error(`File '${this.options.fileName}' probably is not uploaded. Too many errors.`);
-      requestDeferred.reject(new Error('Too many errors. File upload process interrupted.'));
+      let message: string = `File '${this.options.fileName}' probably is not uploaded: too many errors. Upload process interrupted.`;
+      this.logger.error(message);
+      requestDeferred.reject(new Error(message));
       return;
     }
 
@@ -71,18 +87,20 @@ export class FileSaver {
 
     Promise.join(checkoutResult, uploadResult, (fileExists, data) => {
 
-      /* checkin file */
+      /* checkin file if checkin options presented */
       if (this.options.checkin && fileExists) {
         return this.checkinFile();
       } else {
-        console.log(`File '${this.options.fileName}' successfully uploaded to folder '${this.options.folder}'`);
+        this.logger.success(this.options.fileName + ` successfully uploaded to url '${this.options.siteUrl}/${this.options.folder}'`);
       }
 
       requestDeferred.resolve(JSON.parse(data.body));
       return undefined;
     }).then(data => {
       if (requestDeferred.promise.isPending()) {
-        console.log(`File ${this.options.fileName} successfully uploaded to folder '${this.options.folder}' and checked in.`);
+        this.logger.success(this.options.fileName +
+          ` successfully uploaded to url '${this.options.siteUrl}/${this.options.folder}' and checked in.` +
+          ` Checkin type: ${this.getCheckinTypeString(this.getCheckinType())}`);
         requestDeferred.resolve(data);
       }
     })
@@ -156,7 +174,7 @@ export class FileSaver {
       })
       .then(data => {
         if (requestDeferred.promise.isPending()) {
-          console.log(`File ${this.options.fileName} checked out.`);
+          this.logger.info(`File ${this.options.fileName} checked out.`);
           requestDeferred.resolve(true);
         }
       })
@@ -199,7 +217,19 @@ export class FileSaver {
     return checkinType;
   }
 
-  /* check if error is save conflict or cobalt and try to reupload the file, otherwise reject deferred */
+  private getCheckinTypeString(checkinType: number): string {
+    switch (checkinType) {
+      case 0:
+        return 'minor';
+      case 1:
+        return 'major';
+      case 2:
+        return 'overwrite';
+      default: return 'unknown';
+    }
+  }
+
+  /* check if error is save conflict or cobalt error and tries to reupload the file, otherwise reject deferred */
   private tryReUpload(exception: any, deferred: Promise.Resolver<any>, attempts: number): void {
     let errorData: any;
 
@@ -218,13 +248,13 @@ export class FileSaver {
 
     if (errorData.error) {
       if (errorData.error.code && errorData.error.code.indexOf(FileSaver.saveConfilctCode) === 0) {
-        console.error(`Save conflict detected for file '${this.options.fileName}'. Trying to re-upload...`);
+        this.logger.warning(`Save conflict detected for file '${this.options.fileName}'. Trying to re-upload...`);
         reUpload();
       } else if (errorData.error.code && errorData.error.code.indexOf(FileSaver.cobaltCode) === 0) {
-        console.error(`Cobalt error detected for file '${this.options.fileName}'. Trying to re-upload...`);
+        this.logger.warning(`Cobalt error detected for file '${this.options.fileName}'. Trying to re-upload...`);
         reUpload();
       } else {
-        console.error(errorData.error);
+        this.logger.error(errorData.error);
         deferred.reject(exception);
       }
     } else {

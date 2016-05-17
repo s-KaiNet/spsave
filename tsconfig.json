@@ -12,9 +12,6 @@
     "removeComments": true
   },
   "exclude": [
-    "typings/browser.d.ts",
-    "typings/browser",
-    "typings-custom",
     "node_modules"
   ]
 }
