@@ -1,4 +1,5 @@
 import * as Promise from 'bluebird';
+import * as notifier from 'node-notifier';
 
 import {SPSaveOptions, FileContentOptions} from './ISPSaveOptions';
 import {FileSaver} from './FileSaver';
@@ -16,12 +17,28 @@ export function spsave(options: SPSaveOptions): Promise<any> {
 
   if (saveOptions instanceof Array) {
     savePromise = saveFileArray(saveOptions);
+    savePromise.then(() => {
+      if (options.notification) {
+        notifier.notify({
+          title: 'spsave',
+          message: `${saveOptions.length} files successfully uploaded`
+        });
+      }
+    });
   } else {
     savePromise = saveSingleFile(saveOptions);
+    savePromise.then(() => {
+      if (options.notification) {
+        notifier.notify({
+          title: `spsave: ${saveOptions.fileName}`,
+          message: 'Successfully uploaded'
+        });
+      }
+    });
   }
 
   savePromise.catch(err => {
-    showError(err);
+    showError(err, options.notification);
   });
 
   return savePromise;
@@ -51,7 +68,15 @@ function saveSingleFile(options: FileContentOptions): Promise<any> {
   return new FileSaver(options).execute();
 }
 
-function showError(err: any): void {
+function showError(err: any, notify: boolean): void {
+
+  if (notify) {
+    notifier.notify({
+      title: 'spsave: ERROR',
+      message: 'See details under console window'
+    });
+  }
+
   if (!err) {
     logger.error('Unknown error occured');
     return;

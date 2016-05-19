@@ -35,7 +35,8 @@ export class FileSaver {
     this.options = _.defaults<FileContentOptions>(_.assign<{}, FileContentOptions>({}, options), {
       checkin: false,
       checkinType: 0,
-      checkinMessage: 'Checked in by spsave'
+      checkinMessage: 'Checked in by spsave',
+      notification: false
     });
 
     this.options.siteUrl = UrlHelper.removeTrailingSlash(this.options.siteUrl);
@@ -97,7 +98,7 @@ export class FileSaver {
       if (this.options.checkin && fileExists) {
         return this.checkinFile();
       } else {
-        this.logger.success(this.options.fileName + ` successfully uploaded to url '${this.options.siteUrl}/${this.options.folder}'`);
+        this.logger.success(this.options.fileName + ` successfully uploaded to '${this.options.siteUrl}/${this.options.folder}'`);
       }
 
       requestDeferred.resolve(JSON.parse(data.body));
@@ -105,7 +106,7 @@ export class FileSaver {
     }).then(data => {
       if (requestDeferred.promise.isPending()) {
         this.logger.success(this.options.fileName +
-          ` successfully uploaded to url '${this.options.siteUrl}/${this.options.folder}' and checked in.` +
+          ` successfully uploaded to '${this.options.siteUrl}/${this.options.folder}' and checked in.` +
           ` Checkin type: ${this.getCheckinTypeString(this.getCheckinType())}`);
 
         requestDeferred.resolve(data.body);

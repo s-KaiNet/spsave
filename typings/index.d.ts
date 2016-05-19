@@ -3,6 +3,7 @@
 /// <reference path="globals/glob/index.d.ts" />
 /// <reference path="globals/minimatch/index.d.ts" />
 /// <reference path="globals/mocha/index.d.ts" />
+/// <reference path="globals/node-notifier/index.d.ts" />
 /// <reference path="globals/node/index.d.ts" />
 /// <reference path="globals/vinyl-fs/index.d.ts" />
 /// <reference path="globals/vinyl/index.d.ts" />

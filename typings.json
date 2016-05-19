@@ -13,6 +13,7 @@
     "glob-stream": "registry:dt/glob-stream#3.1.12+20160316155526",
     "minimatch": "registry:dt/minimatch#2.0.8+20160317120654",
     "node": "registry:env/node#4.0.0+20160507210304",
+    "node-notifier": "registry:dt/node-notifier#0.0.0+20160316155526",
     "vinyl": "registry:dt/vinyl#1.1.0+20160316155526"
   },
   "devDependencies": {

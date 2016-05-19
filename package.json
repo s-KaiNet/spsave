@@ -58,6 +58,7 @@
   "dependencies": {
     "colors": "^1.1.2",
     "globby": "^4.1.0",
+    "node-notifier": "^4.5.0",
     "sp-request": "^1.0.5",
     "vinyl": "^1.1.1"
   }

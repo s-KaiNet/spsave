@@ -35,7 +35,6 @@ export class OptionsParser {
 
       return OptionsParser.createFileOptionsFromVinyl(options.file, options);
     }
-
   }
 
   private static createFileOptionsFromVinyl(file: File, options: opts.GlobOptions | opts.VinylOptions): opts.FileContentOptions {

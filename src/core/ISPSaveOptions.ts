@@ -7,6 +7,7 @@ export interface ICoreOptions {
   checkin?: boolean;
   checkinType?: number | string;
   checkinMessage?: string;
+  notification?: boolean;
 }
 
 export interface IGlobOptions {
