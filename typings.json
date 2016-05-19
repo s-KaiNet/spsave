@@ -3,10 +3,15 @@
   "version": false,
   "dependencies": {
     "bluebird": "registry:npm/bluebird#3.3.4+20160427051630",
+    "globby": "registry:npm/globby#3.0.0+20160211003958",
+    "lodash": "registry:npm/lodash#4.0.0+20160416211519",
     "sp-request": "npm:sp-request"
   },
   "globalDependencies": {
     "colors": "registry:dt/colors#0.6.0-1+20160501135139",
+    "glob": "registry:dt/glob#5.0.10+20160317120654",
+    "glob-stream": "registry:dt/glob-stream#3.1.12+20160316155526",
+    "minimatch": "registry:dt/minimatch#2.0.8+20160317120654",
     "node": "registry:env/node#4.0.0+20160507210304",
     "vinyl": "registry:dt/vinyl#1.1.0+20160316155526"
   },

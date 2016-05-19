@@ -2,6 +2,8 @@ import * as Promise from 'bluebird';
 import * as sprequest from 'sp-request';
 import {ISPRequest} from 'sp-request';
 import * as url from 'url';
+import * as _ from 'lodash';
+import {IEnvironment, IUserCredentials} from 'sp-request';
 
 import {FileContentOptions} from './ISPSaveOptions';
 import {UrlHelper} from './../utils/UrlHelper';
@@ -12,7 +14,6 @@ import {ConsoleLogger} from './../utils/ConsoleLogger';
 export class FileSaver {
   private static saveConfilctCode: string = '-2130246326';
   private static cobaltCode: string = '-1597308888';
-  private static checkinComment: string = 'Checked in by spsave';
   private static reUploadTimeout: number = 1500;
   private static maxAttempts: number = 3;
 
@@ -24,12 +25,18 @@ export class FileSaver {
   private path: string;
   private foldersCreator: FoldersCreator;
   private logger: ILogger;
+  private options: FileContentOptions;
 
-  // TODO - logging for all failers
+  constructor(options: FileContentOptions) {
+    let creds: IUserCredentials = _.pick<IUserCredentials, FileContentOptions>(options, ['username', 'password']);
+    let env: IEnvironment = _.pick<IEnvironment, FileContentOptions>(options, ['domain', 'workstation']);
+    this.sprequest = sprequest.create(creds, env);
 
-  constructor(private options: FileContentOptions) {
-    this.sprequest = sprequest.create({ username: this.options.username, password: this.options.password },
-      { domain: this.options.domain, workstation: this.options.workstation });
+    this.options = _.defaults<FileContentOptions>(_.assign<{}, FileContentOptions>({}, options), {
+      checkin: false,
+      checkinType: 0,
+      checkinMessage: 'Checked in by spsave'
+    });
 
     this.options.siteUrl = UrlHelper.removeTrailingSlash(this.options.siteUrl);
     this.options.folder = UrlHelper.trimSlashes(this.options.folder);
@@ -66,7 +73,6 @@ export class FileSaver {
     }
 
     /* checkout file (only if option checkin provided) */
-
     let checkoutResult: Promise<boolean> = this.checkoutFile();
 
     let uploadResult: Promise<any> =
@@ -101,7 +107,8 @@ export class FileSaver {
         this.logger.success(this.options.fileName +
           ` successfully uploaded to url '${this.options.siteUrl}/${this.options.folder}' and checked in.` +
           ` Checkin type: ${this.getCheckinTypeString(this.getCheckinType())}`);
-        requestDeferred.resolve(data);
+
+        requestDeferred.resolve(data.body);
       }
     })
       .catch(err => {
@@ -174,7 +181,7 @@ export class FileSaver {
       })
       .then(data => {
         if (requestDeferred.promise.isPending()) {
-          this.logger.info(`File ${this.options.fileName} checked out.`);
+          this.logger.info(`${this.options.fileName} checked out.`);
           requestDeferred.resolve(true);
         }
       })
@@ -277,7 +284,7 @@ export class FileSaver {
 
     this.checkinFileRestUrl = this.options.siteUrl +
       '/_api/web/GetFileByServerRelativeUrl(@FileUrl)/CheckIn(comment=@Comment,checkintype=@Type)' +
-      `?@FileUrl='${encodeURIComponent(fileServerRelativeUrl)}'&@Comment='${(FileSaver.checkinComment)}'` +
+      `?@FileUrl='${encodeURIComponent(fileServerRelativeUrl)}'&@Comment='${(this.options.checkinMessage)}'` +
       `&@Type='${this.getCheckinType()}'`;
   }
 }

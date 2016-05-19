@@ -6,10 +6,11 @@ export interface ICoreOptions {
   siteUrl: string;
   checkin?: boolean;
   checkinType?: number | string;
+  checkinMessage?: string;
 }
 
-export interface IPathOptions {
-  path: string | string[];
+export interface IGlobOptions {
+  glob: string | string[];
   folder?: string;
   base?: string;
 }
@@ -22,16 +23,17 @@ export interface IFileContentOptions {
 
 export interface IVinylOptions {
   file: File;
+  folder?: string;
 }
 
 export type CoreOptions = ICoreOptions & IEnvironment & IUserCredentials;
-export type PathOptions = CoreOptions & IPathOptions;
+export type GlobOptions = CoreOptions & IGlobOptions;
 export type FileContentOptions = CoreOptions & IFileContentOptions;
 export type VinylOptions = CoreOptions & IVinylOptions;
-export type SPSaveOptions = PathOptions | FileContentOptions | VinylOptions;
+export type SPSaveOptions = GlobOptions | FileContentOptions | VinylOptions;
 
-export function isPathOptions(T: any): T is PathOptions {
-  return !!T.path;
+export function isGlobOptions(T: any): T is GlobOptions {
+  return !!T.glob;
 }
 
 export function isFileContentOptions(T: any): T is FileContentOptions {
@@ -39,5 +41,5 @@ export function isFileContentOptions(T: any): T is FileContentOptions {
 }
 
 export function isVinylOptions(T: any): T is VinylOptions {
-  return !!T.file;
+  return File.isVinyl(T.file);
 }

@@ -1,0 +1,31 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/typed-typings/npm-globby/6f91a21011a4cc11ef53600f985b8a0ae7ee7cae/typings.json",
+    "raw": "registry:npm/globby#3.0.0+20160211003958",
+    "main": "index.d.ts",
+    "global": false,
+    "dependencies": {
+      "pinkie-promise": {
+        "src": "https://raw.githubusercontent.com/typed-typings/npm-pinkie-promise/93d89ef9863fefc95460d770b1b5b59875a21ac1/typings.json",
+        "raw": "github:typed-typings/npm-pinkie-promise#93d89ef9863fefc95460d770b1b5b59875a21ac1",
+        "main": "index.d.ts",
+        "global": false,
+        "dependencies": {
+          "es6-promise": {
+            "src": "https://raw.githubusercontent.com/typed-typings/npm-es6-promise/fb04188767acfec1defd054fc8024fafa5cd4de7/typings.json",
+            "raw": "github:typed-typings/npm-es6-promise#fb04188767acfec1defd054fc8024fafa5cd4de7",
+            "main": "dist/es6-promise.d.ts",
+            "global": false,
+            "name": "es6-promise",
+            "type": "typings"
+          }
+        },
+        "name": "pinkie-promise",
+        "type": "typings"
+      }
+    },
+    "name": "globby",
+    "type": "typings"
+  }
+}

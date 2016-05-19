@@ -15,7 +15,7 @@ export class ConsoleLogger implements ILogger {
   }
 
   public info(message: string): void {
-    this.log(message, 'gray');
+    this.log(message, 'white');
   }
 
   private log(message: string, color: string): void {
