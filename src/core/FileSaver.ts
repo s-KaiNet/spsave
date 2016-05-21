@@ -5,7 +5,7 @@ import * as url from 'url';
 import * as _ from 'lodash';
 import {IEnvironment, IUserCredentials} from 'sp-request';
 
-import {FileContentOptions} from './ISPSaveOptions';
+import {FileContentOptions, CheckinType} from './ISPSaveOptions';
 import {UrlHelper} from './../utils/UrlHelper';
 import {FoldersCreator} from './../utils/FoldersCreator';
 import {ILogger} from './../utils/ILogger';
@@ -97,6 +97,10 @@ export class FileSaver {
       /* checkin file if checkin options presented */
       if (this.options.checkin && fileExists) {
         return this.checkinFile();
+      /* if this is the first upload and we need to checkin the file, explicitly trigger checkin by uploading once again */
+      } else if (this.options.checkin && !fileExists) {
+        this.saveFile(requestDeferred, attempts + 1);
+        return undefined;
       } else {
         this.logger.success(this.options.fileName + ` successfully uploaded to '${this.options.siteUrl}/${this.options.folder}'`);
       }
@@ -104,10 +108,14 @@ export class FileSaver {
       requestDeferred.resolve(JSON.parse(data.body));
       return undefined;
     }).then(data => {
+      if (!data) {
+        return;
+      }
+
       if (requestDeferred.promise.isPending()) {
         this.logger.success(this.options.fileName +
           ` successfully uploaded to '${this.options.siteUrl}/${this.options.folder}' and checked in.` +
-          ` Checkin type: ${this.getCheckinTypeString(this.getCheckinType())}`);
+          ` Checkin type: ${CheckinType[this.options.checkinType]}`);
 
         requestDeferred.resolve(data.body);
       }
@@ -197,46 +205,6 @@ export class FileSaver {
     return this.sprequest.get(this.getFileRestUrl);
   }
 
-  private getCheckinType(): number {
-    let checkinType: number = 0;
-
-    if (!this.options.checkinType) {
-      return checkinType;
-    }
-
-    switch (this.options.checkinType) {
-      case 'minor':
-      case 0:
-        checkinType = 0;
-        break;
-      case 'major':
-      case 1:
-        checkinType = 1;
-        break;
-      case 'overwrite':
-      case 2:
-        checkinType = 2;
-        break;
-      default:
-        checkinType = 0;
-        break;
-    }
-
-    return checkinType;
-  }
-
-  private getCheckinTypeString(checkinType: number): string {
-    switch (checkinType) {
-      case 0:
-        return 'minor';
-      case 1:
-        return 'major';
-      case 2:
-        return 'overwrite';
-      default: return 'unknown';
-    }
-  }
-
   /* check if error is save conflict or cobalt error and tries to reupload the file, otherwise reject deferred */
   private tryReUpload(exception: any, deferred: Promise.Resolver<any>, attempts: number): void {
     let errorData: any;
@@ -286,6 +254,6 @@ export class FileSaver {
     this.checkinFileRestUrl = this.options.siteUrl +
       '/_api/web/GetFileByServerRelativeUrl(@FileUrl)/CheckIn(comment=@Comment,checkintype=@Type)' +
       `?@FileUrl='${encodeURIComponent(fileServerRelativeUrl)}'&@Comment='${(this.options.checkinMessage)}'` +
-      `&@Type='${this.getCheckinType()}'`;
+      `&@Type='${this.options.checkinType}'`;
   }
 }

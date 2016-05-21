@@ -19,6 +19,9 @@ export class ConsoleLogger implements ILogger {
   }
 
   private log(message: string, color: string): void {
-    console.log(colors[color](message));
+    if (message === '') {
+      console.log('');
+    }
+    console.log(colors[color](`spsave: ${message}`));
   }
 }

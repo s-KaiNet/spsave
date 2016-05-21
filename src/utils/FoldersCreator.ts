@@ -38,7 +38,8 @@ export class FoldersCreator {
     Promise.all(getFolderPromises)
       .then(data => {
         let foldersToCreate: string[] = data.map((promise, index) => {
-          if (promise.isRejected() && promise.reason().statusCode === 404) {
+          /* sp onilne for some reason throws 500 when folder is not found :( */
+          if (promise.isRejected() && (promise.reason().statusCode === 404 || promise.reason().statusCode === 500)) {
             return index;
           } else if (promise.isRejected()) {
             requestDeferred.reject(promise.reason());

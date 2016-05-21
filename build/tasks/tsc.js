@@ -5,11 +5,11 @@ module.exports = function (gulp, $) {
 
   gulp.task('tsc', function () {
 
-    var tsSourcesResult = gulp.src(['./src/**/*.ts', './typings/index.d.ts'])
+    var tsSourcesResult = gulp.src(['src/**/*.ts', 'typings/index.d.ts'])
       .pipe($.sourcemaps.init())
       .pipe($.tsc(tsconfig.compilerOptions));
 
-    var tsTestsResult = gulp.src(['./test/**/*.ts', './typings/index.d.ts'])
+    var tsTestsResult = gulp.src(['test/**/*.ts', 'typings/index.d.ts'])
       .pipe($.sourcemaps.init())
       .pipe($.tsc(tsconfig.compilerOptions));
 

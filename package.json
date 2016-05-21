@@ -45,6 +45,7 @@
     "gulp-sourcemaps": "^2.0.0-alpha",
     "gulp-tslint": "^5.0.0",
     "gulp-typescript": "^2.13.0",
+    "map-stream": "0.0.6",
     "merge-stream": "^1.0.0",
     "mocha-junit-reporter": "^1.11.1",
     "mockery": "^1.6.2",
@@ -53,6 +54,7 @@
     "sinon": "^1.17.3",
     "tslint": "^3.8.1",
     "typings": "^1.0.0",
+    "vinyl-fs": "^2.4.3",
     "yargs": "^4.6.0"
   },
   "dependencies": {

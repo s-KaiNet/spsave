@@ -2,10 +2,16 @@ import File = require('vinyl');
 
 import {IEnvironment, IUserCredentials} from 'sp-request';
 
+export enum CheckinType {
+  minor = 0,
+  major = 1,
+  overwrite = 2
+}
+
 export interface ICoreOptions {
   siteUrl: string;
   checkin?: boolean;
-  checkinType?: number | string;
+  checkinType?: CheckinType;
   checkinMessage?: string;
   notification?: boolean;
 }

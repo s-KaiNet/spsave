@@ -1,7 +1,7 @@
 import * as Promise from 'bluebird';
 import * as notifier from 'node-notifier';
 
-import {SPSaveOptions, FileContentOptions} from './ISPSaveOptions';
+import {SPSaveOptions, FileContentOptions, isFileContentOptions} from './ISPSaveOptions';
 import {FileSaver} from './FileSaver';
 import {ILogger} from './../utils/ILogger';
 import {ConsoleLogger} from './../utils/ConsoleLogger';
@@ -12,28 +12,34 @@ Promise.longStackTraces();
 let logger: ILogger = new ConsoleLogger();
 
 export function spsave(options: SPSaveOptions): Promise<any> {
+
+  let showNotification: (message: string, title?: string) => void = (message: string, title?: string) => {
+    if (options.notification) {
+      notifier.notify({
+        title: title || 'spsave',
+        message: message
+      });
+    }
+  };
+
   let saveOptions: FileContentOptions | FileContentOptions[] = OptionsParser.parseOptions(options);
   let savePromise: Promise<any>;
 
-  if (saveOptions instanceof Array) {
+  if (saveOptions instanceof Array && saveOptions.length > 1) {
     savePromise = saveFileArray(saveOptions);
+
     savePromise.then(() => {
-      if (options.notification) {
-        notifier.notify({
-          title: 'spsave',
-          message: `${saveOptions.length} files successfully uploaded`
-        });
-      }
+      showNotification(`${saveOptions.length} files successfully uploaded`);
     });
-  } else {
+  } else if (saveOptions instanceof Array && saveOptions.length === 1) {
+    savePromise = saveSingleFile(saveOptions[0]);
+    savePromise.then(() => {
+      showNotification(`Successfully uploaded`, `spsave: ${saveOptions[0].fileName}`);
+    });
+  } else if (isFileContentOptions(saveOptions)) {
     savePromise = saveSingleFile(saveOptions);
     savePromise.then(() => {
-      if (options.notification) {
-        notifier.notify({
-          title: `spsave: ${saveOptions.fileName}`,
-          message: 'Successfully uploaded'
-        });
-      }
+      showNotification(`Successfully uploaded`, `spsave: ${saveOptions.fileName}`);
     });
   }
 

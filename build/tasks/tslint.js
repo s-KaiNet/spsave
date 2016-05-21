@@ -4,7 +4,7 @@ module.exports = function (gulp, $) {
 var emitError = !!$.yargs.argv.emitError;
 
   gulp.task('tslint', function () {
-    return gulp.src('./src/**/*.ts')
+    return gulp.src(['src/**/*.ts', 'test/**/*.ts'])
       .pipe($.tslint({
         configuration: './tslint.json'
       }))

@@ -43,7 +43,7 @@ export class OptionsParser {
     newOptions.fileContent = <Buffer>file.contents;
     newOptions.folder = OptionsParser.getFolderToUpload(file, options.folder);
 
-    if (!newOptions.folder) {
+    if (!newOptions.folder || newOptions.folder === '.') {
       throw new Error('Folder option is empty. Either provide folder explicitly, or specify "base" option');
     }
 
@@ -81,7 +81,7 @@ export class OptionsParser {
 
     if (indx === -1) {
       throw new Error(`'base' option has invalid value. 'base' should be a substring of the file path. 'base': ${file.base}` +
-        `file path: ${file.path}`);
+        ` file path: ${file.path}`);
     }
 
     let startIndex: number = indx + base.length;

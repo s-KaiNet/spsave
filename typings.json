@@ -20,6 +20,7 @@
     "chai": "registry:npm/chai#3.5.0+20160415060238"
   },
   "globalDevDependencies": {
-    "mocha": "registry:env/mocha#2.2.5+20160321223601"
+    "mocha": "registry:env/mocha#2.2.5+20160321223601",
+    "vinyl-fs": "registry:dt/vinyl-fs#0.0.0+20160317120654"
   }
 }
