@@ -5,12 +5,12 @@
 	"configurations": [
 		{
 			// Name of configuration; appears in the launch configuration drop down menu.
-			"name": "Run index.js",
+			"name": "Run performance test",
 			// Type of configuration. Possible values: "node", "mono".
 			"type": "node",
 			"request": "launch",
 			// Workspace relative or absolute path to the program.
-			"program": "${workspaceRoot}/demo/index.js",
+			"program": "${workspaceRoot}/lib/test/performance/index.js",
 			// Automatically stop program after launch.
 			"stopOnEntry": false,
 			// Command line arguments passed to the program.

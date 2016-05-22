@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as globby from 'globby';
 import * as fs from 'fs';
 
-import * as opts from './../core/ISPSaveOptions';
+import * as opts from './../core/SPSaveOptions';
 import {UrlHelper} from './UrlHelper';
 
 export class OptionsParser {

@@ -5,7 +5,7 @@ import * as url from 'url';
 import * as _ from 'lodash';
 import {IEnvironment, IUserCredentials} from 'sp-request';
 
-import {FileContentOptions, CheckinType} from './ISPSaveOptions';
+import {FileContentOptions, CheckinType} from './SPSaveOptions';
 import {UrlHelper} from './../utils/UrlHelper';
 import {FoldersCreator} from './../utils/FoldersCreator';
 import {ILogger} from './../utils/ILogger';

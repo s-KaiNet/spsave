@@ -1,7 +1,7 @@
 import * as Promise from 'bluebird';
 import * as notifier from 'node-notifier';
 
-import {SPSaveOptions, FileContentOptions, isFileContentOptions} from './ISPSaveOptions';
+import {SPSaveOptions, FileContentOptions, isFileContentOptions} from './SPSaveOptions';
 import {FileSaver} from './FileSaver';
 import {ILogger} from './../utils/ILogger';
 import {ConsoleLogger} from './../utils/ConsoleLogger';

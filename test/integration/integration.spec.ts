@@ -9,7 +9,7 @@ import * as vfs from 'vinyl-fs';
 import File = require('vinyl');
 
 import {spsave} from './../../src/core/SPSave';
-import {FileContentOptions, VinylOptions, GlobOptions, CheckinType} from './../../src/core/ISPSaveOptions';
+import {FileContentOptions, VinylOptions, GlobOptions, CheckinType} from './../../src/core/SPSaveOptions';
 import {UrlHelper} from './../../src/utils/UrlHelper';
 
 let config: any = require('./config');
