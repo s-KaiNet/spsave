@@ -1,0 +1,19 @@
+machine:
+  node:
+    version: 5.7.0
+  environment:
+    COVERALLS_SERVICE_NAME: circle-ci
+
+test:
+  pre:
+    # tslint before the test
+    - gulp tslint --emitError
+  post:
+    # move junit test report => build artifacts
+    - mkdir $CIRCLE_TEST_REPORTS/junit
+    - mv ./reports/test/*.xml $CIRCLE_TEST_REPORTS/junit/testrun.xml
+    # send code coverage report => coveralls.io
+    - "cat ./reports/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js src"
+    # move code coverage => build artifacts
+    - mkdir $CIRCLE_ARTIFACTS/code-coverage
+    - mv ./reports/coverage/html-remap/** $CIRCLE_ARTIFACTS/code-coverage
