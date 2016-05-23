@@ -22,6 +22,7 @@ export class ConsoleLogger implements ILogger {
   private log(message: string, color: string): void {
     if (message === '') {
       console.log('');
+      return;
     }
     let dateNow: Date = new Date();
     let dateString: string = util.format('[%s:%s:%s]',

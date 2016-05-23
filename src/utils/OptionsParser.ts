@@ -8,9 +8,9 @@ import * as opts from './../core/SPSaveOptions';
 import {UrlHelper} from './UrlHelper';
 
 export class OptionsParser {
-  public static parseOptions(options: opts.SPSaveOptions): opts.FileContentOptions | opts.FileContentOptions[] {
+  public static parseOptions(options: opts.SPSaveOptions): opts.FileContentOptions[] {
     if (opts.isFileContentOptions(options)) {
-      return options;
+      return [options];
     }
 
     if (opts.isGlobOptions(options)) {
@@ -33,8 +33,10 @@ export class OptionsParser {
         folder: ''
       });
 
-      return OptionsParser.createFileOptionsFromVinyl(options.file, options);
+      return [OptionsParser.createFileOptionsFromVinyl(options.file, options)];
     }
+
+    return undefined;
   }
 
   private static createFileOptionsFromVinyl(file: File, options: opts.GlobOptions | opts.VinylOptions): opts.FileContentOptions {

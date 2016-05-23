@@ -17,7 +17,8 @@
     "vinyl": "registry:dt/vinyl#1.1.0+20160316155526"
   },
   "devDependencies": {
-    "chai": "registry:npm/chai#3.5.0+20160415060238"
+    "chai": "registry:npm/chai#3.5.0+20160415060238",
+    "sinon": "registry:npm/sinon#1.16.0+20160427193336"
   },
   "globalDevDependencies": {
     "mocha": "registry:env/mocha#2.2.5+20160321223601",

@@ -11,4 +11,5 @@
 /// <reference path="modules/chai/index.d.ts" />
 /// <reference path="modules/globby/index.d.ts" />
 /// <reference path="modules/lodash/index.d.ts" />
+/// <reference path="modules/sinon/index.d.ts" />
 /// <reference path="modules/sp-request/index.d.ts" />

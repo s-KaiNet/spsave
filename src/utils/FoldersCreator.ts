@@ -26,7 +26,7 @@ export class FoldersCreator {
     let requestDeferred: Promise.Resolver<any> = Promise.defer<any>();
 
     let folderPaths: string[] = [];
-    let paths: string[] = this.folder.split('/');
+    let paths: string[] = this.folder.split('/').filter(path => { return path !== ''; });
 
     this.createFoldersPathArray(paths, folderPaths);
     let getFolderPromises: Inspection<any>[] = [];
@@ -83,13 +83,13 @@ export class FoldersCreator {
             headers: {
               'X-RequestDigest': digest
             }
-          })
-            .then(data => {
-              this.createFolders(folders.slice(1, folders.length), deferred);
-            })
-            .catch(err => {
-              deferred.reject(err);
-            });
+          });
+        })
+        .then(data => {
+          this.createFolders(folders.slice(1, folders.length), deferred);
+        })
+        .catch(err => {
+          deferred.reject(err);
         });
     } else {
       deferred.resolve();
