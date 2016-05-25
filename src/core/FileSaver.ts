@@ -34,9 +34,8 @@ export class FileSaver {
 
     this.options = _.defaults<FileContentOptions>(_.assign<{}, FileContentOptions>({}, options), {
       checkin: false,
-      checkinType: 0,
-      checkinMessage: 'Checked in by spsave',
-      notification: false
+      checkinType: CheckinType.minor,
+      checkinMessage: 'Checked in by spsave'
     });
 
     this.options.siteUrl = UrlHelper.removeTrailingSlash(this.options.siteUrl);
@@ -49,7 +48,7 @@ export class FileSaver {
     this.buildRestUrls();
   }
 
-  public execute(): Promise<any> {
+  public save(): Promise<any> {
     let requestDeferred: Promise.Resolver<any> = Promise.defer<any>();
 
     this.foldersCreator.createFoldersHierarchy()
@@ -80,46 +79,49 @@ export class FileSaver {
       checkoutResult
         .then(() => {
           /* upload file to folder */
-          return this.sprequest.requestDigest(this.options.siteUrl)
-            .then(digest => {
-              return this.sprequest.post(this.uploadFileRestUrl, {
-                headers: {
-                  'X-RequestDigest': digest
-                },
-                body: this.options.fileContent,
-                json: false
-              });
-            });
+          return this.sprequest.requestDigest(this.options.siteUrl);
+        })
+        .then(digest => {
+          return this.sprequest.post(this.uploadFileRestUrl, {
+            headers: {
+              'X-RequestDigest': digest
+            },
+            body: this.options.fileContent,
+            json: false
+          });
         });
 
-    Promise.join(checkoutResult, uploadResult, (fileExists, data) => {
+    Promise.all([checkoutResult, uploadResult])
+      .then(result => {
+        let fileExists: boolean = result[0];
+        let data: any = result[1];
 
-      /* checkin file if checkin options presented */
-      if (this.options.checkin && fileExists) {
-        return this.checkinFile();
-      /* if this is the first upload and we need to checkin the file, explicitly trigger checkin by uploading once again */
-      } else if (this.options.checkin && !fileExists) {
-        this.saveFile(requestDeferred, attempts + 1);
+        /* checkin file if checkin options presented */
+        if (this.options.checkin && fileExists) {
+          return this.checkinFile();
+          /* if this is the first upload and we need to checkin the file, explicitly trigger checkin by uploading once again */
+        } else if (this.options.checkin && !fileExists) {
+          this.saveFile(requestDeferred, attempts + 1);
+          return undefined;
+        } else {
+          this.logger.success(this.options.fileName + ` successfully uploaded to '${this.options.siteUrl}/${this.options.folder}'`);
+        }
+
+        requestDeferred.resolve(JSON.parse(data.body));
         return undefined;
-      } else {
-        this.logger.success(this.options.fileName + ` successfully uploaded to '${this.options.siteUrl}/${this.options.folder}'`);
-      }
+      }).then(data => {
+        if (!data) {
+          return;
+        }
 
-      requestDeferred.resolve(JSON.parse(data.body));
-      return undefined;
-    }).then(data => {
-      if (!data) {
-        return;
-      }
+        if (requestDeferred.promise.isPending()) {
+          this.logger.success(this.options.fileName +
+            ` successfully uploaded to '${this.options.siteUrl}/${this.options.folder}' and checked in.` +
+            ` Checkin type: ${CheckinType[this.options.checkinType]}`);
 
-      if (requestDeferred.promise.isPending()) {
-        this.logger.success(this.options.fileName +
-          ` successfully uploaded to '${this.options.siteUrl}/${this.options.folder}' and checked in.` +
-          ` Checkin type: ${CheckinType[this.options.checkinType]}`);
-
-        requestDeferred.resolve(data.body);
-      }
-    })
+          requestDeferred.resolve(data.body);
+        }
+      })
       .catch(err => {
         if (err && (err.statusCode === 500 || err.statusCode === 409)) { /* save conflict or cobalt error */
           this.tryReUpload(err, requestDeferred, attempts);
@@ -181,12 +183,11 @@ export class FileSaver {
           });
       }, err => {
         /* file doesn't exist message code, resolve with false */
-        if (err.message.indexOf('-2146232832') !== 0) {
+        if (err.message.indexOf('-2146232832') !== -1) {
           requestDeferred.resolve(false);
           return undefined;
         }
         requestDeferred.reject(err);
-        return undefined;
       })
       .then(data => {
         if (requestDeferred.promise.isPending()) {

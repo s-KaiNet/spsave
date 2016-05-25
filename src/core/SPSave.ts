@@ -23,26 +23,29 @@ export function spsave(options: SPSaveOptions): Promise<any> {
   };
 
   let saveOptions: FileContentOptions[] = OptionsParser.parseOptions(options);
-  let savePromise: Promise<any>;
+  let requestDeferred: Promise.Resolver<any> = Promise.defer<any>();
 
   if (saveOptions.length > 1) {
-    savePromise = saveFileArray(saveOptions);
-
-    savePromise.then(() => {
+    saveFileArray(saveOptions).then((data) => {
       showNotification(`${saveOptions.length} files successfully uploaded`);
+      requestDeferred.resolve(data);
+    })
+    .catch(err => {
+      showError(err, options.notification);
+      requestDeferred.reject(err);
     });
   } else if (saveOptions.length === 1) {
-    savePromise = saveSingleFile(saveOptions[0]);
-    savePromise.then(() => {
+    saveSingleFile(saveOptions[0]).then((data) => {
       showNotification(`Successfully uploaded`, `spsave: ${saveOptions[0].fileName}`);
+      requestDeferred.resolve(data);
+    })
+    .catch(err => {
+      showError(err, options.notification);
+      requestDeferred.reject(err);
     });
   }
 
-  savePromise.catch(err => {
-    showError(err, options.notification);
-  });
-
-  return savePromise;
+  return requestDeferred.promise;
 }
 
 function saveFileArray(options: FileContentOptions[], deferred?: Promise.Resolver<any>): Promise<any> {
@@ -66,7 +69,7 @@ function saveFileArray(options: FileContentOptions[], deferred?: Promise.Resolve
 }
 
 function saveSingleFile(options: FileContentOptions): Promise<any> {
-  return new FileSaver(options).execute();
+  return new FileSaver(options).save();
 }
 
 function showError(err: any, notify: boolean): void {

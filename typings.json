@@ -22,6 +22,7 @@
   },
   "globalDevDependencies": {
     "mocha": "registry:env/mocha#2.2.5+20160321223601",
+    "mockery": "registry:dt/mockery#1.4.0+20160316155526",
     "vinyl-fs": "registry:dt/vinyl-fs#0.0.0+20160317120654"
   }
 }

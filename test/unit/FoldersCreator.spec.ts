@@ -72,7 +72,7 @@ describe('spsave: FoldersCreator test', () => {
   });
 
   it('should reject if unable to get folder', (done) => {
-    let spy: sinon.SinonStub = sinon.stub(console, 'log');
+    let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
     let getDeferred: Promise.Resolver<any> = Promise.defer<any>();
     let error: any = { statusCode: 0 };
     getDeferred.reject(error);
@@ -83,11 +83,11 @@ describe('spsave: FoldersCreator test', () => {
     let creator: FoldersCreator = new FoldersCreator(spr, folder, 'http://some.sp.url');
     creator.createFoldersHierarchy()
       .then(data => {
-        spy.restore();
+        consoleSpy.restore();
         done(new Error('Deferred should be rejected'));
       })
       .catch(err => {
-        spy.restore();
+        consoleSpy.restore();
         expect(err).to.equal(error);
         done();
       })
@@ -97,7 +97,7 @@ describe('spsave: FoldersCreator test', () => {
   });
 
   it('should reject deferred if unable to create folders', (done) => {
-    let spy: sinon.SinonStub = sinon.stub(console, 'log');
+    let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
     let getDeferred: Promise.Resolver<any> = Promise.defer<any>();
     getDeferred.reject({ statusCode: 404 });
 
@@ -112,11 +112,11 @@ describe('spsave: FoldersCreator test', () => {
     let creator: FoldersCreator = new FoldersCreator(spr, folder, 'http://some.sp.url');
     creator.createFoldersHierarchy()
       .then(data => {
-        spy.restore();
+        consoleSpy.restore();
         done(new Error('Deferred should be rejected'));
       })
       .catch(err => {
-        spy.restore();
+        consoleSpy.restore();
         expect(err).to.equal(error);
         done();
       })
