@@ -11,7 +11,9 @@
   "scripts": {
     "test": "gulp test-ci",
     "build": "npm install && gulp tsc",
-    "dev": "gulp live-dev"
+    "dev": "gulp live-dev",
+    "test-int": "gulp test-int",
+    "test-perf": "gulp tsc && node lib/test/performance/index.js"
   },
   "bugs": {
     "url": "https://github.com/s-KaiNet/spsave/issues"

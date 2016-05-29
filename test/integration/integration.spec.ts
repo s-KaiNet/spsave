@@ -220,9 +220,8 @@ tests.forEach(test => {
       let folder: string = 'SiteAssets';
       let fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
 
-      vfs.src(`test/integration/files/${fileName}`)
+      vfs.src(`test/integration/files/${fileName}`, { base: 'test/integration' })
         .pipe(map((file: File, cb: Function) => {
-          file.base = 'test/integration';
           spsave(<VinylOptions>{
             username: test.creds.username,
             password: test.creds.password,
@@ -348,7 +347,7 @@ tests.forEach(test => {
         .then(data => {
           return Promise.all([data.body.d, spsave(opts)]);
         })
-        .then(data =>  {
+        .then(data => {
           return Promise.all([data[0], spr.get(`${opts.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)` +
             `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`, {
               encoding: null
@@ -393,7 +392,7 @@ tests.forEach(test => {
         .then(data => {
           return Promise.all([data.body.d, spsave(opts)]);
         })
-        .then(data =>  {
+        .then(data => {
           return Promise.all([data[0], spr.get(`${opts.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)` +
             `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`, {
               encoding: null
@@ -438,7 +437,7 @@ tests.forEach(test => {
         .then(data => {
           return Promise.all([data.body.d, spsave(opts)]);
         })
-        .then(data =>  {
+        .then(data => {
           return Promise.all([data[0], spr.get(`${opts.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)` +
             `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`, {
               encoding: null
