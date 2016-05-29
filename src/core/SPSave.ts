@@ -1,5 +1,6 @@
 import * as Promise from 'bluebird';
 import * as notifier from 'node-notifier';
+import * as path from 'path';
 
 import {SPSaveOptions, FileContentOptions} from './SPSaveOptions';
 import {FileSaver} from './FileSaver';
@@ -17,7 +18,8 @@ export function spsave(options: SPSaveOptions): Promise<any> {
     if (options.notification) {
       notifier.notify({
         title: title || 'spsave',
-        message: message
+        message: message,
+        icon: path.join(__dirname, '../../../assets/sp.png')
       });
     }
   };

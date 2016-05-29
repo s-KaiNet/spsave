@@ -76,7 +76,8 @@ export class OptionsParser {
   }
 
   private static getFolderToUpload(file: File, folder: string): string {
-    let base: string = file.base.replace(/\\/g, '/');
+    let parsedBase: string = file.base || path.dirname(path.resolve(file.path));
+    let base: string = parsedBase.replace(/\\/g, '/');
     let filePath: string = file.path.replace(/\\/g, '/');
     let fileName: string = path.basename(file.path);
     let indx: number = filePath.indexOf(base);

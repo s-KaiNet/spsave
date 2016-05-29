@@ -48,5 +48,5 @@ export function isFileContentOptions(T: any): T is FileContentOptions {
 }
 
 export function isVinylOptions(T: any): T is VinylOptions {
-  return File.isVinyl(T.file);
+  return !!T.file;
 }
