@@ -1,5 +1,6 @@
 ## spsave 2.x
 
+- switch to TypeScript
 - added `checkinMessage` option
 - added `notification` option with help of [node-notifier](https://github.com/mikaelbr/node-notifier) module
 - added Glob option for uploading multiple files

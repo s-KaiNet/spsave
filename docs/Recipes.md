@@ -1,6 +1,6 @@
 ## `spsave` recipes
 
-On this page you can find different options supported by `spsave`. Lets assume we have some core options like `siteUrl`, `username`, `password`. The most interesting options are file content option, so lets take a closer look on all possible scenarious.   
+On this page you can find different options supported by `spsave`. Lets assume we have some core options like `siteUrl`, `username`, `password`. The most interesting options are file content option, so lets take a closer look on all possible scenarios.   
 
 As you may know there are three types of file content options - file content, glob, vinyl file. 
 
@@ -14,7 +14,7 @@ spsave({
   fileName: 'file.txt',
   fileContent: 'hello world',
   checkin: true,
-	checkinType: 1
+  checkinType: 1
 })
 ```
 ##### result: 

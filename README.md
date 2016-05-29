@@ -13,7 +13,7 @@ Nodejs module for saving files in SharePoint (SharePoint 2013\2016, SharePoint O
 `spsave 2.x` doesn't have backward compatibility with `spsave 1.x`, primary because of switching to bluebird's promises instead of callbacks and using TypeScript. It depends heavily on another module [sp-request](https://github.com/s-KaiNet/sp-request) and use it to send REST queries to SharePoint.  
 If you want to migrate to `spsave 2.x`, please refer to this article - [Upgrade to spsave 2.x](https://github.com/s-KaiNet/spsave/tree/master/docs/UpgradeToSPSave2.md).  
 If you just want to use 2.x version, read how to use it below.
-Also take a look at the [CHANGELOG](https://github.com/s-KaiNet/spsave/tree/master/docs/CHANGELOG.md) to see how new version is differs the from previous.  
+Also take a look at the [CHANGELOG](https://github.com/s-KaiNet/spsave/tree/master/docs/CHANGELOG.md) to see how new version is differs from the previous one.  
 There is a small performance comparison between 1.x and 2.x versions - [Performance](https://github.com/s-KaiNet/spsave/tree/master/docs/PerformanceComparison.md)
 
 ---
@@ -104,7 +104,8 @@ Please refer to [this page](https://github.com/s-KaiNet/spsave/tree/master/docs/
 
 ## Development:
 I recommend using VS Code for development. Repository already contains some settings for VS Code editor.
-Before creating Pull Request you need to create an appropriate issue and reference it from PR.
+Before creating Pull Request you need to create an appropriate issue and reference it from PR.  
+
 1. `git clone https://github.com/s-KaiNet/spsave.git`
 2. `cd spsave`
 3. `git checkout -b myfeature dev`

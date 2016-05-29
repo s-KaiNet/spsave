@@ -44,5 +44,6 @@ spsave({
 ## Uploading to SharePoint hosted app web
 `appWebUrl` is deprecated in `spsave 2.x`.  
 If you are uploading something to SharePoint hosted app web, all you need is to provide the url to your app web in the format `[host url]/AppWebName`.  
+
 For example you have `http://sp2013dev/sites/dev` host site and `http://app-ff155d312cfc7e.apps.dev.com/sites/dev/MyNotifications`.
-In this case `MyNotifications` is your app web. You need to set `siteUrl: 'http://sp2013dev/sites/dev/SmartNotifications'` for `spsave`
+In this case `MyNotifications` is your app web. You need to set `siteUrl: 'http://sp2013dev/sites/dev/MyNotifications'` for `spsave`
