@@ -51,6 +51,7 @@ tests.forEach(test => {
         })
         .then(data => {
           done();
+          return null;
         })
         .catch(done);
     });
@@ -70,6 +71,7 @@ tests.forEach(test => {
         })
         .then(data => {
           done();
+          return null;
         })
         .catch(done);
     });
@@ -104,6 +106,7 @@ tests.forEach(test => {
         .then(data => {
           expect(fileContent.equals(data.body)).is.true;
           done();
+          return null;
         })
         .catch(done);
     });
@@ -136,6 +139,7 @@ tests.forEach(test => {
         .then(data => {
           expect(fileContent.equals(data.body)).is.true;
           done();
+          return null;
         })
         .catch(done);
     });
@@ -174,6 +178,7 @@ tests.forEach(test => {
         .then(data => {
           expect(data.statusCode).to.equal(200);
           done();
+          return null;
         })
         .catch(done);
     });
@@ -205,6 +210,7 @@ tests.forEach(test => {
             .then(data => {
               expect(fileContent.equals(data.body)).is.true;
               done();
+              return null;
             })
             .catch(done)
             .finally(() => {
@@ -239,6 +245,7 @@ tests.forEach(test => {
             .then(data => {
               expect(fileContent.equals(data.body)).is.true;
               done();
+              return null;
             })
             .catch(done)
             .finally(() => {
@@ -276,6 +283,7 @@ tests.forEach(test => {
           expect(txtFile.equals(data[1].body)).is.true;
 
           done();
+          return null;
         })
         .catch(done);
     });
@@ -311,6 +319,7 @@ tests.forEach(test => {
         .then(data => {
           expect(data.body.d.CheckInComment).to.equal(comment);
           done();
+          return null;
         })
         .catch(done);
     });
@@ -356,6 +365,7 @@ tests.forEach(test => {
         .then(data => {
           expect(data[0].MinorVersion + 1).to.equal(data[1].body.d.MinorVersion);
           done();
+          return null;
         })
         .catch(done);
     });
@@ -401,6 +411,7 @@ tests.forEach(test => {
         .then(data => {
           expect(data[0].MajorVersion + 1).to.equal(data[1].body.d.MajorVersion);
           done();
+          return null;
         })
         .catch(done);
     });
@@ -447,6 +458,7 @@ tests.forEach(test => {
           expect(data[0].MajorVersion).to.equal(data[1].body.d.MajorVersion);
           expect(data[0].MinorVersion).to.equal(data[1].body.d.MinorVersion);
           done();
+          return null;
         })
         .catch(done);
     });

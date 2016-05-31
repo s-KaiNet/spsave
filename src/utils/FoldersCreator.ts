@@ -5,6 +5,7 @@ import {Inspection} from 'bluebird';
 import {UrlHelper} from './UrlHelper';
 import {ILogger} from './ILogger';
 import {ConsoleLogger} from './ConsoleLogger';
+import {defer, IDeferred} from './Defer';
 
 export class FoldersCreator {
 
@@ -23,53 +24,52 @@ export class FoldersCreator {
   }
 
   public createFoldersHierarchy(): Promise<any> {
-    let requestDeferred: Promise.Resolver<any> = Promise.defer<any>();
+    return new Promise<any>((resolve, reject) => {
+      let folderPaths: string[] = [];
+      let paths: string[] = this.folder.split('/').filter(path => { return path !== ''; });
 
-    let folderPaths: string[] = [];
-    let paths: string[] = this.folder.split('/').filter(path => { return path !== ''; });
-
-    this.createFoldersPathArray(paths, folderPaths);
-    let getFolderPromises: Inspection<any>[] = [];
-    folderPaths.forEach(folder => {
-      let getFolderUrl: string = this.getFolderRestUrlBase + `?@FolderName='${encodeURIComponent(folder)}'`;
-      getFolderPromises.push(this.sprequest.get(getFolderUrl).reflect());
-    });
-
-    Promise.all(getFolderPromises)
-      .then(data => {
-        let foldersToCreate: string[] = data.map((promise, index) => {
-          /* sp onilne for some reason throws 500 when folder is not found :( */
-          if (promise.isRejected() && (promise.reason().statusCode === 404 || promise.reason().statusCode === 500)) {
-            return index;
-          } else if (promise.isRejected()) {
-            requestDeferred.reject(promise.reason());
-          }
-        }).filter(index => {
-          return index !== undefined;
-        }).map(index => {
-          return folderPaths[index];
-        });
-
-        if (foldersToCreate.length > 0) {
-          this.logger.info(`Creating folder or full folders hierarchy: '${this.folder}'`);
-          this.createFolders(foldersToCreate)
-            .then(() => {
-              requestDeferred.resolve();
-            })
-            .catch(err => {
-              requestDeferred.reject(err);
-            });
-        } else {
-          requestDeferred.resolve();
-        }
+      this.createFoldersPathArray(paths, folderPaths);
+      let getFolderPromises: Inspection<any>[] = [];
+      folderPaths.forEach(folder => {
+        let getFolderUrl: string = this.getFolderRestUrlBase + `?@FolderName='${encodeURIComponent(folder)}'`;
+        getFolderPromises.push(this.sprequest.get(getFolderUrl).reflect());
       });
 
-    return requestDeferred.promise;
+      Promise.all(getFolderPromises)
+        .then(data => {
+          let foldersToCreate: string[] = data.map((promise, index) => {
+            /* sp onilne for some reason throws 500 when folder is not found :( */
+            if (promise.isRejected() && (promise.reason().statusCode === 404 || promise.reason().statusCode === 500)) {
+              return index;
+            } else if (promise.isRejected()) {
+              reject(promise.reason());
+            }
+          }).filter(index => {
+            return index !== undefined;
+          }).map(index => {
+            return folderPaths[index];
+          });
+
+          if (foldersToCreate.length > 0) {
+            this.logger.info(`Creating folder or full folders hierarchy: '${this.folder}'`);
+            this.createFolders(foldersToCreate)
+              .then(() => {
+                resolve(undefined);
+              })
+              .catch(err => {
+                reject(err);
+              });
+          } else {
+            resolve(undefined);
+          }
+        });
+    });
+
   }
 
-  private createFolders(folders: string[], deferred?: Promise.Resolver<any>): Promise<any> {
+  private createFolders(folders: string[], deferred?: IDeferred<any>): Promise<any> {
     if (!deferred) {
-      deferred = Promise.defer<any>();
+      deferred = defer<any>();
     }
 
     if (folders.length > 0) {
@@ -87,12 +87,14 @@ export class FoldersCreator {
         })
         .then(data => {
           this.createFolders(folders.slice(1, folders.length), deferred);
+
+          return null;
         })
         .catch(err => {
           deferred.reject(err);
         });
     } else {
-      deferred.resolve();
+      deferred.resolve(undefined);
     }
 
     return deferred.promise;

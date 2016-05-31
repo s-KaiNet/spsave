@@ -21,7 +21,7 @@
 			"runtimeExecutable": null,
 			// Environment variables passed to the program.
 			"env": {
-				"NODE_ENV": "production"
+				"NODE_ENV": "development"
 			}
 		},
 		{
@@ -45,7 +45,7 @@
 			"outDir": "${workspaceRoot}/lib",
 			// Environment variables passed to the program.
 			"env": {
-				"NODE_ENV": "production"
+				"NODE_ENV": "development"
 			}
 		},
 		{
@@ -69,7 +69,7 @@
 			"outDir": "${workspaceRoot}/lib",
 			// Environment variables passed to the program.
 			"env": {
-				"NODE_ENV": "production"
+				"NODE_ENV": "development"
 			}
 		}
 	]

@@ -6,6 +6,7 @@ import * as mockery from 'mockery';
 import {FileSaver} from './../../src/core/FileSaver';
 import {FileContentOptions} from './../../src/core/SPSaveOptions';
 import {CheckinType} from './../../src/core/SPSaveOptions';
+import {defer, IDeferred} from './../../src/utils/Defer';
 
 interface IFakeSPRequest {
   requestDigest?: sinon.SinonStub;
@@ -175,9 +176,12 @@ describe('spsave: FileSaver test', () => {
 
     let saver: FileSaver = new fileSaver(opts);
     let errorString: string = '{"error": {"code" : "-2130246326"}}';
-    let def: Promise.Resolver<any> = Promise.defer();
+    let def: IDeferred<any> = defer();
+    let error: Error = new Error();
+    (<any>error).error = errorString;
+    (<any>error).statusCode = 500;
     setTimeout(() => {
-      def.reject({ statusCode: 500, error: errorString });
+      def.reject(error);
     }, 100);
 
     fakeSPRequest.post.withArgs(uploadFileRestUrl).onCall(0).returns(def.promise);
@@ -200,9 +204,12 @@ describe('spsave: FileSaver test', () => {
 
     let saver: FileSaver = new fileSaver(opts);
     let errorString: string = '{"error": {"code" : "-1597308888"}}';
-    let def: Promise.Resolver<any> = Promise.defer();
+    let def: IDeferred<any> = defer();
+    let error: Error = new Error();
+    (<any>error).error = errorString;
+    (<any>error).statusCode = 500;
     setTimeout(() => {
-      def.reject({ statusCode: 500, error: errorString });
+      def.reject(error);
     }, 100);
     fakeSPRequest.post.withArgs(uploadFileRestUrl).onCall(0).returns(def.promise);
     fakeSPRequest.post.withArgs(uploadFileRestUrl).onCall(1).returns(Promise.resolve({ body: '{}' }));
@@ -224,8 +231,10 @@ describe('spsave: FileSaver test', () => {
 
     let saver: FileSaver = new fileSaver(opts);
     let errorString: string = 'spsave';
-    let def: Promise.Resolver<any> = Promise.defer();
-    let expectedError: any = { statusCode: 500, error: errorString };
+    let def: IDeferred<any> = defer();
+    let expectedError: Error = new Error();
+    (<any>expectedError).error = errorString;
+    (<any>expectedError).statusCode = 500;
     setTimeout(() => {
       def.reject(expectedError);
     }, 100);
@@ -249,8 +258,9 @@ describe('spsave: FileSaver test', () => {
     let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
 
     let saver: FileSaver = new fileSaver(opts);
-    let def: Promise.Resolver<any> = Promise.defer();
-    let expectedError: any = { statusCode: 0 };
+    let def: IDeferred<any> = defer();
+    let expectedError: Error = new Error();
+    (<any>expectedError).statusCode = 500;
     setTimeout(() => {
       def.reject(expectedError);
     }, 100);
@@ -275,8 +285,10 @@ describe('spsave: FileSaver test', () => {
 
     let saver: FileSaver = new fileSaver(opts);
     let errorString: string = '{"info": {"code" : "-1597308888"}}';
-    let def: Promise.Resolver<any> = Promise.defer();
-    let expectedError: any = { statusCode: 500, error: errorString };
+    let def: IDeferred<any> = defer();
+    let expectedError: Error = new Error();
+    (<any>expectedError).error = errorString;
+    (<any>expectedError).statusCode = 500;
     setTimeout(() => {
       def.reject(expectedError);
     }, 100);
@@ -301,8 +313,10 @@ describe('spsave: FileSaver test', () => {
 
     let saver: FileSaver = new fileSaver(opts);
     let errorString: string = '{"error": {"code" : "-1"}}';
-    let def: Promise.Resolver<any> = Promise.defer();
-    let expectedError: any = { statusCode: 500, error: errorString };
+    let def: IDeferred<any> = defer();
+    let expectedError: Error = new Error();
+    (<any>expectedError).error = errorString;
+    (<any>expectedError).statusCode = 500;
     setTimeout(() => {
       def.reject(expectedError);
     }, 100);
@@ -331,10 +345,10 @@ describe('spsave: FileSaver test', () => {
     fakeSPRequest.post.withArgs(uploadFileRestUrl).returns(Promise.resolve({ body: '{}' }));
     fakeSPRequest.post.withArgs(checkoutFileRestUrl).returns(Promise.resolve({}));
     fakeSPRequest.post.withArgs(checkinFileRestUrl).returns(Promise.resolve({ body: {} }));
-    let p: Promise.Resolver<any> = Promise.defer<any>();
-    p.reject({ message: '-2146232832' });
+    let fileResultDeferred: IDeferred<any> = defer<any>();
+    fileResultDeferred.reject(new Error('-2146232832'));
 
-    fakeSPRequest.get.withArgs(getFileRestUrl).onCall(0).returns(p.promise);
+    fakeSPRequest.get.withArgs(getFileRestUrl).onCall(0).returns(fileResultDeferred.promise);
     fakeSPRequest.get.withArgs(getFileRestUrl).onCall(1).returns(Promise.resolve({
       body: {
         d: {
@@ -363,15 +377,15 @@ describe('spsave: FileSaver test', () => {
 
     fakeSPRequest.post.withArgs(uploadFileRestUrl).returns(Promise.resolve({ body: '{}' }));
     fakeSPRequest.post.withArgs(checkoutFileRestUrl).returns(Promise.resolve({}));
-    let checkinDeferred: Promise.Resolver<any> = Promise.defer<any>();
+    let checkinDeferred: IDeferred<any> = defer<any>();
     setTimeout(() => {
-      checkinDeferred.reject({ message: 'spsave' });
+      checkinDeferred.reject(new Error('spsave'));
     }, 100);
 
     fakeSPRequest.post.withArgs(checkinFileRestUrl).returns(checkinDeferred.promise);
 
-    let getFileDeferred: Promise.Resolver<any> = Promise.defer<any>();
-    getFileDeferred.reject({ message: '-2146232832' });
+    let getFileDeferred: IDeferred<any> = defer<any>();
+    getFileDeferred.reject(new Error('-2146232832'));
     fakeSPRequest.get.withArgs(getFileRestUrl).onCall(0).returns(getFileDeferred.promise);
 
     fakeSPRequest.get.withArgs(getFileRestUrl).onCall(1).returns(Promise.resolve({
@@ -401,7 +415,7 @@ describe('spsave: FileSaver test', () => {
 
     fakeSPRequest.post.withArgs(uploadFileRestUrl).returns(Promise.resolve({ body: '{}' }));
     fakeSPRequest.post.withArgs(checkoutFileRestUrl).returns(Promise.resolve({}));
-    fakeSPRequest.get.withArgs(getFileRestUrl).onCall(0).returns(Promise.reject({ message: '-1' }));
+    fakeSPRequest.get.withArgs(getFileRestUrl).onCall(0).returns(Promise.reject(new Error('-1')));
 
     saver.save()
       .then(data => {
@@ -450,7 +464,7 @@ describe('spsave: FileSaver test', () => {
     fakeSPRequest.post.withArgs(uploadFileRestUrl).returns(Promise.resolve({ body: '{}' }));
     fakeSPRequest.post.withArgs(checkoutFileRestUrl).returns(Promise.resolve({}));
     fakeSPRequest.post.withArgs(checkinFileRestUrl).returns(Promise.resolve({ body: {} }));
-    fakeSPRequest.get.withArgs(getFileRestUrl).returns(Promise.reject({ message: '-2146232832' }));
+    fakeSPRequest.get.withArgs(getFileRestUrl).returns(Promise.reject(new Error('-2146232832')));
 
     saver.save()
       .then(data => {

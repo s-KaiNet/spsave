@@ -10,6 +10,7 @@ import {UrlHelper} from './../utils/UrlHelper';
 import {FoldersCreator} from './../utils/FoldersCreator';
 import {ILogger} from './../utils/ILogger';
 import {ConsoleLogger} from './../utils/ConsoleLogger';
+import {defer, IDeferred} from './../utils/Defer';
 
 export class FileSaver {
   private static saveConfilctCode: string = '-2130246326';
@@ -49,21 +50,22 @@ export class FileSaver {
   }
 
   public save(): Promise<any> {
-    let requestDeferred: Promise.Resolver<any> = Promise.defer<any>();
+
+    let deferred: IDeferred<any> = defer<any>();
 
     this.foldersCreator.createFoldersHierarchy()
       .then(() => {
-        this.saveFile(requestDeferred);
-      })
-      .catch(err => {
-        requestDeferred.reject(err);
-      });
+        this.saveFile(deferred);
 
-    return requestDeferred.promise;
+        return null;
+      })
+      .catch(deferred.reject);
+
+    return deferred.promise;
   }
 
   /* saves file in a folder. If save conflict or cobalt error is thrown, tries to reupload file `maxAttempts` times */
-  private saveFile(requestDeferred: Promise.Resolver<any>, attempts: number = 1): void {
+  private saveFile(requestDeferred: IDeferred<any>, attempts: number = 1): void {
 
     if (attempts > FileSaver.maxAttempts) {
       let message: string = `File '${this.options.fileName}' probably is not uploaded: too many errors. Upload process interrupted.`;
@@ -102,13 +104,15 @@ export class FileSaver {
           /* if this is the first upload and we need to checkin the file, explicitly trigger checkin by uploading once again */
         } else if (this.options.checkin && !fileExists) {
           this.saveFile(requestDeferred, attempts + 1);
-          return undefined;
+
+          return null;
         } else {
           this.logger.success(this.options.fileName + ` successfully uploaded to '${this.options.siteUrl}/${this.options.folder}'`);
         }
 
         requestDeferred.resolve(JSON.parse(data.body));
-        return undefined;
+
+        return null;
       }).then(data => {
         if (!data) {
           return;
@@ -134,72 +138,73 @@ export class FileSaver {
 
   /* checkins files */
   private checkinFile(): Promise<any> {
-    let requestDeferred: Promise.Resolver<any> = Promise.defer<any>();
+    return new Promise<any>((resolve, reject) => {
+      this.sprequest.requestDigest(this.options.siteUrl)
+        .then(digest => {
+          return this.sprequest.post(this.checkinFileRestUrl, {
+            headers: {
+              'X-RequestDigest': digest
+            }
+          });
+        })
+        .then(data => {
+          resolve(data);
 
-    this.sprequest.requestDigest(this.options.siteUrl)
-      .then(digest => {
-        return this.sprequest.post(this.checkinFileRestUrl, {
-          headers: {
-            'X-RequestDigest': digest
-          }
-        });
-      })
-      .then(data => {
-        requestDeferred.resolve(data);
-      })
-      .catch(err => {
-        requestDeferred.reject(err);
-      });
-
-    return requestDeferred.promise;
+          return null;
+        })
+        .catch(reject);
+    });
   }
 
   /* tries to checkout file. returns true if file exists or false if doesn't */
   private checkoutFile(): Promise<boolean> {
-    let requestDeferred: Promise.Resolver<boolean> = Promise.defer<boolean>();
+    let promise: Promise<any> = new Promise<any>((resolve, reject) => {
+      /* if checkin option isn't provided, just resolve to true and return */
+      if (!this.options.checkin) {
+        resolve(true);
+        return undefined;
+      }
 
-    /* if checkin option isn't provided, just resolve to true and return */
-    if (!this.options.checkin) {
-      requestDeferred.resolve(true);
-      return requestDeferred.promise;
-    }
+      this.getFileByUrl()
+        .then(data => {
+          /* if already checked out, resolve to true */
+          if (data.body.d.CheckOutType === 0) {
+            resolve(true);
+            return null;
+          }
 
-    this.getFileByUrl()
-      .then(data => {
-        /* if already checked out, resolve to true */
-        if (data.body.d.CheckOutType === 0) {
-          requestDeferred.resolve(true);
-          return undefined;
-        }
-
-        /* not checked out yet, so checkout */
-        return this.sprequest.requestDigest(this.options.siteUrl)
-          .then(digest => {
-            return this.sprequest.post(this.checkoutFileRestUrl, {
-              headers: {
-                'X-RequestDigest': digest
-              }
+          /* not checked out yet, so checkout */
+          return this.sprequest.requestDigest(this.options.siteUrl)
+            .then(digest => {
+              return this.sprequest.post(this.checkoutFileRestUrl, {
+                headers: {
+                  'X-RequestDigest': digest
+                }
+              });
             });
-          });
-      }, err => {
-        /* file doesn't exist message code, resolve with false */
-        if (err.message.indexOf('-2146232832') !== -1) {
-          requestDeferred.resolve(false);
-          return undefined;
-        }
-        requestDeferred.reject(err);
-      })
-      .then(data => {
-        if (requestDeferred.promise.isPending()) {
-          this.logger.info(`${this.options.fileName} checked out.`);
-          requestDeferred.resolve(true);
-        }
-      })
-      .catch(err => {
-        requestDeferred.reject(err);
-      });
+        }, err => {
+          /* file doesn't exist message code, resolve with false */
+          if (err.message.indexOf('-2146232832') !== -1) {
+            resolve(false);
 
-    return requestDeferred.promise;
+            return null;
+          }
+          reject(err);
+
+          return null;
+        })
+        .then(data => {
+          if (promise.isPending()) {
+            this.logger.info(`${this.options.fileName} checked out.`);
+            resolve(true);
+          }
+
+          return null;
+        })
+        .catch(reject);
+    });
+
+    return promise;
   }
 
   private getFileByUrl(): Promise<any> {
@@ -207,7 +212,7 @@ export class FileSaver {
   }
 
   /* check if error is save conflict or cobalt error and tries to reupload the file, otherwise reject deferred */
-  private tryReUpload(exception: any, deferred: Promise.Resolver<any>, attempts: number): void {
+  private tryReUpload(exception: any, deferred: IDeferred<any>, attempts: number): void {
     let errorData: any;
 
     try {

@@ -1,16 +1,16 @@
 import {expect} from 'chai';
-import * as Promise from 'bluebird';
 import * as sinon from 'sinon';
 import * as notifier from 'node-notifier';
 
 import {spsave} from './../../src/core/SPSave';
 import {FileSaver} from './../../src/core/FileSaver';
 import {FileContentOptions, GlobOptions} from './../../src/core/SPSaveOptions';
+import {defer, IDeferred} from './../../src/utils/Defer';
 
 describe('spsave: SPSave test', () => {
   it('should save multiple files', done => {
-    let saveDeferred: Promise.Resolver<any> = Promise.defer<any>();
-    saveDeferred.resolve();
+    let saveDeferred: IDeferred<any> = defer();
+    saveDeferred.resolve(null);
 
     let saveStub: sinon.SinonStub = sinon.stub(FileSaver.prototype, 'save').returns(saveDeferred.promise);
 
@@ -33,8 +33,8 @@ describe('spsave: SPSave test', () => {
   });
 
   it('should save single file', done => {
-    let saveDeferred: Promise.Resolver<any> = Promise.defer<any>();
-    saveDeferred.resolve();
+    let saveDeferred: IDeferred<any> = defer();
+    saveDeferred.resolve(null);
 
     let saveStub: sinon.SinonStub = sinon.stub(FileSaver.prototype, 'save').returns(saveDeferred.promise);
 
@@ -58,8 +58,8 @@ describe('spsave: SPSave test', () => {
   });
 
   it('should show notification', done => {
-    let saveDeferred: Promise.Resolver<any> = Promise.defer<any>();
-    saveDeferred.resolve();
+    let saveDeferred: IDeferred<any> = defer();
+    saveDeferred.resolve(null);
 
     let saveStub: sinon.SinonStub = sinon.stub(FileSaver.prototype, 'save').returns(saveDeferred.promise);
     let notifyStub: sinon.SinonStub = sinon.stub(notifier, 'notify');
@@ -88,7 +88,7 @@ describe('spsave: SPSave test', () => {
 
   it('should reject deferred', done => {
     let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
-    let saveDeferred: Promise.Resolver<any> = Promise.defer<any>();
+    let saveDeferred: IDeferred<any> = defer();
     let error: Error = new Error('failed');
     saveDeferred.reject(error);
 
@@ -121,10 +121,11 @@ describe('spsave: SPSave test', () => {
       });
   });
 
-  it('should reject deferred with undefined error', done => {
+  it('should reject deferred with precise error', done => {
     let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
-    let saveDeferred: Promise.Resolver<any> = Promise.defer<any>();
-    saveDeferred.reject(undefined);
+    let saveDeferred: IDeferred<any> = defer();
+    let error: Error = new Error();
+    saveDeferred.reject(error);
 
     let saveStub: sinon.SinonStub = sinon.stub(FileSaver.prototype, 'save').returns(saveDeferred.promise);
 
@@ -143,7 +144,7 @@ describe('spsave: SPSave test', () => {
       })
       .catch(err => {
         consoleSpy.restore();
-        expect(err).to.equal(undefined);
+        expect(err).to.equal(error);
         done();
       })
       .finally(() => {

@@ -7,6 +7,7 @@ require('console.table');
 
 import {spsave} from './../../src/core/SPSave';
 import {FileContentOptions, CoreOptions} from './../../src/core/SPSaveOptions';
+import {defer, IDeferred} from './../../src/utils/Defer';
 
 let config: any = require('./config');
 let spsaveLegacy: any = require(path.resolve('test/performance/legacy/node_modules/spsave/lib/spsave.js'));
@@ -129,7 +130,7 @@ function saveFilesArrayInParallelLegacy(files: string[], opts: any): Promise<any
     opts.fileContent = fs.readFileSync(file);
     opts.folder = folder;
     let newOptions: any = _.extend({}, opts);
-    let deferred: Promise.Resolver<any> = Promise.defer<any>();
+    let deferred: IDeferred<any> = defer<any>();
 
     ((o) => {
       spsaveLegacy(o, (err: any, data: any) => {
@@ -137,7 +138,7 @@ function saveFilesArrayInParallelLegacy(files: string[], opts: any): Promise<any
           deferred.reject(err);
           return;
         }
-        deferred.resolve();
+        deferred.resolve(null);
       });
     })(newOptions);
     promises.push(deferred.promise);
@@ -159,9 +160,9 @@ function saveFilesArrayInParallel(files: string[], opts: any): Promise<any> {
   return Promise.all(promises);
 }
 
-function savesFileArraySeriesLegacy(files: string[], opts: any, deferred?: Promise.Resolver<any>): Promise<any> {
+function savesFileArraySeriesLegacy(files: string[], opts: any, deferred?: IDeferred<any>): Promise<any> {
   if (!deferred) {
-    deferred = Promise.defer<any>();
+    deferred = defer<any>();
   }
 
   if (files.length > 0) {
@@ -178,15 +179,15 @@ function savesFileArraySeriesLegacy(files: string[], opts: any, deferred?: Promi
       savesFileArraySeriesLegacy(files.slice(1, files.length), opts, deferred);
     });
   } else {
-    deferred.resolve();
+    deferred.resolve(null);
   }
 
   return deferred.promise;
 }
 
-function saveFilesArraySeries(files: string[], opts: FileContentOptions, deferred?: Promise.Resolver<any>): Promise<any> {
+function saveFilesArraySeries(files: string[], opts: FileContentOptions, deferred?: IDeferred<any>): Promise<any> {
   if (!deferred) {
-    deferred = Promise.defer<any>();
+    deferred = defer<any>();
   }
 
   if (files.length > 0) {
@@ -203,7 +204,7 @@ function saveFilesArraySeries(files: string[], opts: FileContentOptions, deferre
         deferred.reject(err);
       });
   } else {
-    deferred.resolve();
+    deferred.resolve(null);
   }
 
   return deferred.promise;

@@ -1,5 +1,7 @@
 'use strict';
 
+process.env.NODE_ENV = 'development';
+
 var gulp = require('gulp'),
   plugins = require('gulp-load-plugins')({
     pattern: ['gulp-*', 'gulp.*', 'run-sequence', 'merge-stream', 'yargs', 'del'],

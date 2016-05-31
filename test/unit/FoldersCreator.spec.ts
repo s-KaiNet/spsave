@@ -1,9 +1,10 @@
 import {expect} from 'chai';
 import * as sinon from 'sinon';
 import * as sprequest from 'sp-request';
-import * as Promise from 'bluebird';
 
 import {FoldersCreator} from './../../src/utils/FoldersCreator';
+import {defer, IDeferred} from './../../src/utils/Defer';
+
 let spr: sprequest.ISPRequest = sprequest.create({ username: '', password: '' });
 
 describe('spsave: FoldersCreator test', () => {
@@ -20,8 +21,8 @@ describe('spsave: FoldersCreator test', () => {
   });
 
   it('should check folders created', (done) => {
-    let getDeferred: Promise.Resolver<any> = Promise.defer<any>();
-    getDeferred.resolve();
+    let getDeferred: IDeferred<any> = defer();
+    getDeferred.resolve(null);
     let sprGetStub: sinon.SinonStub = sinon.stub(spr, 'get').returns(getDeferred.promise);
 
     let folder: string = `/assets/app/ng/templates/`;
@@ -39,14 +40,16 @@ describe('spsave: FoldersCreator test', () => {
 
   it('should create folders hierarchy', (done) => {
     let spy: sinon.SinonStub = sinon.stub(console, 'log');
-    let getDeferred: Promise.Resolver<any> = Promise.defer<any>();
-    getDeferred.reject({ statusCode: 404 });
+    let getDeferred: IDeferred<any> = defer();
+    let getFileError: Error = new Error();
+    (<any>getFileError).statusCode = 404;
+    getDeferred.reject(getFileError);
 
-    let digestDeferred: Promise.Resolver<any> = Promise.defer<any>();
+    let digestDeferred: IDeferred<any> = defer();
     digestDeferred.resolve('digest');
 
-    let postDeferred: Promise.Resolver<any> = Promise.defer<any>();
-    postDeferred.resolve();
+    let postDeferred: IDeferred<any> = defer();
+    postDeferred.resolve(null);
 
     let sprGetStub: sinon.SinonStub = sinon.stub(spr, 'get').returns(getDeferred.promise);
     let sprPostStub: sinon.SinonStub = sinon.stub(spr, 'post').returns(postDeferred.promise);
@@ -73,8 +76,9 @@ describe('spsave: FoldersCreator test', () => {
 
   it('should reject if unable to get folder', (done) => {
     let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
-    let getDeferred: Promise.Resolver<any> = Promise.defer<any>();
-    let error: any = { statusCode: 0 };
+    let getDeferred: IDeferred<any> = defer();
+    let error: Error = new Error();
+    (<any>error).statusCode = 0;
     getDeferred.reject(error);
 
     let sprGetStub: sinon.SinonStub = sinon.stub(spr, 'get').returns(getDeferred.promise);
@@ -98,10 +102,12 @@ describe('spsave: FoldersCreator test', () => {
 
   it('should reject deferred if unable to create folders', (done) => {
     let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
-    let getDeferred: Promise.Resolver<any> = Promise.defer<any>();
-    getDeferred.reject({ statusCode: 404 });
+    let getDeferred: IDeferred<any> = defer();
+    let getFileError: Error = new Error();
+    (<any>getFileError).statusCode = 404;
+    getDeferred.reject(getFileError);
 
-    let digestDeferred: Promise.Resolver<any> = Promise.defer<any>();
+    let digestDeferred: IDeferred<any> = defer();
     let error: Error = new Error('digest');
     digestDeferred.reject(error);
 
