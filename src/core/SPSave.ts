@@ -90,11 +90,19 @@ function showError(err: any, notify: boolean): void {
     });
   }
 
-  if (!err) {
+  if (!err || !err.message) {
     logger.error('Unknown error occured');
+    if (err && err.stack) {
+      logger.info('');
+      logger.info('Stack trace:');
+      logger.info('');
+      logger.error(err.stack);
+    }
     return;
   }
+
   logger.error('Error occured:');
+
   if (err.message) {
     logger.error(err.message);
   }
