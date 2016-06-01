@@ -38,6 +38,29 @@ spsave(options)
 .then(successHandler)
 .catch(errorHandler);
 ```
+## Using with gulp
+You have following options:  
+
+1. Use official gulp plugin for `spsave` - [gulp-spsave](https://github.com/s-KaiNet/gulp-spsave)
+2. Use `spsave` inside gulp tasks or in watchers like this: 
+
+        var spsave = require("spsave").spsave;
+        
+        gulp.task('spsave', function(cb) {
+            
+          spsave(options)
+          .then(function(){
+              cb();
+          }).catch(cb);
+          
+        );
+
+3. Use both approaches. First one is handy if you are processing files in a stream, for example you need minimize, concatenate and then upload. The second can be used if you want just upload files and that's it. 
+
+
+## Using with SharePoint hosted apps (uploading to app web)
+Please refer to [this page](https://github.com/s-KaiNet/spsave/tree/master/docs/UpgradeToSPSave2.md) (in the bottom) 
+
 
 ## options:
 ##### Core options:
@@ -99,8 +122,6 @@ spsave({
 	console.log(err);
 });
 ```
-## Using with SharePoint hosted apps (uploading to app web)
-Please refer to [this page](https://github.com/s-KaiNet/spsave/tree/master/docs/UpgradeToSPSave2.md) (in the bottom) 
 
 ## Development:
 I recommend using VS Code for development. Repository already contains some settings for VS Code editor.

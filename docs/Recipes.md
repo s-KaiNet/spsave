@@ -1,12 +1,12 @@
 ## `spsave` recipes
 
-On this page you can find different options supported by `spsave`. Lets assume we have some core options like `siteUrl`, `username`, `password`. The most interesting options are file content option, so lets take a closer look on all possible scenarios.   
+On this page you can find different options supported by `spsave`. Lets assume we have some core options like `siteUrl`, `username`, `password`. The most interesting options are file content option, so lets take a closer look to all possible scenarios.   
 
 As you may know there are three types of file content options - file content, glob, vinyl file. 
 
 ## File content options
 
-##### input:
+##### Save file using its name and content. Additionally perform major checkin:
 ```javascript
 spsave({
   siteUrl: '[sp url]',  username: '[username]', password: '[password]',
@@ -17,25 +17,26 @@ spsave({
   checkinType: 1
 })
 ```
-##### result: 
+###### Result: 
 New file `file.txt` will be uploaded to `[sp site url]/SiteAssets`. If `SiteAssets` is document library, file will be visible as new file in document library.  
 If `SiteAssets` folder doesn't exist, `spsave` will create that folder. Also the file will be checked in with major version.
 
-##### input:
+##### Save binary file using nodejs `fs.readFileSync` function, show notificatin upon upload (or error if any):
 ```javascript
 spsave({
   siteUrl: '[sp url]',  username: '[username]', password: '[password]',
   folder: 'SiteAssets/app/templates',
   fileName: 'file.txt',
-  fileContent: fs.readFileSync('file.txt')
+  fileContent: fs.readFileSync('file.txt'),
+  notification: true
 })
 ```
-##### result: 
+###### Result: 
 New file `file.txt` will be uploaded to `[sp site url]/SiteAssets/app/templates/`. If `SiteAssets/app/templates/` doesn't exists, full folders hierarchy wil be created by `spsave`
 
 
 ## Glob options
-##### input:
+##### Save file by its path (file content and file name will be extracted automatically):
 ```javascript
 spsave({
   siteUrl: '[sp url]',  username: '[username]', password: '[password]',
@@ -43,33 +44,33 @@ spsave({
   folder: 'SiteAssets'
 })
 ```
-##### result:
+###### Result:
 New file `file.txt` will be uploaded to `[sp site url]/SiteAssets`
 
-##### input:
+##### Save file by its path with base option:
 ```javascript
 spsave({
   siteUrl: '[sp url]',  username: '[username]', password: '[password]',
-  glob: 'myapp/files/file.txt',
+  glob: 'myapp/data/files/file.txt',
   folder: 'SiteAssets',
   base: 'myapp'
 })
 ```
-##### result:
-New file `file.txt` will be uploaded to `[sp site url]/SiteAssets/files` (because of `base` option)
+###### Result:
+New file `file.txt` will be uploaded to `[sp site url]/SiteAssets/data/files` (because of `base` option)
 
-##### input:
+##### Save file by its path without folder option:
 ```javascript
 spsave({
   siteUrl: '[sp url]',  username: '[username]', password: '[password]',
-  glob: 'myapp/files/file.txt',
+  glob: 'myapp/data/files/file.txt',
   base: 'myapp'
 })
 ```
-##### result:
-New file `file.txt` will be uploaded to `[sp site url]/files/` (because of `folder` is missing, `files` becomes root folder)
+###### Result:
+New file `file.txt` will be uploaded to `[sp site url]/data/files/` (because of `folder` is missing, `data` becomes root folder)
 
-##### input:
+##### Save multiple files by mask, preserve folder structure (base options is used):
 ```javascript
 spsave({
   siteUrl: '[sp url]',  username: '[username]', password: '[password]',
@@ -78,10 +79,10 @@ spsave({
   folder: 'SiteAssets'
 })
 ```
-##### result:
+###### Result:
 All files from `myapp` local folder will be uploaded to `SiteAssets` folder. `spsave` will preserve folder structure if `myapp` has any subfolders.
 
-##### input:
+##### Save multiple files by mask, flatten structure:
 ```javascript
 spsave({
   siteUrl: '[sp url]',  username: '[username]', password: '[password]',
@@ -89,10 +90,10 @@ spsave({
   folder: 'SiteAssets'
 })
 ```
-##### result:
+###### Result:
 All files from `myapp` local folder will be uploaded to `SiteAssets` folder using flatten structure (`base` option is missing).
 
-##### input:
+##### Save multiple different files:
 ```javascript
 spsave({
   siteUrl: '[sp url]',  username: '[username]', password: '[password]',
@@ -100,12 +101,12 @@ spsave({
   folder: 'SiteAssets'
 })
 ```
-##### result:
+###### Result:
 Two files will be uploaded to `[sp site url]/SiteAssets` - `file.txt` and `home.html`
 
 ## Vinyl file options:
 
-##### input:
+##### Pipe vinyl file and save it to SharePoint:
 ```javascript
 var vfs = require('vinyl-fs');
 var map = require('map-stream');
@@ -120,15 +121,15 @@ vfs.src('files/file.txt')
     .then(function(){ console.log('success'); })
     .finally(function(){ cb(); });
 ```
-##### result:
+###### Result:
 New file `file.txt` will be uploaded to `[sp site url]/SiteAssets`
 
-##### input:
+##### Pipe vinyl file with base option and upload to subfolder using base:
 ```javascript
 var vfs = require('vinyl-fs');
 var map = require('map-stream');
 
-vfs.src('myapp/files/file.txt', { base: 'myapp' })
+vfs.src('myapp/data/files/file.txt', { base: 'myapp' })
   .pipe(map(function(file, cb) {
     spsave({
       siteUrl: '[sp url]',  username: '[username]', password: '[password]',
@@ -138,5 +139,5 @@ vfs.src('myapp/files/file.txt', { base: 'myapp' })
     .then(function(){ console.log('success'); })
     .finally(function(){ cb(); });
 ```
-##### result:
-New file `file.txt` will be uploaded to `[sp site url]/SiteAssets/files`
+###### Result:
+New file `file.txt` will be uploaded to `[sp site url]/SiteAssets/data/files`
