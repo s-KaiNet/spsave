@@ -15,6 +15,7 @@ import {defer, IDeferred} from './../utils/Defer';
 export class FileSaver {
   private static saveConfilctCode: string = '-2130246326';
   private static cobaltCode: string = '-1597308888';
+  private static directoryNotFoundCode: string = '-2147024893';
   private static reUploadTimeout: number = 1500;
   private static maxAttempts: number = 3;
 
@@ -50,16 +51,9 @@ export class FileSaver {
   }
 
   public save(): Promise<any> {
-
     let deferred: IDeferred<any> = defer<any>();
 
-    this.foldersCreator.createFoldersHierarchy()
-      .then(() => {
-        this.saveFile(deferred);
-
-        return null;
-      })
-      .catch(deferred.reject);
+    this.saveFile(deferred);
 
     return deferred.promise;
   }
@@ -129,6 +123,18 @@ export class FileSaver {
       .catch(err => {
         if (err && (err.statusCode === 500 || err.statusCode === 409)) { /* save conflict or cobalt error */
           this.tryReUpload(err, requestDeferred, attempts);
+          return;
+        }
+        /* folder doesn't exist, create and reupload */
+        if (err && (err.statusCode === 404 && err.error && err.error.indexOf(FileSaver.directoryNotFoundCode) !== -1)) {
+          this.foldersCreator.createFoldersHierarchy()
+            .then(() => {
+              this.saveFile(requestDeferred, attempts + 1);
+              return null;
+            })
+            .catch(folderError => {
+              requestDeferred.reject(folderError);
+            });
           return;
         }
 

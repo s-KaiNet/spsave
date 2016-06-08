@@ -97,23 +97,6 @@ describe('spsave: FileSaver test', () => {
       });
   });
 
-  it('should reject request', done => {
-    let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
-    let saver: FileSaver = new fileSaver(opts);
-    let error: Error = new Error('spsave');
-    foldersStub.returns(Promise.reject(error));
-    saver.save()
-      .then(data => {
-        consoleSpy.restore();
-        done(new Error('Deferred should be rejected'));
-      })
-      .catch(err => {
-        consoleSpy.restore();
-        expect(err).to.equal(error);
-        done();
-      });
-  });
-
   it('should check if file is checked out and then upload', done => {
     let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
 
@@ -180,6 +163,67 @@ describe('spsave: FileSaver test', () => {
     let error: Error = new Error();
     (<any>error).error = errorString;
     (<any>error).statusCode = 500;
+    setTimeout(() => {
+      def.reject(error);
+    }, 100);
+
+    fakeSPRequest.post.withArgs(uploadFileRestUrl).onCall(0).returns(def.promise);
+    fakeSPRequest.post.withArgs(uploadFileRestUrl).onCall(1).returns(Promise.resolve({ body: '{}' }));
+
+    saver.save()
+      .then(data => {
+        consoleSpy.restore();
+        expect(fakeSPRequest.post.callCount).to.equal(2);
+        done();
+      })
+      .catch(err => {
+        consoleSpy.restore();
+        done(err);
+      });
+  });
+
+  it('should reject request if unable to create the folder', done => {
+    let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
+    let saver: FileSaver = new fileSaver(opts);
+    let folderDeferred: IDeferred<any> = defer();
+    let folderCreateError: Error = new Error();
+    setTimeout(() => {
+      folderDeferred.reject(folderCreateError);
+    }, 300);
+    foldersStub.returns(folderDeferred.promise);
+
+    let errorString: string = '{"error": {"code" : "-2147024893"}}';
+    let def: IDeferred<any> = defer();
+    let error: Error = new Error();
+    (<any>error).error = errorString;
+    (<any>error).statusCode = 404;
+    setTimeout(() => {
+      def.reject(error);
+    }, 100);
+
+    fakeSPRequest.post.withArgs(uploadFileRestUrl).onCall(0).returns(def.promise);
+
+    saver.save()
+      .then(data => {
+        consoleSpy.restore();
+        done(new Error('Deferred should be rejected'));
+      })
+      .catch(err => {
+        consoleSpy.restore();
+        expect(err).to.equal(folderCreateError);
+        done();
+      });
+  });
+
+  it('should create folder if folder does not exist', done => {
+    let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
+
+    let saver: FileSaver = new fileSaver(opts);
+    let errorString: string = '{"error": {"code" : "-2147024893"}}';
+    let def: IDeferred<any> = defer();
+    let error: Error = new Error();
+    (<any>error).error = errorString;
+    (<any>error).statusCode = 404;
     setTimeout(() => {
       def.reject(error);
     }, 100);

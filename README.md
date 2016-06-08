@@ -14,11 +14,13 @@ Nodejs module for saving files in SharePoint (SharePoint 2013\2016, SharePoint O
 If you want to migrate to `spsave 2.x`, please refer to this article - [Upgrade to spsave 2.x](https://github.com/s-KaiNet/spsave/tree/master/docs/UpgradeToSPSave2.md).  
 If you just want to use 2.x version, read how to use it below.
 Also take a look at the [CHANGELOG](https://github.com/s-KaiNet/spsave/tree/master/docs/CHANGELOG.md) to see how new version is differs from the previous one.  
-There is a small performance comparison between 1.x and 2.x versions - [Performance](https://github.com/s-KaiNet/spsave/tree/master/docs/PerformanceComparison.md)
+#### Performance
+There is a small performance comparison between 1.x and 2.x versions - [spsave performance comparison](https://github.com/s-KaiNet/spsave/tree/master/docs/PerformanceComparison.md) and performance comparison between `gulp-spsave` and `gulp-spsync` - [gulp-spsave vs gulp-spsync performance](https://github.com/s-KaiNet/gulp-spsave/blob/master/Performance.md)  
+
 
 ---
 
-### How to use:
+## How to use:
 #### Install:
 ```bash
 npm install spsave --save-dev
