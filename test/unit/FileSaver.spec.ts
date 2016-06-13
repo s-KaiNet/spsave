@@ -51,6 +51,8 @@ describe('spsave: FileSaver test', () => {
     '/_api/web/GetFileByServerRelativeUrl(@FileUrl)/CheckIn(comment=@Comment,checkintype=@Type)' +
     `?@FileUrl='${encodeURIComponent(fileServerRelativeUrl)}'&@Comment='${(opts.checkinMessage)}'` +
     `&@Type='${opts.checkinType}'`;
+  let updateMetaDataFileUrl: string = opts.siteUrl + '/_api/web/GetFileByServerRelativeUrl(@FileUrl)/ListItemAllFields' +
+    `?@FileUrl='${encodeURIComponent(fileServerRelativeUrl)}'`;
 
   beforeEach(() => {
     mockery.enable({
@@ -105,7 +107,7 @@ describe('spsave: FileSaver test', () => {
 
     fakeSPRequest.post.withArgs(uploadFileRestUrl).returns(Promise.resolve({ body: '{}' }));
     fakeSPRequest.post.withArgs(checkinFileRestUrl).returns(Promise.resolve({ body: {} }));
-    fakeSPRequest.get.withArgs(getFileRestUrl).returns(Promise.resolve({
+    let getFileStub: sinon.SinonStub = fakeSPRequest.get.withArgs(getFileRestUrl).returns(Promise.resolve({
       body: {
         d: {
           CheckOutType: 0
@@ -116,7 +118,7 @@ describe('spsave: FileSaver test', () => {
       .then(data => {
         consoleSpy.restore();
         expect(fakeSPRequest.post.called).is.true;
-        expect(fakeSPRequest.get.called).is.true;
+        expect(getFileStub.callCount).to.equal(1);
         done();
       })
       .catch(err => {
@@ -518,6 +520,60 @@ describe('spsave: FileSaver test', () => {
       .catch(err => {
         consoleSpy.restore();
         done();
+      });
+  });
+
+  it('should update file metadata', done => {
+    let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
+
+    opts.filesMetaData = [{
+      fileName: opts.fileName,
+      metadata: {}
+    }];
+
+    let saver: FileSaver = new fileSaver(opts);
+
+    let updateMetaDataStub: sinon.SinonStub = fakeSPRequest.post.withArgs(updateMetaDataFileUrl).returns(Promise.resolve({}));
+    fakeSPRequest.post.withArgs(uploadFileRestUrl).returns(Promise.resolve({ body: '{}' }));
+
+    saver.save()
+      .then(data => {
+        consoleSpy.restore();
+        expect(updateMetaDataStub.callCount).to.equal(1);
+        done();
+      })
+      .catch(err => {
+        consoleSpy.restore();
+        done(err);
+      });
+  });
+
+  it('should not update file metadata when already updated', done => {
+    let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
+
+    opts.filesMetaData = [{
+      fileName: opts.fileName,
+      metadata: {}
+    }];
+
+    let saver: FileSaver = new fileSaver(opts);
+
+    let updateMetaDataStub: sinon.SinonStub = fakeSPRequest.post.withArgs(updateMetaDataFileUrl).returns(Promise.resolve({}));
+    fakeSPRequest.post.withArgs(uploadFileRestUrl).returns(Promise.resolve({ body: '{}' }));
+
+    saver.save()
+      .then(data => {
+        expect(updateMetaDataStub.callCount).to.equal(1);
+        return saver.save();
+      })
+      .then(data => {
+        consoleSpy.restore();
+        expect(updateMetaDataStub.callCount).to.equal(1);
+        done();
+      })
+      .catch(err => {
+        consoleSpy.restore();
+        done(err);
       });
   });
 });

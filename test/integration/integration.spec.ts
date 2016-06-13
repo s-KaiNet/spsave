@@ -463,5 +463,95 @@ tests.forEach(test => {
         .catch(done);
     });
 
+    it('should update file metadata', function (done: MochaDone): void {
+      this.timeout(10 * 1000);
+
+      let fileName: string = 'spsave.txt';
+      let fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
+      let folder: string = 'SiteAssets/files';
+      let title: string = 'updated by spsave';
+
+      let opts: FileContentOptions = {
+        username: test.creds.username,
+        password: test.creds.password,
+        domain: test.env.domain,
+        siteUrl: test.url,
+        fileName: fileName,
+        fileContent: fileContent,
+        folder: folder,
+        filesMetaData: [{
+          fileName: fileName,
+          metadata: {
+            '__metadata': { type: 'SP.Data.SiteAssetsItem' },
+            Title: title
+          }
+        }]
+      };
+
+      spsave(opts)
+        .then(data => {
+          let fileRelativeUrl: string = `${path}/${folder}/${fileName}`;
+          return spr.get(`${opts.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)/ListItemAllFields` +
+            `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`);
+        })
+        .then(data => {
+          expect(data.body.d.Title).to.equal(title);
+          expect(opts.filesMetaData[0].updated).is.true;
+          done();
+          return null;
+        })
+        .catch(done);
+    });
+
+    it('should update file metadata for display template', function (done: MochaDone): void {
+      this.timeout(10 * 1000);
+
+      let fileName: string = 'SPSave.js';
+      let fileContent: Buffer = fs.readFileSync(`lib/src/core/${fileName}`);
+      let folder: string = '_catalogs/masterpage/Display Templates/Search';
+
+      let opts: FileContentOptions = {
+        username: test.creds.username,
+        password: test.creds.password,
+        domain: test.env.domain,
+        siteUrl: test.url,
+        fileName: fileName,
+        fileContent: fileContent,
+        folder: folder,
+        filesMetaData: [{
+          fileName: fileName,
+          metadata: {
+            '__metadata': { type: 'SP.Data.OData__x005f_catalogs_x002f_masterpageItem' },
+            Title: 'SPSave Display Template',
+            DisplayTemplateLevel: 'Item',
+            TargetControlType: {
+              '__metadata': {
+                'type': 'Collection(Edm.String)'
+              },
+              'results': [
+                'SearchResults'
+              ]
+            },
+            ManagedPropertyMapping: `'Title':'Title','Path':'Path','Description':'Description'`,
+            ContentTypeId: '0x0101002039C03B61C64EC4A04F5361F38510660500A0383064C59087438E649B7323C95AF6',
+            TemplateHidden: false
+          }
+        }]
+      };
+
+      spsave(opts)
+        .then(data => {
+          let fileRelativeUrl: string = `${path}/${folder}/${fileName}`;
+          return spr.get(`${opts.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)/ListItemAllFields` +
+            `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`);
+        })
+        .then(data => {
+          expect(opts.filesMetaData[0].updated).is.true;
+          done();
+          return null;
+        })
+        .catch(done);
+    });
+
   });
 });

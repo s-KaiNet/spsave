@@ -78,6 +78,9 @@ Please refer to [this page](https://github.com/s-KaiNet/spsave/tree/master/docs/
     - `2` - overwrite
 - `checkinMessage` - optional string, you can provide your own checkin message
 - `notification` - optional boolean, when true, `spsave` will notify about successful upload using [node-notifier](https://github.com/mikaelbr/node-notifier) module.
+- `filesMetaData` - optional, array of `IFileMetaData`: 
+    - `fileName` - required, string file name
+    - `metadata` - metadata object 
 
 File options, used to tell `spsave` how to find\load the file to be uploaded to SharePoint. When one is used, others are ignored. There are three file options supported: file content, glob and vinyl file.
 ##### File content options:

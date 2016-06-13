@@ -14,6 +14,13 @@ export interface ICoreOptions {
   checkinType?: CheckinType;
   checkinMessage?: string;
   notification?: boolean;
+  filesMetaData?: IFileMetaData[];
+}
+
+export interface IFileMetaData {
+  fileName: string;
+  updated?: boolean;
+  metadata: any;
 }
 
 export interface IGlobOptions {

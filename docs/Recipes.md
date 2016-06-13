@@ -21,6 +21,57 @@ spsave({
 New file `file.txt` will be uploaded to `[sp site url]/SiteAssets`. If `SiteAssets` is document library, file will be visible as new file in document library.  
 If `SiteAssets` folder doesn't exist, `spsave` will create that folder. Also the file will be checked in with major version.
 
+##### Save file using its name and content, update metadata for the file:
+```javascript
+spsave({
+  siteUrl: '[sp url]',  username: '[username]', password: '[password]',
+  folder: 'SiteAssets',
+  fileName: 'file.txt',
+  fileContent: 'hello world',
+  filesMetaData: [{
+          fileName: 'file.txt',
+          metadata: {
+            '__metadata': { type: 'SP.Data.SiteAssetsItem' },
+            Title: title
+          }
+        }]
+})
+```
+###### Result: 
+New file `file.txt` will be uploaded to `[sp site url]/SiteAssets`. If `SiteAssets` is document library, file will be visible as new file in document library.  
+If `SiteAssets` folder doesn't exist, `spsave` will create that folder. Field "Title" will be updated with title provided. 
+
+##### Upload search display template to master page gallery:
+```javascript
+spsave({
+  siteUrl: '[sp url]',  username: '[username]', password: '[password]',
+  folder: '_catalogs/masterpage/Display Templates/Search',
+  fileName: 'Item_Template.js',
+  fileContent: '<javascript content>',
+  filesMetaData: [{
+          fileName: 'Item_Template.js',
+          metadata: {
+            '__metadata': { type: 'SP.Data.OData__x005f_catalogs_x002f_masterpageItem' },
+            Title: 'SPSave Display Template',
+            DisplayTemplateLevel: 'Item',
+            TargetControlType: {
+              '__metadata': {
+                'type': 'Collection(Edm.String)'
+              },
+              'results': [
+                'SearchResults'
+              ]
+            },
+            ManagedPropertyMapping: `'Title':'Title','Path':'Path','Description':'Description'`,
+            ContentTypeId: '0x0101002039C03B61C64EC4A04F5361F38510660500A0383064C59087438E649B7323C95AF6',
+            TemplateHidden: false
+          }
+        }]
+})
+```
+###### Result: 
+New display template `Item_Template.js` will be uploaded to master page gallery. Metadata for the template will be updated.
+
 ##### Save binary file using nodejs `fs.readFileSync` function, show notificatin upon upload (or error if any):
 ```javascript
 spsave({

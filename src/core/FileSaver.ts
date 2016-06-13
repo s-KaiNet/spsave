@@ -5,7 +5,7 @@ import * as url from 'url';
 import * as _ from 'lodash';
 import {IEnvironment, IUserCredentials} from 'sp-request';
 
-import {FileContentOptions, CheckinType} from './SPSaveOptions';
+import {FileContentOptions, CheckinType, IFileMetaData} from './SPSaveOptions';
 import {UrlHelper} from './../utils/UrlHelper';
 import {FoldersCreator} from './../utils/FoldersCreator';
 import {ILogger} from './../utils/ILogger';
@@ -24,6 +24,7 @@ export class FileSaver {
   private getFileRestUrl: string;
   private checkoutFileRestUrl: string;
   private checkinFileRestUrl: string;
+  private updateMetaDataRestUrl: string;
   private path: string;
   private foldersCreator: FoldersCreator;
   private logger: ILogger;
@@ -89,6 +90,9 @@ export class FileSaver {
 
     Promise.all([checkoutResult, uploadResult])
       .then(result => {
+        return this.updateMetaData(result);
+      })
+      .then(result => {
         let fileExists: boolean = result[0];
         let data: any = result[1];
 
@@ -140,6 +144,43 @@ export class FileSaver {
 
         requestDeferred.reject(err);
       });
+  }
+
+  private updateMetaData(data: any): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      if (!this.options.filesMetaData || this.options.filesMetaData.length === 0) {
+        resolve(data);
+        return;
+      }
+
+      let fileMetaData: IFileMetaData = this.options.filesMetaData.filter(fileData => {
+        return fileData.fileName === this.options.fileName;
+      })[0];
+
+      if (!fileMetaData || fileMetaData.updated) {
+        resolve(data);
+        return;
+      }
+
+      this.sprequest.requestDigest(this.options.siteUrl)
+        .then(digest => {
+          return this.sprequest.post(this.updateMetaDataRestUrl, {
+            headers: {
+              'X-RequestDigest': digest,
+              'IF-MATCH': '*',
+              'X-HTTP-Method': 'MERGE'
+            },
+            body: fileMetaData.metadata
+          });
+        })
+        .then(() => {
+          fileMetaData.updated = true;
+          resolve(data);
+
+          return null;
+        })
+        .catch(reject);
+    });
   }
 
   /* checkins files */
@@ -267,5 +308,8 @@ export class FileSaver {
       '/_api/web/GetFileByServerRelativeUrl(@FileUrl)/CheckIn(comment=@Comment,checkintype=@Type)' +
       `?@FileUrl='${encodeURIComponent(fileServerRelativeUrl)}'&@Comment='${(this.options.checkinMessage)}'` +
       `&@Type='${this.options.checkinType}'`;
+
+    this.updateMetaDataRestUrl = this.options.siteUrl + '/_api/web/GetFileByServerRelativeUrl(@FileUrl)/ListItemAllFields' +
+      `?@FileUrl='${encodeURIComponent(fileServerRelativeUrl)}'`;
   }
 }
