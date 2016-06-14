@@ -576,4 +576,46 @@ describe('spsave: FileSaver test', () => {
         done(err);
       });
   });
+
+  it('should not upload file if string file content is empty', done => {
+    let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
+
+    opts.fileContent = '';
+
+    let saver: FileSaver = new fileSaver(opts);
+
+    let uploadStub: sinon.SinonStub = fakeSPRequest.post.withArgs(uploadFileRestUrl).returns(Promise.resolve({ body: '{}' }));
+
+    saver.save()
+      .then(data => {
+        consoleSpy.restore();
+        expect(uploadStub.callCount).to.equal(0);
+        done();
+      })
+      .catch(err => {
+        consoleSpy.restore();
+        done(err);
+      });
+  });
+
+  it('should not upload file if Buffer file content is empty', done => {
+    let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
+
+    opts.fileContent = new Buffer('');
+
+    let saver: FileSaver = new fileSaver(opts);
+
+    let uploadStub: sinon.SinonStub = fakeSPRequest.post.withArgs(uploadFileRestUrl).returns(Promise.resolve({ body: '{}' }));
+
+    saver.save()
+      .then(data => {
+        consoleSpy.restore();
+        expect(uploadStub.callCount).to.equal(0);
+        done();
+      })
+      .catch(err => {
+        consoleSpy.restore();
+        done(err);
+      });
+  });
 });

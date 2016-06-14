@@ -27,7 +27,7 @@ describe('spsave: OptionsParser test', () => {
     let opts: FileContentOptions = {
       username: '',
       password: '',
-      fileContent: '',
+      fileContent: null,
       folder: 'Assets',
       fileName: 'file.txt',
       siteUrl: 'http://sp.url'

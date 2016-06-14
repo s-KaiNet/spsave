@@ -53,8 +53,13 @@ export class FileSaver {
 
   public save(): Promise<any> {
     let deferred: IDeferred<any> = defer<any>();
-
-    this.saveFile(deferred);
+    if (typeof this.options.fileContent === 'string' && Buffer.byteLength(<string>this.options.fileContent) === 0) {
+      this.skipUpload(deferred);
+    } else if (this.options.fileContent.length === 0) {
+      this.skipUpload(deferred);
+    } else {
+      this.saveFile(deferred);
+    }
 
     return deferred.promise;
   }
@@ -144,6 +149,11 @@ export class FileSaver {
 
         requestDeferred.reject(err);
       });
+  }
+
+  private skipUpload(deferred: IDeferred<any>): void {
+    this.logger.warning(`File '${this.options.fileName}': skipping, file content is empty.'`);
+    deferred.resolve(true);
   }
 
   private updateMetaData(data: any): Promise<any> {

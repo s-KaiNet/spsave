@@ -7,6 +7,7 @@ import {ISPRequest} from 'sp-request';
 let map: any = require('map-stream');
 import * as vfs from 'vinyl-fs';
 import File = require('vinyl');
+import * as sinon from 'sinon';
 
 import {spsave} from './../../src/core/SPSave';
 import {FileContentOptions, VinylOptions, GlobOptions, CheckinType} from './../../src/core/SPSaveOptions';
@@ -37,7 +38,7 @@ tests.forEach(test => {
     let spr: ISPRequest = sprequest.create({ username: test.creds.username, password: test.creds.password }, { domain: test.env.domain });
 
     beforeEach('delete folders', function (done: MochaDone): void {
-      this.timeout(10 * 1000);
+      this.timeout(20 * 1000);
 
       spr.requestDigest(test.url)
         .then(digest => {
@@ -57,7 +58,7 @@ tests.forEach(test => {
     });
 
     after('cleaning', function (done: MochaDone): void {
-      this.timeout(10 * 1000);
+      this.timeout(20 * 1000);
 
       spr.requestDigest(test.url)
         .then(digest => {
@@ -79,7 +80,7 @@ tests.forEach(test => {
     let path: string = UrlHelper.removeTrailingSlash(url.parse(test.url).path);
 
     it('should upload binary file', function (done: MochaDone): void {
-      this.timeout(10 * 1000);
+      this.timeout(20 * 1000);
 
       let fileName: string = 'sp.png';
       let fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
@@ -112,7 +113,7 @@ tests.forEach(test => {
     });
 
     it('should upload text file', function (done: MochaDone): void {
-      this.timeout(10 * 1000);
+      this.timeout(20 * 1000);
 
       let fileName: string = 'spsave.txt';
       let fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
@@ -145,7 +146,7 @@ tests.forEach(test => {
     });
 
     it('should create folders before uploading the file', function (done: MochaDone): void {
-      this.timeout(10 * 1000);
+      this.timeout(20 * 1000);
 
       let fileName: string = 'sp.png';
       let fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
@@ -184,7 +185,7 @@ tests.forEach(test => {
     });
 
     it('should upload vinyl file', function (done: MochaDone): void {
-      this.timeout(10 * 1000);
+      this.timeout(20 * 1000);
 
       let fileName: string = 'sp.png';
       let folder: string = 'SiteAssets/files';
@@ -220,7 +221,7 @@ tests.forEach(test => {
     });
 
     it('should create subfolders when using vinyl file', function (done: MochaDone): void {
-      this.timeout(10 * 1000);
+      this.timeout(20 * 1000);
 
       let fileName: string = 'sp.png';
       let folder: string = 'SiteAssets';
@@ -255,7 +256,7 @@ tests.forEach(test => {
     });
 
     it('should upload all globs files', function (done: MochaDone): void {
-      this.timeout(10 * 1000);
+      this.timeout(20 * 1000);
 
       let pngFile: Buffer = fs.readFileSync('test/integration/files/sp.png');
       let txtFile: Buffer = fs.readFileSync('test/integration/files/spsave.txt');
@@ -289,7 +290,7 @@ tests.forEach(test => {
     });
 
     it('should checkin with appropriate comment', function (done: MochaDone): void {
-      this.timeout(10 * 1000);
+      this.timeout(20 * 1000);
 
       let fileName: string = 'sp.png';
       let fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
@@ -325,7 +326,7 @@ tests.forEach(test => {
     });
 
     it('should create new minor version', function (done: MochaDone): void {
-      this.timeout(10 * 1000);
+      this.timeout(20 * 1000);
 
       let fileName: string = 'sp.png';
       let fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
@@ -371,7 +372,7 @@ tests.forEach(test => {
     });
 
     it('should create new major version', function (done: MochaDone): void {
-      this.timeout(10 * 1000);
+      this.timeout(20 * 1000);
 
       let fileName: string = 'sp.png';
       let fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
@@ -417,7 +418,7 @@ tests.forEach(test => {
     });
 
     it('should overwrite current version', function (done: MochaDone): void {
-      this.timeout(10 * 1000);
+      this.timeout(20 * 1000);
 
       let fileName: string = 'sp.png';
       let fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
@@ -464,7 +465,7 @@ tests.forEach(test => {
     });
 
     it('should update file metadata', function (done: MochaDone): void {
-      this.timeout(10 * 1000);
+      this.timeout(20 * 1000);
 
       let fileName: string = 'spsave.txt';
       let fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
@@ -504,7 +505,7 @@ tests.forEach(test => {
     });
 
     it('should update file metadata for display template', function (done: MochaDone): void {
-      this.timeout(10 * 1000);
+      this.timeout(20 * 1000);
 
       let fileName: string = 'SPSave.js';
       let fileContent: Buffer = fs.readFileSync(`lib/src/core/${fileName}`);
@@ -553,5 +554,37 @@ tests.forEach(test => {
         .catch(done);
     });
 
+    it('should not upload empty file', function (done: MochaDone): void {
+      this.timeout(20 * 1000);
+
+      let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
+
+      let fileName: string = 'spsave.txt';
+      let fileContent: string = '';
+      let folder: string = 'SiteAssets/files';
+
+      let opts: FileContentOptions = {
+        username: test.creds.username,
+        password: test.creds.password,
+        domain: test.env.domain,
+        siteUrl: test.url,
+        fileName: fileName,
+        fileContent: fileContent,
+        folder: folder
+      };
+
+      spsave(opts)
+        .then(data => {
+          consoleSpy.restore();
+          let call: sinon.SinonSpyCall = consoleSpy.getCall(0);
+          expect((<string>call.args[0]).indexOf('skipping')).not.to.equal(-1);
+
+          done();
+        })
+        .catch(err => {
+          consoleSpy.restore();
+          done(err);
+        });
+    });
   });
 });

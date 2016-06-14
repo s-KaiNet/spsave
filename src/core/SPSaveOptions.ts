@@ -51,7 +51,7 @@ export function isGlobOptions(T: any): T is GlobOptions {
 }
 
 export function isFileContentOptions(T: any): T is FileContentOptions {
-  return !!T.fileContent;
+  return !!T.fileContent || T.fileContent === '';
 }
 
 export function isVinylOptions(T: any): T is VinylOptions {
