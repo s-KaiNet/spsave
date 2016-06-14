@@ -152,7 +152,7 @@ export class FileSaver {
   }
 
   private skipUpload(deferred: IDeferred<any>): void {
-    this.logger.warning(`File '${this.options.fileName}': skipping, file content is empty.'`);
+    this.logger.warning(`File '${this.options.fileName}': skipping, file content is empty.`);
     deferred.resolve(true);
   }
 
