@@ -16,6 +16,8 @@ export class FileSaver {
   private static saveConfilctCode: string = '-2130246326';
   private static cobaltCode: string = '-1597308888';
   private static directoryNotFoundCode: string = '-2147024893';
+  private static fileDoesNotExistOnpremCode: string = '-2146232832';
+  private static fileDoesNotExistOnlineCode: string = '-2130575338';
   private static reUploadTimeout: number = 1500;
   private static maxAttempts: number = 3;
 
@@ -135,7 +137,7 @@ export class FileSaver {
           return;
         }
         /* folder doesn't exist, create and reupload */
-        if (err && (err.statusCode === 404 && err.error && err.error.indexOf(FileSaver.directoryNotFoundCode) !== -1)) {
+        if (err && err.statusCode === 404 && err.message && err.message.indexOf(FileSaver.directoryNotFoundCode) !== -1) {
           this.foldersCreator.createFoldersHierarchy()
             .then(() => {
               this.saveFile(requestDeferred, attempts + 1);
@@ -241,7 +243,8 @@ export class FileSaver {
             });
         }, err => {
           /* file doesn't exist message code, resolve with false */
-          if (err.message.indexOf('-2146232832') !== -1) {
+          if (err.message.indexOf(FileSaver.fileDoesNotExistOnpremCode) !== -1 ||
+              err.message.indexOf(FileSaver.fileDoesNotExistOnlineCode) !== -1) {
             resolve(false);
 
             return null;
