@@ -1,68 +1,79 @@
 import * as Promise from 'bluebird';
 import * as notifier from 'node-notifier';
 import * as path from 'path';
+import {IAuthOptions} from 'sp-request';
 
-import {SPSaveOptions, FileContentOptions} from './SPSaveOptions';
+import {
+  ICoreOptions,
+  FileOptions,
+  ISPSaveOptions
+} from './SPSaveOptions';
 import {FileSaver} from './FileSaver';
 import {ILogger} from './../utils/ILogger';
 import {ConsoleLogger} from './../utils/ConsoleLogger';
-import {OptionsParser} from './../utils/OptionsParser';
+import {FileOptionsParser} from './../utils/FileOptionsParser';
 import {defer, IDeferred} from './../utils/Defer';
 
 Promise.longStackTraces();
 
 let logger: ILogger = new ConsoleLogger();
 
-export function spsave(options: SPSaveOptions): Promise<any> {
+export function spsave(coreOptions: ICoreOptions, credentialOptions: IAuthOptions, fileOptions: FileOptions): Promise<any> {
   return new Promise<any>((resolve, reject) => {
-    let saveOptions: FileContentOptions[] = OptionsParser.parseOptions(options);
+
+    let spSaveOptions: ISPSaveOptions = {
+      creds: credentialOptions,
+      core: coreOptions,
+      files: FileOptionsParser.parseOptions(fileOptions)
+    };
     let showNotification: () => void = () => {
-      if (!options.notification) {
+      if (!coreOptions.notification) {
         return;
       }
 
       notifier.notify({
-        title: `spsave: ${saveOptions.length} file(s) uploaded`,
-        message: saveOptions.map((o) => { return o.fileName; }).join(', '),
+        title: `spsave: ${spSaveOptions.files.length} file(s) uploaded`,
+        message: spSaveOptions.files.map((o) => { return o.fileName; }).join(', '),
         icon: path.join(__dirname, '../../../assets/sp.png')
       });
     };
 
-    if (saveOptions.length > 1) {
-      saveFileArray(saveOptions).then((data) => {
+    if (spSaveOptions.files.length > 1) {
+      saveFileArray(spSaveOptions).then((data) => {
         showNotification();
         resolve(data);
 
         return null;
       })
         .catch(err => {
-          showError(err, options.notification);
+          showError(err, coreOptions.notification);
           reject(err);
         });
-    } else if (saveOptions.length === 1) {
-      saveSingleFile(saveOptions[0]).then((data) => {
+    } else if (spSaveOptions.files.length === 1) {
+      saveSingleFile(spSaveOptions).then((data) => {
         showNotification();
         resolve(data);
 
         return null;
       })
         .catch(err => {
-          showError(err, options.notification);
+          showError(err, coreOptions.notification);
           reject(err);
         });
     }
   });
 }
 
-function saveFileArray(options: FileContentOptions[], deferred?: IDeferred<any>): Promise<any> {
+function saveFileArray(opts: ISPSaveOptions, deferred?: IDeferred<any>): Promise<any> {
   if (!deferred) {
     deferred = defer<any>();
   }
 
-  if (options.length > 0) {
-    saveSingleFile(options[0])
+  if (opts.files.length > 0) {
+    saveSingleFile(opts)
       .then(() => {
-        saveFileArray(options.slice(1, options.length), deferred);
+        opts.files = opts.files.slice(1, opts.files.length);
+        saveFileArray(opts, deferred);
 
         return null;
       })
@@ -76,8 +87,8 @@ function saveFileArray(options: FileContentOptions[], deferred?: IDeferred<any>)
   return deferred.promise;
 }
 
-function saveSingleFile(options: FileContentOptions): Promise<any> {
-  return new FileSaver(options).save();
+function saveSingleFile(opts: ISPSaveOptions): Promise<any> {
+  return new FileSaver(opts.core, opts.creds, opts.files[0]).save();
 }
 
 function showError(err: any, notify: boolean): void {

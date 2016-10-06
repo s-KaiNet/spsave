@@ -5,7 +5,6 @@
     "raw": "registry:npm/bluebird#3.3.4+20160427051630",
     "main": "bluebird.d.ts",
     "version": "3.3.4",
-    "global": false,
     "name": "bluebird",
     "type": "typings"
   }

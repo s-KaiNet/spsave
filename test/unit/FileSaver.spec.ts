@@ -2,10 +2,10 @@ import {expect} from 'chai';
 import * as Promise from 'bluebird';
 import * as sinon from 'sinon';
 import * as mockery from 'mockery';
+import {IUserCredentials} from 'sp-request';
 
 import {FileSaver} from './../../src/core/FileSaver';
-import {FileContentOptions} from './../../src/core/SPSaveOptions';
-import {CheckinType} from './../../src/core/SPSaveOptions';
+import {CheckinType, ICoreOptions, IFileContentOptions} from './../../src/core/SPSaveOptions';
 import {defer, IDeferred} from './../../src/utils/Defer';
 
 interface IFakeSPRequest {
@@ -16,12 +16,18 @@ interface IFakeSPRequest {
 
 describe('spsave: FileSaver test', () => {
 
-  let opts: FileContentOptions = {
+  let creds: IUserCredentials = {
     username: '',
-    password: '',
+    password: ''
+  };
+
+  let file: IFileContentOptions = {
     fileContent: 'spsave',
     folder: 'Assets',
-    fileName: 'file.txt',
+    fileName: 'file.txt'
+  };
+
+  let core: ICoreOptions = {
     siteUrl: 'http://sp.url',
     checkinMessage: 'spsave',
     checkinType: CheckinType.minor
@@ -35,23 +41,23 @@ describe('spsave: FileSaver test', () => {
   let sprequestStub: sinon.SinonStub;
   let fileSaver: any;
 
-  let fileServerRelativeUrl: string = `/${opts.folder}/${opts.fileName}`;
+  let fileServerRelativeUrl: string = `/${file.folder}/${file.fileName}`;
 
-  let uploadFileRestUrl: string = opts.siteUrl +
+  let uploadFileRestUrl: string = core.siteUrl +
     '/_api/web/GetFolderByServerRelativeUrl(@FolderName)/Files/add(url=@FileName,overwrite=true)' +
-    `?@FolderName='${encodeURIComponent(opts.folder)}'&@FileName='${encodeURIComponent(opts.fileName)}'`;
+    `?@FolderName='${encodeURIComponent(file.folder)}'&@FileName='${encodeURIComponent(file.fileName)}'`;
 
-  let getFileRestUrl: string = opts.siteUrl + '/_api/web/GetFileByServerRelativeUrl(@FileUrl)' +
+  let getFileRestUrl: string = core.siteUrl + '/_api/web/GetFileByServerRelativeUrl(@FileUrl)' +
     `?@FileUrl='${encodeURIComponent(fileServerRelativeUrl)}'`;
 
-  let checkoutFileRestUrl: string = opts.siteUrl + '/_api/web/GetFileByServerRelativeUrl(@FileUrl)/CheckOut()' +
+  let checkoutFileRestUrl: string = core.siteUrl + '/_api/web/GetFileByServerRelativeUrl(@FileUrl)/CheckOut()' +
     `?@FileUrl='${encodeURIComponent(fileServerRelativeUrl)}'`;
 
-  let checkinFileRestUrl: string = opts.siteUrl +
+  let checkinFileRestUrl: string = core.siteUrl +
     '/_api/web/GetFileByServerRelativeUrl(@FileUrl)/CheckIn(comment=@Comment,checkintype=@Type)' +
-    `?@FileUrl='${encodeURIComponent(fileServerRelativeUrl)}'&@Comment='${(opts.checkinMessage)}'` +
-    `&@Type='${opts.checkinType}'`;
-  let updateMetaDataFileUrl: string = opts.siteUrl + '/_api/web/GetFileByServerRelativeUrl(@FileUrl)/ListItemAllFields' +
+    `?@FileUrl='${encodeURIComponent(fileServerRelativeUrl)}'&@Comment='${(core.checkinMessage)}'` +
+    `&@Type='${core.checkinType}'`;
+  let updateMetaDataFileUrl: string = core.siteUrl + '/_api/web/GetFileByServerRelativeUrl(@FileUrl)/ListItemAllFields' +
     `?@FileUrl='${encodeURIComponent(fileServerRelativeUrl)}'`;
 
   beforeEach(() => {
@@ -61,7 +67,7 @@ describe('spsave: FileSaver test', () => {
       useCleanCache: true
     });
 
-    opts.checkin = false;
+    core.checkin = false;
 
     fakeSPRequest = {
       post: sinon.stub(),
@@ -85,7 +91,7 @@ describe('spsave: FileSaver test', () => {
 
   it('should perform post request', done => {
     let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
-    let saver: FileSaver = new fileSaver(opts);
+    let saver: FileSaver = new fileSaver(core, creds, file);
     fakeSPRequest.post.withArgs(uploadFileRestUrl).returns(Promise.resolve({ body: '{}' }));
     saver.save()
       .then(data => {
@@ -102,8 +108,8 @@ describe('spsave: FileSaver test', () => {
   it('should check if file is checked out and then upload', done => {
     let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
 
-    opts.checkin = true;
-    let saver: FileSaver = new fileSaver(opts);
+    core.checkin = true;
+    let saver: FileSaver = new fileSaver(core, creds, file);
 
     fakeSPRequest.post.withArgs(uploadFileRestUrl).returns(Promise.resolve({ body: '{}' }));
     fakeSPRequest.post.withArgs(checkinFileRestUrl).returns(Promise.resolve({ body: {} }));
@@ -130,8 +136,8 @@ describe('spsave: FileSaver test', () => {
   it('should checkout file before upload', done => {
     let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
 
-    opts.checkin = true;
-    let saver: FileSaver = new fileSaver(opts);
+    core.checkin = true;
+    let saver: FileSaver = new fileSaver(core, creds, file);
 
     fakeSPRequest.post.withArgs(uploadFileRestUrl).returns(Promise.resolve({ body: '{}' }));
     fakeSPRequest.post.withArgs(checkoutFileRestUrl).returns(Promise.resolve({}));
@@ -159,7 +165,7 @@ describe('spsave: FileSaver test', () => {
   it('should try to reupload when save conflict', done => {
     let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
 
-    let saver: FileSaver = new fileSaver(opts);
+    let saver: FileSaver = new fileSaver(core, creds, file);
     let errorString: string = '{"error": {"code" : "-2130246326"}}';
     let def: IDeferred<any> = defer();
     let error: Error = new Error();
@@ -186,7 +192,7 @@ describe('spsave: FileSaver test', () => {
 
   it('should reject request if unable to create the folder', done => {
     let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
-    let saver: FileSaver = new fileSaver(opts);
+    let saver: FileSaver = new fileSaver(core, creds, file);
     let folderDeferred: IDeferred<any> = defer();
     let folderCreateError: Error = new Error();
     setTimeout(() => {
@@ -221,7 +227,7 @@ describe('spsave: FileSaver test', () => {
   it('should create folder if folder does not exist', done => {
     let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
 
-    let saver: FileSaver = new fileSaver(opts);
+    let saver: FileSaver = new fileSaver(core, creds, file);
     let errorString: string = '{"error": {"code" : "-2147024893"}}';
     let def: IDeferred<any> = defer();
     let error: Error = new Error();
@@ -250,7 +256,7 @@ describe('spsave: FileSaver test', () => {
   it('should try to reupload when cobalt error', done => {
     let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
 
-    let saver: FileSaver = new fileSaver(opts);
+    let saver: FileSaver = new fileSaver(core, creds, file);
     let errorString: string = '{"error": {"code" : "-1597308888"}}';
     let def: IDeferred<any> = defer();
     let error: Error = new Error();
@@ -277,7 +283,7 @@ describe('spsave: FileSaver test', () => {
   it('should reject when undefined error string', done => {
     let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
 
-    let saver: FileSaver = new fileSaver(opts);
+    let saver: FileSaver = new fileSaver(core, creds, file);
     let errorString: string = 'spsave';
     let def: IDeferred<any> = defer();
     let expectedError: Error = new Error();
@@ -305,7 +311,7 @@ describe('spsave: FileSaver test', () => {
   it('should reject when undefined error', done => {
     let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
 
-    let saver: FileSaver = new fileSaver(opts);
+    let saver: FileSaver = new fileSaver(core, creds, file);
     let def: IDeferred<any> = defer();
     let expectedError: Error = new Error();
     (<any>expectedError).statusCode = 500;
@@ -331,7 +337,7 @@ describe('spsave: FileSaver test', () => {
   it('should reject when code 500 and undefined error object', done => {
     let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
 
-    let saver: FileSaver = new fileSaver(opts);
+    let saver: FileSaver = new fileSaver(core, creds, file);
     let errorString: string = '{"info": {"code" : "-1597308888"}}';
     let def: IDeferred<any> = defer();
     let expectedError: Error = new Error();
@@ -359,7 +365,7 @@ describe('spsave: FileSaver test', () => {
   it('should reject when code 500 and undefined error code', done => {
     let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
 
-    let saver: FileSaver = new fileSaver(opts);
+    let saver: FileSaver = new fileSaver(core, creds, file);
     let errorString: string = '{"error": {"code" : "-1"}}';
     let def: IDeferred<any> = defer();
     let expectedError: Error = new Error();
@@ -387,8 +393,8 @@ describe('spsave: FileSaver test', () => {
   it('should explicitly checkout the file', done => {
     let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
 
-    opts.checkin = true;
-    let saver: FileSaver = new fileSaver(opts);
+    core.checkin = true;
+    let saver: FileSaver = new fileSaver(core, creds, file);
 
     fakeSPRequest.post.withArgs(uploadFileRestUrl).returns(Promise.resolve({ body: '{}' }));
     fakeSPRequest.post.withArgs(checkoutFileRestUrl).returns(Promise.resolve({}));
@@ -420,8 +426,8 @@ describe('spsave: FileSaver test', () => {
   it('should explicitly reject in case of checkin error', done => {
     let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
 
-    opts.checkin = true;
-    let saver: FileSaver = new fileSaver(opts);
+    core.checkin = true;
+    let saver: FileSaver = new fileSaver(core, creds, file);
 
     fakeSPRequest.post.withArgs(uploadFileRestUrl).returns(Promise.resolve({ body: '{}' }));
     fakeSPRequest.post.withArgs(checkoutFileRestUrl).returns(Promise.resolve({}));
@@ -458,8 +464,8 @@ describe('spsave: FileSaver test', () => {
   it('should reject when message other than "File not found"', done => {
     let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
 
-    opts.checkin = true;
-    let saver: FileSaver = new fileSaver(opts);
+    core.checkin = true;
+    let saver: FileSaver = new fileSaver(core, creds, file);
 
     fakeSPRequest.post.withArgs(uploadFileRestUrl).returns(Promise.resolve({ body: '{}' }));
     fakeSPRequest.post.withArgs(checkoutFileRestUrl).returns(Promise.resolve({}));
@@ -479,8 +485,8 @@ describe('spsave: FileSaver test', () => {
   it('should reject when checkout failed', done => {
     let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
 
-    opts.checkin = true;
-    let saver: FileSaver = new fileSaver(opts);
+    core.checkin = true;
+    let saver: FileSaver = new fileSaver(core, creds, file);
 
     fakeSPRequest.post.withArgs(uploadFileRestUrl).returns(Promise.resolve({ body: '{}' }));
     fakeSPRequest.post.withArgs(checkoutFileRestUrl).returns(Promise.reject(new Error('spsave')));
@@ -506,8 +512,8 @@ describe('spsave: FileSaver test', () => {
   it('should reject after max attempts', done => {
     let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
 
-    opts.checkin = true;
-    let saver: FileSaver = new fileSaver(opts);
+    core.checkin = true;
+    let saver: FileSaver = new fileSaver(core, creds, file);
 
     fakeSPRequest.post.withArgs(uploadFileRestUrl).returns(Promise.resolve({ body: '{}' }));
     fakeSPRequest.post.withArgs(checkoutFileRestUrl).returns(Promise.resolve({}));
@@ -528,12 +534,12 @@ describe('spsave: FileSaver test', () => {
   it('should update file metadata', done => {
     let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
 
-    opts.filesMetaData = [{
-      fileName: opts.fileName,
+    core.filesMetaData = [{
+      fileName: file.fileName,
       metadata: {}
     }];
 
-    let saver: FileSaver = new fileSaver(opts);
+    let saver: FileSaver = new fileSaver(core, creds, file);
 
     let updateMetaDataStub: sinon.SinonStub = fakeSPRequest.post.withArgs(updateMetaDataFileUrl).returns(Promise.resolve({}));
     fakeSPRequest.post.withArgs(uploadFileRestUrl).returns(Promise.resolve({ body: '{}' }));
@@ -553,12 +559,12 @@ describe('spsave: FileSaver test', () => {
   it('should not update file metadata when already updated', done => {
     let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
 
-    opts.filesMetaData = [{
-      fileName: opts.fileName,
+    core.filesMetaData = [{
+      fileName: file.fileName,
       metadata: {}
     }];
 
-    let saver: FileSaver = new fileSaver(opts);
+    let saver: FileSaver = new fileSaver(core, creds, file);
 
     let updateMetaDataStub: sinon.SinonStub = fakeSPRequest.post.withArgs(updateMetaDataFileUrl).returns(Promise.resolve({}));
     fakeSPRequest.post.withArgs(uploadFileRestUrl).returns(Promise.resolve({ body: '{}' }));
@@ -582,9 +588,9 @@ describe('spsave: FileSaver test', () => {
   it('should not upload file if string file content is empty', done => {
     let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
 
-    opts.fileContent = '';
+    file.fileContent = '';
 
-    let saver: FileSaver = new fileSaver(opts);
+    let saver: FileSaver = new fileSaver(core, creds, file);
 
     let uploadStub: sinon.SinonStub = fakeSPRequest.post.withArgs(uploadFileRestUrl).returns(Promise.resolve({ body: '{}' }));
 
@@ -603,9 +609,9 @@ describe('spsave: FileSaver test', () => {
   it('should not upload file if Buffer file content is empty', done => {
     let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
 
-    opts.fileContent = new Buffer('');
+    file.fileContent = new Buffer('');
 
-    let saver: FileSaver = new fileSaver(opts);
+    let saver: FileSaver = new fileSaver(core, creds, file);
 
     let uploadStub: sinon.SinonStub = fakeSPRequest.post.withArgs(uploadFileRestUrl).returns(Promise.resolve({ body: '{}' }));
 

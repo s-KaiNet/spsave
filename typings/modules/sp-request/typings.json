@@ -1,17 +1,18 @@
 {
   "resolution": "main",
   "tree": {
-    "src": "c:\\Projects\\spsave\\node_modules\\sp-request\\package.json",
+    "src": "C:\\Projects\\spsave\\node_modules\\sp-request\\package.json",
     "raw": "npm:sp-request",
     "main": "./lib/src/index.js",
-    "version": "1.0.15",
+    "version": "2.0.0",
     "global": false,
     "dependencies": {
       "agentkeepalive": {
-        "src": "c:\\Projects\\spsave\\node_modules\\agentkeepalive\\package.json",
+        "src": "C:\\Projects\\spsave\\node_modules\\agentkeepalive\\package.json",
         "raw": "npm:agentkeepalive",
         "main": "index.js",
-        "version": "2.1.1",
+        "browser": "browser.js",
+        "version": "2.2.0",
         "global": false,
         "name": "agentkeepalive"
       },
@@ -20,19 +21,18 @@
         "raw": "registry:npm/bluebird#3.3.4+20160427051630",
         "main": "bluebird.d.ts",
         "version": "3.3.4",
-        "global": false,
         "name": "bluebird",
         "type": "typings"
       },
       "httpntlm": {
-        "src": "c:\\Projects\\spsave\\node_modules\\sp-request\\node_modules\\httpntlm\\package.json",
+        "src": "C:\\Projects\\spsave\\node_modules\\httpntlm\\package.json",
         "raw": "npm:httpntlm",
         "main": "./httpntlm",
         "version": "1.6.1",
         "global": false,
         "dependencies": {
           "httpreq": {
-            "src": "c:\\Projects\\spsave\\node_modules\\sp-request\\node_modules\\httpreq\\package.json",
+            "src": "C:\\Projects\\spsave\\node_modules\\httpreq\\package.json",
             "raw": "npm:httpreq",
             "main": "./lib/httpreq",
             "version": "0.4.22",
@@ -40,7 +40,7 @@
             "name": "httpreq"
           },
           "underscore": {
-            "src": "c:\\Projects\\spsave\\node_modules\\underscore\\package.json",
+            "src": "C:\\Projects\\spsave\\node_modules\\underscore\\package.json",
             "raw": "npm:underscore",
             "main": "underscore.js",
             "version": "1.7.0",
@@ -55,44 +55,689 @@
         "raw": "registry:npm/lodash#4.0.0+20160416211519",
         "main": "index.d.ts",
         "version": "4.0.0",
-        "global": false,
         "name": "lodash",
         "type": "typings"
       },
+      "node-sp-auth": {
+        "src": "C:\\Projects\\spsave\\node_modules\\node-sp-auth\\package.json",
+        "raw": "npm:node-sp-auth",
+        "main": "./lib/src/index.js",
+        "version": "1.0.4",
+        "global": false,
+        "dependencies": {
+          "agentkeepalive": {
+            "src": "C:\\Projects\\spsave\\node_modules\\agentkeepalive\\package.json",
+            "raw": "npm:agentkeepalive",
+            "main": "index.js",
+            "browser": "browser.js",
+            "version": "2.2.0",
+            "global": false,
+            "name": "agentkeepalive"
+          },
+          "bluebird": {
+            "src": "https://raw.githubusercontent.com/types/npm-bluebird/ca3bb021ce522fd0498496b4048786de072ae7d3/typings.json",
+            "raw": "registry:npm/bluebird#3.4.1+20160909132857",
+            "main": "bluebird.d.ts",
+            "version": "3.4.1",
+            "name": "bluebird",
+            "type": "typings"
+          },
+          "cookie": {
+            "src": "C:\\Projects\\spsave\\node_modules\\cookie\\package.json",
+            "raw": "npm:cookie",
+            "version": "0.3.1",
+            "global": false,
+            "name": "cookie"
+          },
+          "httpntlm": {
+            "src": "C:\\Projects\\spsave\\node_modules\\httpntlm\\package.json",
+            "raw": "npm:httpntlm",
+            "main": "./httpntlm",
+            "version": "1.6.1",
+            "global": false,
+            "dependencies": {
+              "httpreq": {
+                "src": "C:\\Projects\\spsave\\node_modules\\httpreq\\package.json",
+                "raw": "npm:httpreq",
+                "main": "./lib/httpreq",
+                "version": "0.4.22",
+                "global": false,
+                "name": "httpreq"
+              },
+              "underscore": {
+                "src": "C:\\Projects\\spsave\\node_modules\\underscore\\package.json",
+                "raw": "npm:underscore",
+                "main": "underscore.js",
+                "version": "1.7.0",
+                "global": false,
+                "name": "underscore"
+              }
+            },
+            "name": "httpntlm"
+          },
+          "jsonwebtoken": {
+            "src": "C:\\Projects\\spsave\\node_modules\\jsonwebtoken\\package.json",
+            "raw": "npm:jsonwebtoken",
+            "main": "index.js",
+            "version": "7.1.9",
+            "global": false,
+            "dependencies": {
+              "joi": {
+                "src": "C:\\Projects\\spsave\\node_modules\\joi\\package.json",
+                "raw": "npm:joi",
+                "main": "lib/index.js",
+                "version": "6.10.1",
+                "global": false,
+                "dependencies": {
+                  "hoek": {
+                    "src": "C:\\Projects\\spsave\\node_modules\\hoek\\package.json",
+                    "raw": "npm:hoek",
+                    "main": "lib/index.js",
+                    "version": "2.16.3",
+                    "global": false,
+                    "name": "hoek"
+                  },
+                  "isemail": {
+                    "src": "C:\\Projects\\spsave\\node_modules\\isemail\\package.json",
+                    "raw": "npm:isemail",
+                    "main": "./index",
+                    "version": "1.2.0",
+                    "global": false,
+                    "name": "isemail"
+                  },
+                  "moment": {
+                    "src": "C:\\Projects\\spsave\\node_modules\\moment\\package.json",
+                    "raw": "npm:moment",
+                    "main": "./moment.js",
+                    "typings": "./moment.d.ts",
+                    "version": "2.15.1",
+                    "global": false,
+                    "name": "moment"
+                  },
+                  "topo": {
+                    "src": "C:\\Projects\\spsave\\node_modules\\topo\\package.json",
+                    "raw": "npm:topo",
+                    "main": "lib/index.js",
+                    "version": "1.1.0",
+                    "global": false,
+                    "dependencies": {
+                      "hoek": {
+                        "src": "C:\\Projects\\spsave\\node_modules\\hoek\\package.json",
+                        "raw": "npm:hoek",
+                        "main": "lib/index.js",
+                        "version": "2.16.3",
+                        "global": false,
+                        "name": "hoek"
+                      }
+                    },
+                    "name": "topo"
+                  }
+                },
+                "name": "joi"
+              },
+              "jws": {
+                "src": "C:\\Projects\\spsave\\node_modules\\jws\\package.json",
+                "raw": "npm:jws",
+                "main": "index.js",
+                "version": "3.1.3",
+                "global": false,
+                "dependencies": {
+                  "base64url": {
+                    "src": "C:\\Projects\\spsave\\node_modules\\base64url\\package.json",
+                    "raw": "npm:base64url",
+                    "main": "index.js",
+                    "version": "1.0.6",
+                    "global": false,
+                    "dependencies": {
+                      "concat-stream": {
+                        "src": "C:\\Projects\\spsave\\node_modules\\concat-stream\\package.json",
+                        "raw": "npm:concat-stream",
+                        "main": "index.js",
+                        "version": "1.4.10",
+                        "global": false,
+                        "dependencies": {
+                          "inherits": {
+                            "src": "C:\\Projects\\spsave\\node_modules\\inherits\\package.json",
+                            "raw": "npm:inherits",
+                            "main": "./inherits.js",
+                            "browser": "./inherits_browser.js",
+                            "version": "2.0.3",
+                            "global": false,
+                            "name": "inherits"
+                          },
+                          "readable-stream": {
+                            "src": "C:\\Projects\\spsave\\node_modules\\readable-stream\\package.json",
+                            "raw": "npm:readable-stream",
+                            "main": "readable.js",
+                            "browser": {
+                              "util": false
+                            },
+                            "version": "1.1.14",
+                            "global": false,
+                            "dependencies": {
+                              "core-util-is": {
+                                "src": "C:\\Projects\\spsave\\node_modules\\core-util-is\\package.json",
+                                "raw": "npm:core-util-is",
+                                "main": "lib/util.js",
+                                "version": "1.0.2",
+                                "global": false,
+                                "name": "core-util-is"
+                              },
+                              "inherits": {
+                                "src": "C:\\Projects\\spsave\\node_modules\\inherits\\package.json",
+                                "raw": "npm:inherits",
+                                "main": "./inherits.js",
+                                "browser": "./inherits_browser.js",
+                                "version": "2.0.3",
+                                "global": false,
+                                "name": "inherits"
+                              },
+                              "isarray": {
+                                "src": "C:\\Projects\\spsave\\node_modules\\isarray\\package.json",
+                                "raw": "npm:isarray",
+                                "main": "index.js",
+                                "version": "0.0.1",
+                                "global": false,
+                                "name": "isarray"
+                              },
+                              "string_decoder": {
+                                "src": "C:\\Projects\\spsave\\node_modules\\string_decoder\\package.json",
+                                "raw": "npm:string_decoder",
+                                "main": "index.js",
+                                "version": "0.10.31",
+                                "global": false,
+                                "name": "string_decoder"
+                              }
+                            },
+                            "name": "readable-stream"
+                          },
+                          "typedarray": {
+                            "src": "C:\\Projects\\spsave\\node_modules\\typedarray\\package.json",
+                            "raw": "npm:typedarray",
+                            "main": "index.js",
+                            "version": "0.0.6",
+                            "global": false,
+                            "name": "typedarray"
+                          }
+                        },
+                        "name": "concat-stream"
+                      },
+                      "meow": {
+                        "src": "C:\\Projects\\spsave\\node_modules\\meow\\package.json",
+                        "raw": "npm:meow",
+                        "version": "2.0.0",
+                        "global": false,
+                        "dependencies": {
+                          "camelcase-keys": {
+                            "src": "C:\\Projects\\spsave\\node_modules\\camelcase-keys\\package.json",
+                            "raw": "npm:camelcase-keys",
+                            "version": "1.0.0",
+                            "global": false,
+                            "dependencies": {
+                              "camelcase": {
+                                "src": "C:\\Projects\\spsave\\node_modules\\camelcase\\package.json",
+                                "raw": "npm:camelcase",
+                                "version": "1.2.1",
+                                "global": false,
+                                "name": "camelcase"
+                              },
+                              "map-obj": {
+                                "src": "C:\\Projects\\spsave\\node_modules\\map-obj\\package.json",
+                                "raw": "npm:map-obj",
+                                "version": "1.0.1",
+                                "global": false,
+                                "name": "map-obj"
+                              }
+                            },
+                            "name": "camelcase-keys"
+                          },
+                          "indent-string": {
+                            "src": "C:\\Projects\\spsave\\node_modules\\indent-string\\package.json",
+                            "raw": "npm:indent-string",
+                            "version": "1.2.2",
+                            "global": false,
+                            "dependencies": {
+                              "get-stdin": {
+                                "src": "C:\\Projects\\spsave\\node_modules\\get-stdin\\package.json",
+                                "raw": "npm:get-stdin",
+                                "version": "4.0.1",
+                                "global": false,
+                                "name": "get-stdin"
+                              },
+                              "minimist": {
+                                "src": "C:\\Projects\\spsave\\node_modules\\minimist\\package.json",
+                                "raw": "npm:minimist",
+                                "main": "index.js",
+                                "version": "1.2.0",
+                                "global": false,
+                                "name": "minimist"
+                              },
+                              "repeating": {
+                                "src": "C:\\Projects\\spsave\\node_modules\\repeating\\package.json",
+                                "raw": "npm:repeating",
+                                "version": "1.1.3",
+                                "global": false,
+                                "dependencies": {
+                                  "is-finite": {
+                                    "src": "C:\\Projects\\spsave\\node_modules\\is-finite\\package.json",
+                                    "raw": "npm:is-finite",
+                                    "version": "1.0.2",
+                                    "global": false,
+                                    "dependencies": {
+                                      "number-is-nan": {
+                                        "src": "C:\\Projects\\spsave\\node_modules\\number-is-nan\\package.json",
+                                        "raw": "npm:number-is-nan",
+                                        "version": "1.0.1",
+                                        "global": false,
+                                        "name": "number-is-nan"
+                                      }
+                                    },
+                                    "name": "is-finite"
+                                  }
+                                },
+                                "name": "repeating"
+                              }
+                            },
+                            "name": "indent-string"
+                          },
+                          "minimist": {
+                            "src": "C:\\Projects\\spsave\\node_modules\\minimist\\package.json",
+                            "raw": "npm:minimist",
+                            "main": "index.js",
+                            "version": "1.2.0",
+                            "global": false,
+                            "name": "minimist"
+                          },
+                          "object-assign": {
+                            "src": "C:\\Projects\\spsave\\node_modules\\meow\\node_modules\\object-assign\\package.json",
+                            "raw": "npm:object-assign",
+                            "version": "1.0.0",
+                            "global": false,
+                            "name": "object-assign"
+                          }
+                        },
+                        "name": "meow"
+                      }
+                    },
+                    "name": "base64url"
+                  },
+                  "jwa": {
+                    "src": "C:\\Projects\\spsave\\node_modules\\jwa\\package.json",
+                    "raw": "npm:jwa",
+                    "main": "index.js",
+                    "version": "1.1.3",
+                    "global": false,
+                    "dependencies": {
+                      "base64url": {
+                        "src": "C:\\Projects\\spsave\\node_modules\\base64url\\package.json",
+                        "raw": "npm:base64url",
+                        "main": "index.js",
+                        "version": "1.0.6",
+                        "global": false,
+                        "dependencies": {
+                          "concat-stream": {
+                            "src": "C:\\Projects\\spsave\\node_modules\\concat-stream\\package.json",
+                            "raw": "npm:concat-stream",
+                            "main": "index.js",
+                            "version": "1.4.10",
+                            "global": false,
+                            "dependencies": {
+                              "inherits": {
+                                "src": "C:\\Projects\\spsave\\node_modules\\inherits\\package.json",
+                                "raw": "npm:inherits",
+                                "main": "./inherits.js",
+                                "browser": "./inherits_browser.js",
+                                "version": "2.0.3",
+                                "global": false,
+                                "name": "inherits"
+                              },
+                              "readable-stream": {
+                                "src": "C:\\Projects\\spsave\\node_modules\\readable-stream\\package.json",
+                                "raw": "npm:readable-stream",
+                                "main": "readable.js",
+                                "browser": {
+                                  "util": false
+                                },
+                                "version": "1.1.14",
+                                "global": false,
+                                "dependencies": {
+                                  "core-util-is": {
+                                    "src": "C:\\Projects\\spsave\\node_modules\\core-util-is\\package.json",
+                                    "raw": "npm:core-util-is",
+                                    "main": "lib/util.js",
+                                    "version": "1.0.2",
+                                    "global": false,
+                                    "name": "core-util-is"
+                                  },
+                                  "inherits": {
+                                    "src": "C:\\Projects\\spsave\\node_modules\\inherits\\package.json",
+                                    "raw": "npm:inherits",
+                                    "main": "./inherits.js",
+                                    "browser": "./inherits_browser.js",
+                                    "version": "2.0.3",
+                                    "global": false,
+                                    "name": "inherits"
+                                  },
+                                  "isarray": {
+                                    "src": "C:\\Projects\\spsave\\node_modules\\isarray\\package.json",
+                                    "raw": "npm:isarray",
+                                    "main": "index.js",
+                                    "version": "0.0.1",
+                                    "global": false,
+                                    "name": "isarray"
+                                  },
+                                  "string_decoder": {
+                                    "src": "C:\\Projects\\spsave\\node_modules\\string_decoder\\package.json",
+                                    "raw": "npm:string_decoder",
+                                    "main": "index.js",
+                                    "version": "0.10.31",
+                                    "global": false,
+                                    "name": "string_decoder"
+                                  }
+                                },
+                                "name": "readable-stream"
+                              },
+                              "typedarray": {
+                                "src": "C:\\Projects\\spsave\\node_modules\\typedarray\\package.json",
+                                "raw": "npm:typedarray",
+                                "main": "index.js",
+                                "version": "0.0.6",
+                                "global": false,
+                                "name": "typedarray"
+                              }
+                            },
+                            "name": "concat-stream"
+                          },
+                          "meow": {
+                            "src": "C:\\Projects\\spsave\\node_modules\\meow\\package.json",
+                            "raw": "npm:meow",
+                            "version": "2.0.0",
+                            "global": false,
+                            "dependencies": {
+                              "camelcase-keys": {
+                                "src": "C:\\Projects\\spsave\\node_modules\\camelcase-keys\\package.json",
+                                "raw": "npm:camelcase-keys",
+                                "version": "1.0.0",
+                                "global": false,
+                                "dependencies": {
+                                  "camelcase": {
+                                    "src": "C:\\Projects\\spsave\\node_modules\\camelcase\\package.json",
+                                    "raw": "npm:camelcase",
+                                    "version": "1.2.1",
+                                    "global": false,
+                                    "name": "camelcase"
+                                  },
+                                  "map-obj": {
+                                    "src": "C:\\Projects\\spsave\\node_modules\\map-obj\\package.json",
+                                    "raw": "npm:map-obj",
+                                    "version": "1.0.1",
+                                    "global": false,
+                                    "name": "map-obj"
+                                  }
+                                },
+                                "name": "camelcase-keys"
+                              },
+                              "indent-string": {
+                                "src": "C:\\Projects\\spsave\\node_modules\\indent-string\\package.json",
+                                "raw": "npm:indent-string",
+                                "version": "1.2.2",
+                                "global": false,
+                                "dependencies": {
+                                  "get-stdin": {
+                                    "src": "C:\\Projects\\spsave\\node_modules\\get-stdin\\package.json",
+                                    "raw": "npm:get-stdin",
+                                    "version": "4.0.1",
+                                    "global": false,
+                                    "name": "get-stdin"
+                                  },
+                                  "minimist": {
+                                    "src": "C:\\Projects\\spsave\\node_modules\\minimist\\package.json",
+                                    "raw": "npm:minimist",
+                                    "main": "index.js",
+                                    "version": "1.2.0",
+                                    "global": false,
+                                    "name": "minimist"
+                                  },
+                                  "repeating": {
+                                    "src": "C:\\Projects\\spsave\\node_modules\\repeating\\package.json",
+                                    "raw": "npm:repeating",
+                                    "version": "1.1.3",
+                                    "global": false,
+                                    "dependencies": {
+                                      "is-finite": {
+                                        "src": "C:\\Projects\\spsave\\node_modules\\is-finite\\package.json",
+                                        "raw": "npm:is-finite",
+                                        "version": "1.0.2",
+                                        "global": false,
+                                        "dependencies": {
+                                          "number-is-nan": {
+                                            "src": "C:\\Projects\\spsave\\node_modules\\number-is-nan\\package.json",
+                                            "raw": "npm:number-is-nan",
+                                            "version": "1.0.1",
+                                            "global": false,
+                                            "name": "number-is-nan"
+                                          }
+                                        },
+                                        "name": "is-finite"
+                                      }
+                                    },
+                                    "name": "repeating"
+                                  }
+                                },
+                                "name": "indent-string"
+                              },
+                              "minimist": {
+                                "src": "C:\\Projects\\spsave\\node_modules\\minimist\\package.json",
+                                "raw": "npm:minimist",
+                                "main": "index.js",
+                                "version": "1.2.0",
+                                "global": false,
+                                "name": "minimist"
+                              },
+                              "object-assign": {
+                                "src": "C:\\Projects\\spsave\\node_modules\\meow\\node_modules\\object-assign\\package.json",
+                                "raw": "npm:object-assign",
+                                "version": "1.0.0",
+                                "global": false,
+                                "name": "object-assign"
+                              }
+                            },
+                            "name": "meow"
+                          }
+                        },
+                        "name": "base64url"
+                      },
+                      "buffer-equal-constant-time": {
+                        "src": "C:\\Projects\\spsave\\node_modules\\buffer-equal-constant-time\\package.json",
+                        "raw": "npm:buffer-equal-constant-time",
+                        "main": "index.js",
+                        "version": "1.0.1",
+                        "global": false,
+                        "name": "buffer-equal-constant-time"
+                      },
+                      "ecdsa-sig-formatter": {
+                        "src": "C:\\Projects\\spsave\\node_modules\\ecdsa-sig-formatter\\package.json",
+                        "raw": "npm:ecdsa-sig-formatter",
+                        "main": "src/ecdsa-sig-formatter.js",
+                        "version": "1.0.7",
+                        "global": false,
+                        "dependencies": {
+                          "base64-url": {
+                            "src": "C:\\Projects\\spsave\\node_modules\\base64-url\\package.json",
+                            "raw": "npm:base64-url",
+                            "main": "index.js",
+                            "version": "1.3.2",
+                            "global": false,
+                            "name": "base64-url"
+                          }
+                        },
+                        "name": "ecdsa-sig-formatter"
+                      }
+                    },
+                    "name": "jwa"
+                  }
+                },
+                "name": "jws"
+              },
+              "lodash.once": {
+                "src": "C:\\Projects\\spsave\\node_modules\\lodash.once\\package.json",
+                "raw": "npm:lodash.once",
+                "version": "4.1.1",
+                "global": false,
+                "name": "lodash.once"
+              },
+              "ms": {
+                "src": "C:\\Projects\\spsave\\node_modules\\ms\\package.json",
+                "raw": "npm:ms",
+                "main": "./index",
+                "version": "0.7.1",
+                "global": false,
+                "name": "ms"
+              },
+              "xtend": {
+                "src": "C:\\Projects\\spsave\\node_modules\\xtend\\package.json",
+                "raw": "npm:xtend",
+                "main": "immutable",
+                "version": "4.0.1",
+                "global": false,
+                "name": "xtend"
+              }
+            },
+            "name": "jsonwebtoken"
+          },
+          "lodash": {
+            "src": "https://raw.githubusercontent.com/types/npm-lodash/9b83559bbd3454f0cd9e4020c920e36eee80d5a3/typings.json",
+            "raw": "registry:npm/lodash#4.0.0+20160723033700",
+            "main": "index.d.ts",
+            "version": "4.0.0",
+            "name": "lodash",
+            "type": "typings"
+          },
+          "request": {
+            "src": "https://raw.githubusercontent.com/louy/typed-request/8dbbc8c9c3aee44d1ca00ac82a88a00f37198e1d/typings.json",
+            "raw": "registry:npm/request#2.69.0+20160428223725",
+            "main": "index.d.ts",
+            "version": "2.69.0",
+            "dependencies": {
+              "form-data": {
+                "src": "https://raw.githubusercontent.com/typed-typings/npm-form-data/edc32200ec6065d98bfaa7ff9cfd104e17c5d3e4/typings.json",
+                "raw": "registry:npm/form-data#1.0.0+20160211003958",
+                "main": "lib/form_data.d.ts",
+                "browser": "lib/browser.d.ts",
+                "name": "form-data",
+                "type": "typings"
+              },
+              "tough-cookie": {
+                "src": "https://raw.githubusercontent.com/typed-typings/npm-tough-cookie/3e37dc2e6d448130d2fa4be1026e195ffda2b398/typings.json",
+                "raw": "registry:npm/tough-cookie#2.2.0+20160211003958",
+                "main": "lib/cookie.d.ts",
+                "name": "tough-cookie",
+                "type": "typings"
+              }
+            },
+            "name": "request",
+            "type": "typings"
+          },
+          "request-promise": {
+            "src": "C:\\Projects\\spsave\\node_modules\\node-sp-auth\\node_modules\\request-promise\\package.json",
+            "raw": "npm:request-promise",
+            "main": "./lib/rp.js",
+            "version": "4.1.1",
+            "global": false,
+            "dependencies": {
+              "bluebird": {
+                "src": "C:\\Projects\\spsave\\node_modules\\bluebird\\package.json",
+                "raw": "npm:bluebird",
+                "main": "./js/release/bluebird.js",
+                "browser": "./js/browser/bluebird.js",
+                "version": "3.4.6",
+                "global": false,
+                "name": "bluebird"
+              },
+              "request-promise-core": {
+                "src": "C:\\Projects\\spsave\\node_modules\\request-promise-core\\package.json",
+                "raw": "npm:request-promise-core",
+                "main": "./lib/plumbing.js",
+                "version": "1.1.1",
+                "global": false,
+                "dependencies": {
+                  "lodash": {
+                    "src": "C:\\Projects\\spsave\\node_modules\\lodash\\package.json",
+                    "raw": "npm:lodash",
+                    "main": "lodash.js",
+                    "version": "4.16.3",
+                    "global": false,
+                    "name": "lodash"
+                  }
+                },
+                "name": "request-promise-core"
+              },
+              "stealthy-require": {
+                "src": "C:\\Projects\\spsave\\node_modules\\stealthy-require\\package.json",
+                "raw": "npm:stealthy-require",
+                "main": "./lib/index.js",
+                "version": "1.0.0",
+                "global": false,
+                "name": "stealthy-require"
+              }
+            },
+            "name": "request-promise"
+          },
+          "xmldoc": {
+            "src": "C:\\Projects\\spsave\\node_modules\\xmldoc\\package.json",
+            "raw": "npm:xmldoc",
+            "main": "./index",
+            "version": "0.5.1",
+            "global": false,
+            "dependencies": {
+              "sax": {
+                "src": "C:\\Projects\\spsave\\node_modules\\sax\\package.json",
+                "raw": "npm:sax",
+                "main": "lib/sax.js",
+                "version": "1.1.6",
+                "global": false,
+                "name": "sax"
+              }
+            },
+            "name": "xmldoc"
+          }
+        },
+        "name": "node-sp-auth"
+      },
       "node-spoauth": {
-        "src": "c:\\Projects\\spsave\\node_modules\\node-spoauth\\package.json",
+        "src": "C:\\Projects\\spsave\\node_modules\\node-spoauth\\package.json",
         "raw": "npm:node-spoauth",
         "main": "sharepoint.js",
         "version": "1.0.0",
         "global": false,
         "dependencies": {
           "xml2js": {
-            "src": "c:\\Projects\\spsave\\node_modules\\node-spoauth\\node_modules\\xml2js\\package.json",
+            "src": "C:\\Projects\\spsave\\node_modules\\xml2js\\package.json",
             "raw": "npm:xml2js",
             "main": "./lib/xml2js",
-            "version": "0.4.12",
+            "version": "0.4.17",
             "global": false,
             "dependencies": {
               "sax": {
-                "src": "c:\\Projects\\spsave\\node_modules\\node-spoauth\\node_modules\\xml2js\\node_modules\\sax\\package.json",
+                "src": "C:\\Projects\\spsave\\node_modules\\sax\\package.json",
                 "raw": "npm:sax",
                 "main": "lib/sax.js",
-                "version": "1.1.3",
+                "version": "1.1.6",
                 "global": false,
                 "name": "sax"
               },
               "xmlbuilder": {
-                "src": "c:\\Projects\\spsave\\node_modules\\node-spoauth\\node_modules\\xml2js\\node_modules\\xmlbuilder\\package.json",
+                "src": "C:\\Projects\\spsave\\node_modules\\xmlbuilder\\package.json",
                 "raw": "npm:xmlbuilder",
                 "main": "./lib/index",
-                "version": "3.1.0",
+                "version": "4.2.1",
                 "global": false,
                 "dependencies": {
                   "lodash": {
-                    "src": "c:\\Projects\\spsave\\node_modules\\node-spoauth\\node_modules\\xml2js\\node_modules\\xmlbuilder\\node_modules\\lodash\\package.json",
+                    "src": "C:\\Projects\\spsave\\node_modules\\lodash\\package.json",
                     "raw": "npm:lodash",
-                    "main": "index.js",
-                    "version": "3.10.1",
+                    "main": "lodash.js",
+                    "version": "4.16.3",
                     "global": false,
                     "name": "lodash"
                   }
@@ -110,14 +755,12 @@
         "raw": "registry:npm/request#2.69.0+20160428223725",
         "main": "index.d.ts",
         "version": "2.69.0",
-        "global": false,
         "dependencies": {
           "form-data": {
             "src": "https://raw.githubusercontent.com/typed-typings/npm-form-data/edc32200ec6065d98bfaa7ff9cfd104e17c5d3e4/typings.json",
             "raw": "registry:npm/form-data#1.0.0+20160211003958",
             "main": "lib/form_data.d.ts",
             "browser": "lib/browser.d.ts",
-            "global": false,
             "name": "form-data",
             "type": "typings"
           },
@@ -125,7 +768,6 @@
             "src": "https://raw.githubusercontent.com/typed-typings/npm-tough-cookie/3e37dc2e6d448130d2fa4be1026e195ffda2b398/typings.json",
             "raw": "registry:npm/tough-cookie#2.2.0+20160211003958",
             "main": "lib/cookie.d.ts",
-            "global": false,
             "name": "tough-cookie",
             "type": "typings"
           }
@@ -134,53 +776,61 @@
         "type": "typings"
       },
       "request-promise": {
-        "src": "c:\\Projects\\spsave\\node_modules\\request-promise\\package.json",
+        "src": "C:\\Projects\\spsave\\node_modules\\request-promise\\package.json",
         "raw": "npm:request-promise",
         "main": "./lib/rp.js",
         "version": "3.0.0",
         "global": false,
         "dependencies": {
           "bluebird": {
-            "src": "c:\\Projects\\spsave\\node_modules\\bluebird\\package.json",
+            "src": "C:\\Projects\\spsave\\node_modules\\bluebird\\package.json",
             "raw": "npm:bluebird",
             "main": "./js/release/bluebird.js",
             "browser": "./js/browser/bluebird.js",
-            "version": "3.3.5",
+            "version": "3.4.6",
             "global": false,
             "name": "bluebird"
           },
           "lodash": {
-            "src": "c:\\Projects\\spsave\\node_modules\\request-promise\\node_modules\\lodash\\package.json",
+            "src": "C:\\Projects\\spsave\\node_modules\\lodash\\package.json",
             "raw": "npm:lodash",
             "main": "lodash.js",
-            "version": "4.12.0",
+            "version": "4.16.3",
             "global": false,
             "name": "lodash"
           },
           "request": {
-            "src": "c:\\Projects\\spsave\\node_modules\\request\\package.json",
+            "src": "C:\\Projects\\spsave\\node_modules\\request\\package.json",
             "raw": "npm:request",
             "main": "index.js",
-            "version": "2.67.0",
+            "version": "2.75.0",
             "global": false,
             "dependencies": {
               "aws-sign2": {
-                "src": "c:\\Projects\\spsave\\node_modules\\aws-sign2\\package.json",
+                "src": "C:\\Projects\\spsave\\node_modules\\aws-sign2\\package.json",
                 "raw": "npm:aws-sign2",
                 "main": "index.js",
                 "version": "0.6.0",
                 "global": false,
                 "name": "aws-sign2"
               },
+              "aws4": {
+                "src": "C:\\Projects\\spsave\\node_modules\\aws4\\package.json",
+                "raw": "npm:aws4",
+                "main": "aws4.js",
+                "version": "1.4.1",
+                "global": false,
+                "name": "aws4"
+              },
               "bl": {
-                "src": "c:\\Projects\\spsave\\node_modules\\bl\\package.json",
+                "src": "C:\\Projects\\spsave\\node_modules\\bl\\package.json",
                 "raw": "npm:bl",
                 "main": "bl.js",
-                "version": "1.0.3",
+                "version": "1.1.2",
                 "global": false,
                 "dependencies": {
                   "readable-stream": {
-                    "src": "c:\\Projects\\spsave\\node_modules\\readable-stream\\package.json",
+                    "src": "C:\\Projects\\spsave\\node_modules\\bl\\node_modules\\readable-stream\\package.json",
                     "raw": "npm:readable-stream",
                     "main": "readable.js",
                     "browser": {
@@ -190,7 +840,7 @@
                     "global": false,
                     "dependencies": {
                       "core-util-is": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\core-util-is\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\core-util-is\\package.json",
                         "raw": "npm:core-util-is",
                         "main": "lib/util.js",
                         "version": "1.0.2",
@@ -198,16 +848,16 @@
                         "name": "core-util-is"
                       },
                       "inherits": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\inherits\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\inherits\\package.json",
                         "raw": "npm:inherits",
                         "main": "./inherits.js",
                         "browser": "./inherits_browser.js",
-                        "version": "2.0.1",
+                        "version": "2.0.3",
                         "global": false,
                         "name": "inherits"
                       },
                       "isarray": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\isarray\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\bl\\node_modules\\isarray\\package.json",
                         "raw": "npm:isarray",
                         "main": "index.js",
                         "version": "1.0.0",
@@ -215,7 +865,7 @@
                         "name": "isarray"
                       },
                       "process-nextick-args": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\process-nextick-args\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\process-nextick-args\\package.json",
                         "raw": "npm:process-nextick-args",
                         "main": "index.js",
                         "version": "1.0.7",
@@ -223,7 +873,7 @@
                         "name": "process-nextick-args"
                       },
                       "string_decoder": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\string_decoder\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\string_decoder\\package.json",
                         "raw": "npm:string_decoder",
                         "main": "index.js",
                         "version": "0.10.31",
@@ -231,7 +881,7 @@
                         "name": "string_decoder"
                       },
                       "util-deprecate": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\util-deprecate\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\util-deprecate\\package.json",
                         "raw": "npm:util-deprecate",
                         "main": "node.js",
                         "browser": "browser.js",
@@ -246,7 +896,7 @@
                 "name": "bl"
               },
               "caseless": {
-                "src": "c:\\Projects\\spsave\\node_modules\\caseless\\package.json",
+                "src": "C:\\Projects\\spsave\\node_modules\\caseless\\package.json",
                 "raw": "npm:caseless",
                 "main": "index.js",
                 "version": "0.11.0",
@@ -254,14 +904,14 @@
                 "name": "caseless"
               },
               "combined-stream": {
-                "src": "c:\\Projects\\spsave\\node_modules\\combined-stream\\package.json",
+                "src": "C:\\Projects\\spsave\\node_modules\\combined-stream\\package.json",
                 "raw": "npm:combined-stream",
                 "main": "./lib/combined_stream",
                 "version": "1.0.5",
                 "global": false,
                 "dependencies": {
                   "delayed-stream": {
-                    "src": "c:\\Projects\\spsave\\node_modules\\delayed-stream\\package.json",
+                    "src": "C:\\Projects\\spsave\\node_modules\\delayed-stream\\package.json",
                     "raw": "npm:delayed-stream",
                     "main": "./lib/delayed_stream",
                     "version": "1.0.0",
@@ -272,7 +922,7 @@
                 "name": "combined-stream"
               },
               "extend": {
-                "src": "c:\\Projects\\spsave\\node_modules\\extend\\package.json",
+                "src": "C:\\Projects\\spsave\\node_modules\\extend\\package.json",
                 "raw": "npm:extend",
                 "main": "index",
                 "version": "3.0.0",
@@ -280,7 +930,7 @@
                 "name": "extend"
               },
               "forever-agent": {
-                "src": "c:\\Projects\\spsave\\node_modules\\forever-agent\\package.json",
+                "src": "C:\\Projects\\spsave\\node_modules\\forever-agent\\package.json",
                 "raw": "npm:forever-agent",
                 "main": "index.js",
                 "version": "0.6.1",
@@ -288,30 +938,30 @@
                 "name": "forever-agent"
               },
               "form-data": {
-                "src": "c:\\Projects\\spsave\\node_modules\\form-data\\package.json",
+                "src": "C:\\Projects\\spsave\\node_modules\\form-data\\package.json",
                 "raw": "npm:form-data",
                 "main": "./lib/form_data",
                 "browser": "./lib/browser",
-                "version": "1.0.0-rc4",
+                "version": "2.0.0",
                 "global": false,
                 "dependencies": {
-                  "async": {
-                    "src": "c:\\Projects\\spsave\\node_modules\\async\\package.json",
-                    "raw": "npm:async",
-                    "main": "lib/async.js",
-                    "version": "1.5.2",
+                  "asynckit": {
+                    "src": "C:\\Projects\\spsave\\node_modules\\asynckit\\package.json",
+                    "raw": "npm:asynckit",
+                    "main": "index.js",
+                    "version": "0.4.0",
                     "global": false,
-                    "name": "async"
+                    "name": "asynckit"
                   },
                   "combined-stream": {
-                    "src": "c:\\Projects\\spsave\\node_modules\\combined-stream\\package.json",
+                    "src": "C:\\Projects\\spsave\\node_modules\\combined-stream\\package.json",
                     "raw": "npm:combined-stream",
                     "main": "./lib/combined_stream",
                     "version": "1.0.5",
                     "global": false,
                     "dependencies": {
                       "delayed-stream": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\delayed-stream\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\delayed-stream\\package.json",
                         "raw": "npm:delayed-stream",
                         "main": "./lib/delayed_stream",
                         "version": "1.0.0",
@@ -322,15 +972,15 @@
                     "name": "combined-stream"
                   },
                   "mime-types": {
-                    "src": "c:\\Projects\\spsave\\node_modules\\mime-types\\package.json",
+                    "src": "C:\\Projects\\spsave\\node_modules\\mime-types\\package.json",
                     "raw": "npm:mime-types",
-                    "version": "2.1.11",
+                    "version": "2.1.12",
                     "global": false,
                     "dependencies": {
                       "mime-db": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\mime-db\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\mime-db\\package.json",
                         "raw": "npm:mime-db",
-                        "version": "1.23.0",
+                        "version": "1.24.0",
                         "global": false,
                         "name": "mime-db"
                       }
@@ -341,40 +991,40 @@
                 "name": "form-data"
               },
               "har-validator": {
-                "src": "c:\\Projects\\spsave\\node_modules\\har-validator\\package.json",
+                "src": "C:\\Projects\\spsave\\node_modules\\har-validator\\package.json",
                 "raw": "npm:har-validator",
                 "main": "lib/index",
                 "version": "2.0.6",
                 "global": false,
                 "dependencies": {
                   "chalk": {
-                    "src": "c:\\Projects\\spsave\\node_modules\\chalk\\package.json",
+                    "src": "C:\\Projects\\spsave\\node_modules\\chalk\\package.json",
                     "raw": "npm:chalk",
                     "version": "1.1.3",
                     "global": false,
                     "dependencies": {
                       "ansi-styles": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\ansi-styles\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\ansi-styles\\package.json",
                         "raw": "npm:ansi-styles",
                         "version": "2.2.1",
                         "global": false,
                         "name": "ansi-styles"
                       },
                       "escape-string-regexp": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\escape-string-regexp\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\escape-string-regexp\\package.json",
                         "raw": "npm:escape-string-regexp",
                         "version": "1.0.5",
                         "global": false,
                         "name": "escape-string-regexp"
                       },
                       "has-ansi": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\has-ansi\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\has-ansi\\package.json",
                         "raw": "npm:has-ansi",
                         "version": "2.0.0",
                         "global": false,
                         "dependencies": {
                           "ansi-regex": {
-                            "src": "c:\\Projects\\spsave\\node_modules\\ansi-regex\\package.json",
+                            "src": "C:\\Projects\\spsave\\node_modules\\ansi-regex\\package.json",
                             "raw": "npm:ansi-regex",
                             "version": "2.0.0",
                             "global": false,
@@ -384,13 +1034,13 @@
                         "name": "has-ansi"
                       },
                       "strip-ansi": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\strip-ansi\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\strip-ansi\\package.json",
                         "raw": "npm:strip-ansi",
                         "version": "3.0.1",
                         "global": false,
                         "dependencies": {
                           "ansi-regex": {
-                            "src": "c:\\Projects\\spsave\\node_modules\\ansi-regex\\package.json",
+                            "src": "C:\\Projects\\spsave\\node_modules\\ansi-regex\\package.json",
                             "raw": "npm:ansi-regex",
                             "version": "2.0.0",
                             "global": false,
@@ -400,7 +1050,7 @@
                         "name": "strip-ansi"
                       },
                       "supports-color": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\supports-color\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\supports-color\\package.json",
                         "raw": "npm:supports-color",
                         "version": "2.0.0",
                         "global": false,
@@ -410,14 +1060,14 @@
                     "name": "chalk"
                   },
                   "commander": {
-                    "src": "c:\\Projects\\spsave\\node_modules\\commander\\package.json",
+                    "src": "C:\\Projects\\spsave\\node_modules\\commander\\package.json",
                     "raw": "npm:commander",
                     "main": "index",
                     "version": "2.9.0",
                     "global": false,
                     "dependencies": {
                       "graceful-readlink": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\graceful-readlink\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\graceful-readlink\\package.json",
                         "raw": "npm:graceful-readlink",
                         "main": "index.js",
                         "version": "1.0.1",
@@ -428,14 +1078,14 @@
                     "name": "commander"
                   },
                   "is-my-json-valid": {
-                    "src": "c:\\Projects\\spsave\\node_modules\\is-my-json-valid\\package.json",
+                    "src": "C:\\Projects\\spsave\\node_modules\\is-my-json-valid\\package.json",
                     "raw": "npm:is-my-json-valid",
                     "main": "index.js",
-                    "version": "2.13.1",
+                    "version": "2.15.0",
                     "global": false,
                     "dependencies": {
                       "generate-function": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\generate-function\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\generate-function\\package.json",
                         "raw": "npm:generate-function",
                         "main": "index.js",
                         "version": "2.0.0",
@@ -443,14 +1093,14 @@
                         "name": "generate-function"
                       },
                       "generate-object-property": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\generate-object-property\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\generate-object-property\\package.json",
                         "raw": "npm:generate-object-property",
                         "main": "index.js",
                         "version": "1.2.0",
                         "global": false,
                         "dependencies": {
                           "is-property": {
-                            "src": "c:\\Projects\\spsave\\node_modules\\is-property\\package.json",
+                            "src": "C:\\Projects\\spsave\\node_modules\\is-property\\package.json",
                             "raw": "npm:is-property",
                             "main": "is-property.js",
                             "version": "1.0.2",
@@ -461,15 +1111,15 @@
                         "name": "generate-object-property"
                       },
                       "jsonpointer": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\jsonpointer\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\jsonpointer\\package.json",
                         "raw": "npm:jsonpointer",
                         "main": "./jsonpointer",
-                        "version": "2.0.0",
+                        "version": "4.0.0",
                         "global": false,
                         "name": "jsonpointer"
                       },
                       "xtend": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\xtend\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\xtend\\package.json",
                         "raw": "npm:xtend",
                         "main": "immutable",
                         "version": "4.0.1",
@@ -480,13 +1130,13 @@
                     "name": "is-my-json-valid"
                   },
                   "pinkie-promise": {
-                    "src": "c:\\Projects\\spsave\\node_modules\\pinkie-promise\\package.json",
+                    "src": "C:\\Projects\\spsave\\node_modules\\pinkie-promise\\package.json",
                     "raw": "npm:pinkie-promise",
                     "version": "2.0.1",
                     "global": false,
                     "dependencies": {
                       "pinkie": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\pinkie\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\pinkie\\package.json",
                         "raw": "npm:pinkie",
                         "version": "2.0.4",
                         "global": false,
@@ -499,7 +1149,7 @@
                 "name": "har-validator"
               },
               "hawk": {
-                "src": "c:\\Projects\\spsave\\node_modules\\hawk\\package.json",
+                "src": "C:\\Projects\\spsave\\node_modules\\hawk\\package.json",
                 "raw": "npm:hawk",
                 "main": "lib/index.js",
                 "browser": "./lib/browser.js",
@@ -507,14 +1157,14 @@
                 "global": false,
                 "dependencies": {
                   "boom": {
-                    "src": "c:\\Projects\\spsave\\node_modules\\boom\\package.json",
+                    "src": "C:\\Projects\\spsave\\node_modules\\boom\\package.json",
                     "raw": "npm:boom",
                     "main": "lib/index.js",
                     "version": "2.10.1",
                     "global": false,
                     "dependencies": {
                       "hoek": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\hoek\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\hoek\\package.json",
                         "raw": "npm:hoek",
                         "main": "lib/index.js",
                         "version": "2.16.3",
@@ -525,21 +1175,21 @@
                     "name": "boom"
                   },
                   "cryptiles": {
-                    "src": "c:\\Projects\\spsave\\node_modules\\cryptiles\\package.json",
+                    "src": "C:\\Projects\\spsave\\node_modules\\cryptiles\\package.json",
                     "raw": "npm:cryptiles",
                     "main": "lib/index.js",
                     "version": "2.0.5",
                     "global": false,
                     "dependencies": {
                       "boom": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\boom\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\boom\\package.json",
                         "raw": "npm:boom",
                         "main": "lib/index.js",
                         "version": "2.10.1",
                         "global": false,
                         "dependencies": {
                           "hoek": {
-                            "src": "c:\\Projects\\spsave\\node_modules\\hoek\\package.json",
+                            "src": "C:\\Projects\\spsave\\node_modules\\hoek\\package.json",
                             "raw": "npm:hoek",
                             "main": "lib/index.js",
                             "version": "2.16.3",
@@ -553,7 +1203,7 @@
                     "name": "cryptiles"
                   },
                   "hoek": {
-                    "src": "c:\\Projects\\spsave\\node_modules\\hoek\\package.json",
+                    "src": "C:\\Projects\\spsave\\node_modules\\hoek\\package.json",
                     "raw": "npm:hoek",
                     "main": "lib/index.js",
                     "version": "2.16.3",
@@ -561,14 +1211,14 @@
                     "name": "hoek"
                   },
                   "sntp": {
-                    "src": "c:\\Projects\\spsave\\node_modules\\sntp\\package.json",
+                    "src": "C:\\Projects\\spsave\\node_modules\\sntp\\package.json",
                     "raw": "npm:sntp",
                     "main": "index",
                     "version": "1.0.9",
                     "global": false,
                     "dependencies": {
                       "hoek": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\hoek\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\hoek\\package.json",
                         "raw": "npm:hoek",
                         "main": "lib/index.js",
                         "version": "2.16.3",
@@ -582,14 +1232,14 @@
                 "name": "hawk"
               },
               "http-signature": {
-                "src": "c:\\Projects\\spsave\\node_modules\\http-signature\\package.json",
+                "src": "C:\\Projects\\spsave\\node_modules\\http-signature\\package.json",
                 "raw": "npm:http-signature",
                 "main": "lib/index.js",
                 "version": "1.1.1",
                 "global": false,
                 "dependencies": {
                   "assert-plus": {
-                    "src": "c:\\Projects\\spsave\\node_modules\\assert-plus\\package.json",
+                    "src": "C:\\Projects\\spsave\\node_modules\\assert-plus\\package.json",
                     "raw": "npm:assert-plus",
                     "main": "./assert.js",
                     "version": "0.2.0",
@@ -597,14 +1247,14 @@
                     "name": "assert-plus"
                   },
                   "jsprim": {
-                    "src": "c:\\Projects\\spsave\\node_modules\\jsprim\\package.json",
+                    "src": "C:\\Projects\\spsave\\node_modules\\jsprim\\package.json",
                     "raw": "npm:jsprim",
                     "main": "./lib/jsprim.js",
-                    "version": "1.2.2",
+                    "version": "1.3.1",
                     "global": false,
                     "dependencies": {
                       "extsprintf": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\extsprintf\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\extsprintf\\package.json",
                         "raw": "npm:extsprintf",
                         "main": "./lib/extsprintf.js",
                         "version": "1.0.2",
@@ -612,22 +1262,22 @@
                         "name": "extsprintf"
                       },
                       "json-schema": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\json-schema\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\json-schema\\package.json",
                         "raw": "npm:json-schema",
                         "main": "./lib/validate.js",
-                        "version": "0.2.2",
+                        "version": "0.2.3",
                         "global": false,
                         "name": "json-schema"
                       },
                       "verror": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\verror\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\verror\\package.json",
                         "raw": "npm:verror",
                         "main": "./lib/verror.js",
                         "version": "1.3.6",
                         "global": false,
                         "dependencies": {
                           "extsprintf": {
-                            "src": "c:\\Projects\\spsave\\node_modules\\extsprintf\\package.json",
+                            "src": "C:\\Projects\\spsave\\node_modules\\extsprintf\\package.json",
                             "raw": "npm:extsprintf",
                             "main": "./lib/extsprintf.js",
                             "version": "1.0.2",
@@ -641,14 +1291,14 @@
                     "name": "jsprim"
                   },
                   "sshpk": {
-                    "src": "c:\\Projects\\spsave\\node_modules\\sshpk\\package.json",
+                    "src": "C:\\Projects\\spsave\\node_modules\\sshpk\\package.json",
                     "raw": "npm:sshpk",
                     "main": "lib/index.js",
-                    "version": "1.8.3",
+                    "version": "1.10.1",
                     "global": false,
                     "dependencies": {
                       "asn1": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\asn1\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\asn1\\package.json",
                         "raw": "npm:asn1",
                         "main": "lib/index.js",
                         "version": "0.2.3",
@@ -656,22 +1306,44 @@
                         "name": "asn1"
                       },
                       "assert-plus": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\sshpk\\node_modules\\assert-plus\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\sshpk\\node_modules\\assert-plus\\package.json",
                         "raw": "npm:assert-plus",
                         "main": "./assert.js",
                         "version": "1.0.0",
                         "global": false,
                         "name": "assert-plus"
                       },
+                      "bcrypt-pbkdf": {
+                        "src": "C:\\Projects\\spsave\\node_modules\\bcrypt-pbkdf\\package.json",
+                        "raw": "npm:bcrypt-pbkdf",
+                        "main": "index.js",
+                        "version": "1.0.0",
+                        "global": false,
+                        "dependencies": {
+                          "tweetnacl": {
+                            "src": "C:\\Projects\\spsave\\node_modules\\tweetnacl\\package.json",
+                            "raw": "npm:tweetnacl",
+                            "main": "nacl-fast.js",
+                            "browser": {
+                              "buffer": false,
+                              "crypto": false
+                            },
+                            "version": "0.14.3",
+                            "global": false,
+                            "name": "tweetnacl"
+                          }
+                        },
+                        "name": "bcrypt-pbkdf"
+                      },
                       "dashdash": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\dashdash\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\dashdash\\package.json",
                         "raw": "npm:dashdash",
                         "main": "./lib/dashdash.js",
-                        "version": "1.13.1",
+                        "version": "1.14.0",
                         "global": false,
                         "dependencies": {
                           "assert-plus": {
-                            "src": "c:\\Projects\\spsave\\node_modules\\dashdash\\node_modules\\assert-plus\\package.json",
+                            "src": "C:\\Projects\\spsave\\node_modules\\dashdash\\node_modules\\assert-plus\\package.json",
                             "raw": "npm:assert-plus",
                             "main": "./assert.js",
                             "version": "1.0.0",
@@ -682,14 +1354,14 @@
                         "name": "dashdash"
                       },
                       "ecc-jsbn": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\ecc-jsbn\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\ecc-jsbn\\package.json",
                         "raw": "npm:ecc-jsbn",
                         "main": "index.js",
                         "version": "0.1.1",
                         "global": false,
                         "dependencies": {
                           "jsbn": {
-                            "src": "c:\\Projects\\spsave\\node_modules\\jsbn\\package.json",
+                            "src": "C:\\Projects\\spsave\\node_modules\\jsbn\\package.json",
                             "raw": "npm:jsbn",
                             "main": "index.js",
                             "version": "0.1.0",
@@ -700,14 +1372,14 @@
                         "name": "ecc-jsbn"
                       },
                       "getpass": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\getpass\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\getpass\\package.json",
                         "raw": "npm:getpass",
                         "main": "lib/index.js",
                         "version": "0.1.6",
                         "global": false,
                         "dependencies": {
                           "assert-plus": {
-                            "src": "c:\\Projects\\spsave\\node_modules\\getpass\\node_modules\\assert-plus\\package.json",
+                            "src": "C:\\Projects\\spsave\\node_modules\\getpass\\node_modules\\assert-plus\\package.json",
                             "raw": "npm:assert-plus",
                             "main": "./assert.js",
                             "version": "1.0.0",
@@ -718,14 +1390,14 @@
                         "name": "getpass"
                       },
                       "jodid25519": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\jodid25519\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\jodid25519\\package.json",
                         "raw": "npm:jodid25519",
                         "main": "index.js",
                         "version": "1.0.2",
                         "global": false,
                         "dependencies": {
                           "jsbn": {
-                            "src": "c:\\Projects\\spsave\\node_modules\\jsbn\\package.json",
+                            "src": "C:\\Projects\\spsave\\node_modules\\jsbn\\package.json",
                             "raw": "npm:jsbn",
                             "main": "index.js",
                             "version": "0.1.0",
@@ -736,7 +1408,7 @@
                         "name": "jodid25519"
                       },
                       "jsbn": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\jsbn\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\jsbn\\package.json",
                         "raw": "npm:jsbn",
                         "main": "index.js",
                         "version": "0.1.0",
@@ -744,14 +1416,14 @@
                         "name": "jsbn"
                       },
                       "tweetnacl": {
-                        "src": "c:\\Projects\\spsave\\node_modules\\tweetnacl\\package.json",
+                        "src": "C:\\Projects\\spsave\\node_modules\\tweetnacl\\package.json",
                         "raw": "npm:tweetnacl",
                         "main": "nacl-fast.js",
                         "browser": {
                           "buffer": false,
                           "crypto": false
                         },
-                        "version": "0.13.3",
+                        "version": "0.14.3",
                         "global": false,
                         "name": "tweetnacl"
                       }
@@ -762,7 +1434,7 @@
                 "name": "http-signature"
               },
               "is-typedarray": {
-                "src": "c:\\Projects\\spsave\\node_modules\\is-typedarray\\package.json",
+                "src": "C:\\Projects\\spsave\\node_modules\\is-typedarray\\package.json",
                 "raw": "npm:is-typedarray",
                 "main": "index.js",
                 "version": "1.0.0",
@@ -770,7 +1442,7 @@
                 "name": "is-typedarray"
               },
               "isstream": {
-                "src": "c:\\Projects\\spsave\\node_modules\\isstream\\package.json",
+                "src": "C:\\Projects\\spsave\\node_modules\\isstream\\package.json",
                 "raw": "npm:isstream",
                 "main": "isstream.js",
                 "version": "0.1.2",
@@ -778,7 +1450,7 @@
                 "name": "isstream"
               },
               "json-stringify-safe": {
-                "src": "c:\\Projects\\spsave\\node_modules\\json-stringify-safe\\package.json",
+                "src": "C:\\Projects\\spsave\\node_modules\\json-stringify-safe\\package.json",
                 "raw": "npm:json-stringify-safe",
                 "main": "stringify.js",
                 "version": "5.0.1",
@@ -786,15 +1458,15 @@
                 "name": "json-stringify-safe"
               },
               "mime-types": {
-                "src": "c:\\Projects\\spsave\\node_modules\\mime-types\\package.json",
+                "src": "C:\\Projects\\spsave\\node_modules\\mime-types\\package.json",
                 "raw": "npm:mime-types",
-                "version": "2.1.11",
+                "version": "2.1.12",
                 "global": false,
                 "dependencies": {
                   "mime-db": {
-                    "src": "c:\\Projects\\spsave\\node_modules\\mime-db\\package.json",
+                    "src": "C:\\Projects\\spsave\\node_modules\\mime-db\\package.json",
                     "raw": "npm:mime-db",
-                    "version": "1.23.0",
+                    "version": "1.24.0",
                     "global": false,
                     "name": "mime-db"
                   }
@@ -802,7 +1474,7 @@
                 "name": "mime-types"
               },
               "node-uuid": {
-                "src": "c:\\Projects\\spsave\\node_modules\\node-uuid\\package.json",
+                "src": "C:\\Projects\\spsave\\node_modules\\node-uuid\\package.json",
                 "raw": "npm:node-uuid",
                 "main": "./uuid.js",
                 "version": "1.4.7",
@@ -810,7 +1482,7 @@
                 "name": "node-uuid"
               },
               "oauth-sign": {
-                "src": "c:\\Projects\\spsave\\node_modules\\oauth-sign\\package.json",
+                "src": "C:\\Projects\\spsave\\node_modules\\oauth-sign\\package.json",
                 "raw": "npm:oauth-sign",
                 "main": "index.js",
                 "version": "0.8.2",
@@ -818,15 +1490,15 @@
                 "name": "oauth-sign"
               },
               "qs": {
-                "src": "c:\\Projects\\spsave\\node_modules\\qs\\package.json",
+                "src": "C:\\Projects\\spsave\\node_modules\\qs\\package.json",
                 "raw": "npm:qs",
                 "main": "lib/index.js",
-                "version": "5.2.0",
+                "version": "6.2.1",
                 "global": false,
                 "name": "qs"
               },
               "stringstream": {
-                "src": "c:\\Projects\\spsave\\node_modules\\stringstream\\package.json",
+                "src": "C:\\Projects\\spsave\\node_modules\\stringstream\\package.json",
                 "raw": "npm:stringstream",
                 "main": "stringstream.js",
                 "version": "0.0.5",
@@ -834,15 +1506,15 @@
                 "name": "stringstream"
               },
               "tough-cookie": {
-                "src": "c:\\Projects\\spsave\\node_modules\\tough-cookie\\package.json",
+                "src": "C:\\Projects\\spsave\\node_modules\\tough-cookie\\package.json",
                 "raw": "npm:tough-cookie",
                 "main": "./lib/cookie",
-                "version": "2.2.2",
+                "version": "2.3.1",
                 "global": false,
                 "name": "tough-cookie"
               },
               "tunnel-agent": {
-                "src": "c:\\Projects\\spsave\\node_modules\\tunnel-agent\\package.json",
+                "src": "C:\\Projects\\spsave\\node_modules\\tunnel-agent\\package.json",
                 "raw": "npm:tunnel-agent",
                 "main": "index.js",
                 "version": "0.4.3",

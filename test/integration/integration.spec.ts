@@ -10,7 +10,7 @@ import File = require('vinyl');
 import * as sinon from 'sinon';
 
 import {spsave} from './../../src/core/SPSave';
-import {FileContentOptions, VinylOptions, GlobOptions, CheckinType} from './../../src/core/SPSaveOptions';
+import {CheckinType, FileOptions, ICoreOptions} from './../../src/core/SPSaveOptions';
 import {UrlHelper} from './../../src/utils/UrlHelper';
 
 let config: any = require('./config');
@@ -19,13 +19,11 @@ let tests: any[] = [
   {
     name: 'on-premise',
     creds: config.onprem,
-    env: config.env,
     url: config.url.onprem
   },
   {
     name: 'online',
     creds: config.online,
-    env: {},
     url: config.url.online
   }
 ];
@@ -86,20 +84,20 @@ tests.forEach(test => {
       let fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
       let folder: string = 'SiteAssets/files';
 
-      let opts: FileContentOptions = {
-        username: test.creds.username,
-        password: test.creds.password,
-        domain: test.env.domain,
-        siteUrl: test.url,
+      let files: FileOptions = {
         fileName: fileName,
         fileContent: fileContent,
         folder: folder
       };
 
-      spsave(opts)
+      let core: ICoreOptions = {
+        siteUrl: test.url
+      };
+
+      spsave(core, test.creds, files)
         .then(data => {
           let fileRelativeUrl: string = `${path}/${folder}/${fileName}`;
-          return spr.get(`${opts.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)/$value` +
+          return spr.get(`${core.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)/$value` +
             `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`, {
               encoding: null
             });
@@ -119,20 +117,20 @@ tests.forEach(test => {
       let fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
       let folder: string = 'SiteAssets/files';
 
-      let opts: FileContentOptions = {
-        username: test.creds.username,
-        password: test.creds.password,
-        domain: test.env.domain,
-        siteUrl: test.url,
+      let files: FileOptions = {
         fileName: fileName,
         fileContent: fileContent,
         folder: folder
       };
 
-      spsave(opts)
+      let core: ICoreOptions = {
+        siteUrl: test.url
+      };
+
+      spsave(core, test.creds, files)
         .then(data => {
           let fileRelativeUrl: string = `${path}/${folder}/${fileName}`;
-          return spr.get(`${opts.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)/$value` +
+          return spr.get(`${core.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)/$value` +
             `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`, {
               encoding: null
             });
@@ -151,15 +149,16 @@ tests.forEach(test => {
       let fileName: string = 'sp.png';
       let fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
 
-      let opts: FileContentOptions = {
-        username: test.creds.username,
-        password: test.creds.password,
-        domain: test.env.domain,
-        siteUrl: test.url,
+      let files: FileOptions = {
         fileName: fileName,
         fileContent: fileContent,
         folder: subFolder
       };
+
+      let core: ICoreOptions = {
+        siteUrl: test.url
+      };
+
       let subFolderRestUrl: string = `${test.url}/_api/web/GetFolderByServerRelativeUrl(@FolderName)` +
         `?@FolderName='${encodeURIComponent(subFolder)}'`;
 
@@ -169,7 +168,7 @@ tests.forEach(test => {
         })
         .catch(err => {
           if (err.statusCode === 404 || err.statusCode === 500) { /* 500 for online */
-            return spsave(opts);
+            return spsave(core, test.creds, files);
           }
           done(new Error('Folder should be deleted before running this test'));
         })
@@ -193,14 +192,17 @@ tests.forEach(test => {
 
       vfs.src(`test/integration/files/${fileName}`)
         .pipe(map((file: File, cb: Function) => {
-          spsave(<VinylOptions>{
-            username: test.creds.username,
-            password: test.creds.password,
-            domain: test.env.domain,
-            siteUrl: test.url,
+
+          let files: FileOptions = {
             file: file,
             folder: folder
-          })
+          };
+
+          let core: ICoreOptions = {
+            siteUrl: test.url
+          };
+
+          spsave(core, test.creds, files)
             .then(data => {
               let fileRelativeUrl: string = `${path}/${folder}/${fileName}`;
               return spr.get(`${test.url}/_api/web/GetFileByServerRelativeUrl(@FileUrl)/$value` +
@@ -229,14 +231,16 @@ tests.forEach(test => {
 
       vfs.src(`test/integration/files/${fileName}`, { base: 'test/integration' })
         .pipe(map((file: File, cb: Function) => {
-          spsave(<VinylOptions>{
-            username: test.creds.username,
-            password: test.creds.password,
-            domain: test.env.domain,
-            siteUrl: test.url,
+          let files: FileOptions = {
             file: file,
             folder: folder
-          })
+          };
+
+          let core: ICoreOptions = {
+            siteUrl: test.url
+          };
+
+          spsave(core, test.creds, files)
             .then(data => {
               return spr.get(`${test.url}/_api/web/GetFileByServerRelativeUrl(@FileUrl)/$value` +
                 `?@FileUrl='${encodeURIComponent(`${path}/SiteAssets/files/${fileName}`)}'`, {
@@ -261,15 +265,17 @@ tests.forEach(test => {
       let pngFile: Buffer = fs.readFileSync('test/integration/files/sp.png');
       let txtFile: Buffer = fs.readFileSync('test/integration/files/spsave.txt');
 
-      spsave(<GlobOptions>{
-        username: test.creds.username,
-        password: test.creds.password,
-        domain: test.env.domain,
-        siteUrl: test.url,
+      let files: FileOptions = {
         glob: ['test/integration/files/*.*'],
         base: 'test/integration',
         folder: 'SiteAssets'
-      })
+      };
+
+      let core: ICoreOptions = {
+        siteUrl: test.url
+      };
+
+      spsave(core, test.creds, files)
         .then(() => {
           return Promise.all([spr.get(`${test.url}/_api/web/GetFileByServerRelativeUrl(@FileUrl)/$value` +
             `?@FileUrl='${encodeURIComponent(`${path}/SiteAssets/files/sp.png`)}'`, {
@@ -297,22 +303,22 @@ tests.forEach(test => {
       let folder: string = 'SiteAssets/files';
       let comment: string = 'spsave testing';
 
-      let opts: FileContentOptions = {
-        username: test.creds.username,
-        password: test.creds.password,
-        domain: test.env.domain,
-        siteUrl: test.url,
+      let files: FileOptions = {
         fileName: fileName,
         fileContent: fileContent,
-        folder: folder,
+        folder: folder
+      };
+
+      let core: ICoreOptions = {
+        siteUrl: test.url,
         checkin: true,
         checkinMessage: comment
       };
 
-      spsave(opts)
+      spsave(core, test.creds, files)
         .then(data => {
           let fileRelativeUrl: string = `${path}/${folder}/${fileName}`;
-          return spr.get(`${opts.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)` +
+          return spr.get(`${core.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)` +
             `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`, {
               encoding: null
             });
@@ -333,32 +339,32 @@ tests.forEach(test => {
       let folder: string = 'SiteAssets/files';
       let fileRelativeUrl: string = `${path}/${folder}/${fileName}`;
 
-      let opts: FileContentOptions = {
-        username: test.creds.username,
-        password: test.creds.password,
-        domain: test.env.domain,
-        siteUrl: test.url,
+      let files: FileOptions = {
         fileName: fileName,
         fileContent: fileContent,
-        folder: folder,
+        folder: folder
+      };
+
+      let core: ICoreOptions = {
+        siteUrl: test.url,
         checkin: true,
         checkinMessage: 'spsave testing',
         checkinType: CheckinType.minor
       };
 
-      spsave(opts)
+      spsave(core, test.creds, files)
         .then(data => {
 
-          return spr.get(`${opts.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)` +
+          return spr.get(`${core.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)` +
             `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`, {
               encoding: null
             });
         })
         .then(data => {
-          return Promise.all([data.body.d, spsave(opts)]);
+          return Promise.all([data.body.d, spsave(core, test.creds, files)]);
         })
         .then(data => {
-          return Promise.all([data[0], spr.get(`${opts.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)` +
+          return Promise.all([data[0], spr.get(`${core.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)` +
             `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`, {
               encoding: null
             })]);
@@ -379,32 +385,32 @@ tests.forEach(test => {
       let folder: string = 'SiteAssets/files';
       let fileRelativeUrl: string = `${path}/${folder}/${fileName}`;
 
-      let opts: FileContentOptions = {
-        username: test.creds.username,
-        password: test.creds.password,
-        domain: test.env.domain,
-        siteUrl: test.url,
+      let files: FileOptions = {
         fileName: fileName,
         fileContent: fileContent,
-        folder: folder,
+        folder: folder
+      };
+
+      let core: ICoreOptions = {
+        siteUrl: test.url,
         checkin: true,
         checkinMessage: 'spsave testing',
         checkinType: CheckinType.major
       };
 
-      spsave(opts)
+      spsave(core, test.creds, files)
         .then(data => {
 
-          return spr.get(`${opts.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)` +
+          return spr.get(`${core.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)` +
             `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`, {
               encoding: null
             });
         })
         .then(data => {
-          return Promise.all([data.body.d, spsave(opts)]);
+          return Promise.all([data.body.d, spsave(core, test.creds, files)]);
         })
         .then(data => {
-          return Promise.all([data[0], spr.get(`${opts.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)` +
+          return Promise.all([data[0], spr.get(`${core.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)` +
             `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`, {
               encoding: null
             })]);
@@ -425,32 +431,32 @@ tests.forEach(test => {
       let folder: string = 'SiteAssets/files';
       let fileRelativeUrl: string = `${path}/${folder}/${fileName}`;
 
-      let opts: FileContentOptions = {
-        username: test.creds.username,
-        password: test.creds.password,
-        domain: test.env.domain,
-        siteUrl: test.url,
+      let files: FileOptions = {
         fileName: fileName,
         fileContent: fileContent,
-        folder: folder,
+        folder: folder
+      };
+
+      let core: ICoreOptions = {
+        siteUrl: test.url,
         checkin: true,
         checkinMessage: 'spsave testing',
         checkinType: CheckinType.overwrite
       };
 
-      spsave(opts)
+      spsave(core, test.creds, files)
         .then(data => {
 
-          return spr.get(`${opts.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)` +
+          return spr.get(`${core.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)` +
             `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`, {
               encoding: null
             });
         })
         .then(data => {
-          return Promise.all([data.body.d, spsave(opts)]);
+          return Promise.all([data.body.d, spsave(core, test.creds, files)]);
         })
         .then(data => {
-          return Promise.all([data[0], spr.get(`${opts.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)` +
+          return Promise.all([data[0], spr.get(`${core.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)` +
             `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`, {
               encoding: null
             })]);
@@ -472,14 +478,14 @@ tests.forEach(test => {
       let folder: string = 'SiteAssets/files';
       let title: string = 'updated by spsave';
 
-      let opts: FileContentOptions = {
-        username: test.creds.username,
-        password: test.creds.password,
-        domain: test.env.domain,
-        siteUrl: test.url,
+      let files: FileOptions = {
         fileName: fileName,
         fileContent: fileContent,
-        folder: folder,
+        folder: folder
+      };
+
+      let core: ICoreOptions = {
+        siteUrl: test.url,
         filesMetaData: [{
           fileName: fileName,
           metadata: {
@@ -489,15 +495,15 @@ tests.forEach(test => {
         }]
       };
 
-      spsave(opts)
+      spsave(core, test.creds, files)
         .then(data => {
           let fileRelativeUrl: string = `${path}/${folder}/${fileName}`;
-          return spr.get(`${opts.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)/ListItemAllFields` +
+          return spr.get(`${core.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)/ListItemAllFields` +
             `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`);
         })
         .then(data => {
           expect(data.body.d.Title).to.equal(title);
-          expect(opts.filesMetaData[0].updated).is.true;
+          expect(core.filesMetaData[0].updated).is.true;
           done();
           return null;
         })
@@ -511,14 +517,14 @@ tests.forEach(test => {
       let fileContent: Buffer = fs.readFileSync(`lib/src/core/${fileName}`);
       let folder: string = '_catalogs/masterpage/Display Templates/Search';
 
-      let opts: FileContentOptions = {
-        username: test.creds.username,
-        password: test.creds.password,
-        domain: test.env.domain,
-        siteUrl: test.url,
+      let files: FileOptions = {
         fileName: fileName,
         fileContent: fileContent,
-        folder: folder,
+        folder: folder
+      };
+
+      let core: ICoreOptions = {
+        siteUrl: test.url,
         filesMetaData: [{
           fileName: fileName,
           metadata: {
@@ -540,14 +546,14 @@ tests.forEach(test => {
         }]
       };
 
-      spsave(opts)
+      spsave(core, test.creds, files)
         .then(data => {
           let fileRelativeUrl: string = `${path}/${folder}/${fileName}`;
-          return spr.get(`${opts.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)/ListItemAllFields` +
+          return spr.get(`${core.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)/ListItemAllFields` +
             `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`);
         })
         .then(data => {
-          expect(opts.filesMetaData[0].updated).is.true;
+          expect(core.filesMetaData[0].updated).is.true;
           done();
           return null;
         })
@@ -563,17 +569,17 @@ tests.forEach(test => {
       let fileContent: string = '';
       let folder: string = 'SiteAssets/files';
 
-      let opts: FileContentOptions = {
-        username: test.creds.username,
-        password: test.creds.password,
-        domain: test.env.domain,
-        siteUrl: test.url,
+      let files: FileOptions = {
         fileName: fileName,
         fileContent: fileContent,
         folder: folder
       };
 
-      spsave(opts)
+      let core: ICoreOptions = {
+        siteUrl: test.url
+      };
+
+      spsave(core, test.creds, files)
         .then(data => {
           consoleSpy.restore();
           let call: sinon.SinonSpyCall = consoleSpy.getCall(0);

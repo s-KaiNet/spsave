@@ -3,9 +3,14 @@ import * as sprequest from 'sp-request';
 import {ISPRequest} from 'sp-request';
 import * as url from 'url';
 import * as _ from 'lodash';
-import {IEnvironment, IUserCredentials} from 'sp-request';
+import {IAuthOptions} from 'sp-request';
 
-import {FileContentOptions, CheckinType, IFileMetaData} from './SPSaveOptions';
+import {
+  ICoreOptions,
+  IFileContentOptions,
+  CheckinType,
+  IFileMetaData
+} from './SPSaveOptions';
 import {UrlHelper} from './../utils/UrlHelper';
 import {FoldersCreator} from './../utils/FoldersCreator';
 import {ILogger} from './../utils/ILogger';
@@ -30,24 +35,26 @@ export class FileSaver {
   private path: string;
   private foldersCreator: FoldersCreator;
   private logger: ILogger;
-  private options: FileContentOptions;
+  private coreOptions: ICoreOptions;
+  private file: IFileContentOptions;
 
-  constructor(options: FileContentOptions) {
-    let creds: IUserCredentials = _.pick<IUserCredentials, FileContentOptions>(options, ['username', 'password']);
-    let env: IEnvironment = _.pick<IEnvironment, FileContentOptions>(options, ['domain', 'workstation']);
-    this.sprequest = sprequest.create(creds, env);
+  constructor(coreOptions: ICoreOptions, credentialOptions: IAuthOptions, fileOptions: IFileContentOptions) {
+    this.sprequest = sprequest.create(credentialOptions);
 
-    this.options = _.defaults<FileContentOptions>(_.assign<{}, FileContentOptions>({}, options), {
+    this.file = _.assign<{}, IFileContentOptions>({}, fileOptions);
+    this.coreOptions = _.assign<{}, ICoreOptions>({}, coreOptions);
+
+    _.defaults<ICoreOptions>(this.coreOptions, {
       checkin: false,
       checkinType: CheckinType.minor,
       checkinMessage: 'Checked in by spsave'
     });
 
-    this.options.siteUrl = UrlHelper.removeTrailingSlash(this.options.siteUrl);
-    this.options.folder = UrlHelper.trimSlashes(this.options.folder);
-    this.path = UrlHelper.removeTrailingSlash(url.parse(this.options.siteUrl).path);
+    this.coreOptions.siteUrl = UrlHelper.removeTrailingSlash(this.coreOptions.siteUrl);
+    this.file.folder = UrlHelper.trimSlashes(this.file.folder);
+    this.path = UrlHelper.removeTrailingSlash(url.parse(this.coreOptions.siteUrl).path);
 
-    this.foldersCreator = new FoldersCreator(this.sprequest, this.options.folder, this.options.siteUrl);
+    this.foldersCreator = new FoldersCreator(this.sprequest, this.file.folder, this.coreOptions.siteUrl);
     this.logger = new ConsoleLogger();
 
     this.buildRestUrls();
@@ -55,9 +62,9 @@ export class FileSaver {
 
   public save(): Promise<any> {
     let deferred: IDeferred<any> = defer<any>();
-    if (typeof this.options.fileContent === 'string' && Buffer.byteLength(<string>this.options.fileContent) === 0) {
+    if (typeof this.file.fileContent === 'string' && Buffer.byteLength(<string>this.file.fileContent) === 0) {
       this.skipUpload(deferred);
-    } else if (this.options.fileContent.length === 0) {
+    } else if (this.file.fileContent.length === 0) {
       this.skipUpload(deferred);
     } else {
       this.saveFile(deferred);
@@ -70,7 +77,7 @@ export class FileSaver {
   private saveFile(requestDeferred: IDeferred<any>, attempts: number = 1): void {
 
     if (attempts > FileSaver.maxAttempts) {
-      let message: string = `File '${this.options.fileName}' probably is not uploaded: too many errors. Upload process interrupted.`;
+      let message: string = `File '${this.file.fileName}' probably is not uploaded: too many errors. Upload process interrupted.`;
       this.logger.error(message);
       requestDeferred.reject(new Error(message));
       return;
@@ -83,14 +90,14 @@ export class FileSaver {
       checkoutResult
         .then(() => {
           /* upload file to folder */
-          return this.sprequest.requestDigest(this.options.siteUrl);
+          return this.sprequest.requestDigest(this.coreOptions.siteUrl);
         })
         .then(digest => {
           return this.sprequest.post(this.uploadFileRestUrl, {
             headers: {
               'X-RequestDigest': digest
             },
-            body: this.options.fileContent,
+            body: this.file.fileContent,
             json: false
           });
         });
@@ -104,15 +111,15 @@ export class FileSaver {
         let data: any = result[1];
 
         /* checkin file if checkin options presented */
-        if (this.options.checkin && fileExists) {
+        if (this.coreOptions.checkin && fileExists) {
           return this.checkinFile();
           /* if this is the first upload and we need to checkin the file, explicitly trigger checkin by uploading once again */
-        } else if (this.options.checkin && !fileExists) {
+        } else if (this.coreOptions.checkin && !fileExists) {
           this.saveFile(requestDeferred, attempts + 1);
 
           return null;
         } else {
-          this.logger.success(this.options.fileName + ` successfully uploaded to '${this.options.siteUrl}/${this.options.folder}'`);
+          this.logger.success(this.file.fileName + ` successfully uploaded to '${this.coreOptions.siteUrl}/${this.file.folder}'`);
         }
 
         requestDeferred.resolve(JSON.parse(data.body));
@@ -124,9 +131,9 @@ export class FileSaver {
         }
 
         if (requestDeferred.promise.isPending()) {
-          this.logger.success(this.options.fileName +
-            ` successfully uploaded to '${this.options.siteUrl}/${this.options.folder}' and checked in.` +
-            ` Checkin type: ${CheckinType[this.options.checkinType]}`);
+          this.logger.success(this.file.fileName +
+            ` successfully uploaded to '${this.coreOptions.siteUrl}/${this.file.folder}' and checked in.` +
+            ` Checkin type: ${CheckinType[this.coreOptions.checkinType]}`);
 
           requestDeferred.resolve(data.body);
         }
@@ -154,19 +161,19 @@ export class FileSaver {
   }
 
   private skipUpload(deferred: IDeferred<any>): void {
-    this.logger.warning(`File '${this.options.fileName}': skipping, file content is empty.`);
+    this.logger.warning(`File '${this.file.fileName}': skipping, file content is empty.`);
     deferred.resolve(true);
   }
 
   private updateMetaData(data: any): Promise<any> {
     return new Promise<any>((resolve, reject) => {
-      if (!this.options.filesMetaData || this.options.filesMetaData.length === 0) {
+      if (!this.coreOptions.filesMetaData || this.coreOptions.filesMetaData.length === 0) {
         resolve(data);
         return;
       }
 
-      let fileMetaData: IFileMetaData = this.options.filesMetaData.filter(fileData => {
-        return fileData.fileName === this.options.fileName;
+      let fileMetaData: IFileMetaData = this.coreOptions.filesMetaData.filter(fileData => {
+        return fileData.fileName === this.file.fileName;
       })[0];
 
       if (!fileMetaData || fileMetaData.updated) {
@@ -174,7 +181,7 @@ export class FileSaver {
         return;
       }
 
-      this.sprequest.requestDigest(this.options.siteUrl)
+      this.sprequest.requestDigest(this.coreOptions.siteUrl)
         .then(digest => {
           return this.sprequest.post(this.updateMetaDataRestUrl, {
             headers: {
@@ -198,7 +205,7 @@ export class FileSaver {
   /* checkins files */
   private checkinFile(): Promise<any> {
     return new Promise<any>((resolve, reject) => {
-      this.sprequest.requestDigest(this.options.siteUrl)
+      this.sprequest.requestDigest(this.coreOptions.siteUrl)
         .then(digest => {
           return this.sprequest.post(this.checkinFileRestUrl, {
             headers: {
@@ -219,7 +226,7 @@ export class FileSaver {
   private checkoutFile(): Promise<boolean> {
     let promise: Promise<any> = new Promise<any>((resolve, reject) => {
       /* if checkin option isn't provided, just resolve to true and return */
-      if (!this.options.checkin) {
+      if (!this.coreOptions.checkin) {
         resolve(true);
         return undefined;
       }
@@ -233,7 +240,7 @@ export class FileSaver {
           }
 
           /* not checked out yet, so checkout */
-          return this.sprequest.requestDigest(this.options.siteUrl)
+          return this.sprequest.requestDigest(this.coreOptions.siteUrl)
             .then(digest => {
               return this.sprequest.post(this.checkoutFileRestUrl, {
                 headers: {
@@ -244,7 +251,7 @@ export class FileSaver {
         }, err => {
           /* file doesn't exist message code, resolve with false */
           if (err.message.indexOf(FileSaver.fileDoesNotExistOnpremCode) !== -1 ||
-              err.message.indexOf(FileSaver.fileDoesNotExistOnlineCode) !== -1) {
+            err.message.indexOf(FileSaver.fileDoesNotExistOnlineCode) !== -1) {
             resolve(false);
 
             return null;
@@ -255,7 +262,7 @@ export class FileSaver {
         })
         .then(data => {
           if (promise.isPending()) {
-            this.logger.info(`${this.options.fileName} checked out.`);
+            this.logger.info(`${this.file.fileName} checked out.`);
             resolve(true);
           }
 
@@ -290,10 +297,10 @@ export class FileSaver {
 
     if (errorData.error) {
       if (errorData.error.code && errorData.error.code.indexOf(FileSaver.saveConfilctCode) === 0) {
-        this.logger.warning(`Save conflict detected for file '${this.options.fileName}'. Trying to re-upload...`);
+        this.logger.warning(`Save conflict detected for file '${this.file.fileName}'. Trying to re-upload...`);
         reUpload();
       } else if (errorData.error.code && errorData.error.code.indexOf(FileSaver.cobaltCode) === 0) {
-        this.logger.warning(`Cobalt error detected for file '${this.options.fileName}'. Trying to re-upload...`);
+        this.logger.warning(`Cobalt error detected for file '${this.file.fileName}'. Trying to re-upload...`);
         reUpload();
       } else {
         this.logger.error(errorData.error);
@@ -305,24 +312,24 @@ export class FileSaver {
   }
 
   private buildRestUrls(): void {
-    let fileServerRelativeUrl: string = `${this.path}/${this.options.folder}/${this.options.fileName}`;
+    let fileServerRelativeUrl: string = `${this.path}/${this.file.folder}/${this.file.fileName}`;
 
-    this.uploadFileRestUrl = this.options.siteUrl +
+    this.uploadFileRestUrl = this.coreOptions.siteUrl +
       '/_api/web/GetFolderByServerRelativeUrl(@FolderName)/Files/add(url=@FileName,overwrite=true)' +
-      `?@FolderName='${encodeURIComponent(this.options.folder)}'&@FileName='${encodeURIComponent(this.options.fileName)}'`;
+      `?@FolderName='${encodeURIComponent(this.file.folder)}'&@FileName='${encodeURIComponent(this.file.fileName)}'`;
 
-    this.getFileRestUrl = this.options.siteUrl + '/_api/web/GetFileByServerRelativeUrl(@FileUrl)' +
+    this.getFileRestUrl = this.coreOptions.siteUrl + '/_api/web/GetFileByServerRelativeUrl(@FileUrl)' +
       `?@FileUrl='${encodeURIComponent(fileServerRelativeUrl)}'`;
 
-    this.checkoutFileRestUrl = this.options.siteUrl + '/_api/web/GetFileByServerRelativeUrl(@FileUrl)/CheckOut()' +
+    this.checkoutFileRestUrl = this.coreOptions.siteUrl + '/_api/web/GetFileByServerRelativeUrl(@FileUrl)/CheckOut()' +
       `?@FileUrl='${encodeURIComponent(fileServerRelativeUrl)}'`;
 
-    this.checkinFileRestUrl = this.options.siteUrl +
+    this.checkinFileRestUrl = this.coreOptions.siteUrl +
       '/_api/web/GetFileByServerRelativeUrl(@FileUrl)/CheckIn(comment=@Comment,checkintype=@Type)' +
-      `?@FileUrl='${encodeURIComponent(fileServerRelativeUrl)}'&@Comment='${(this.options.checkinMessage)}'` +
-      `&@Type='${this.options.checkinType}'`;
+      `?@FileUrl='${encodeURIComponent(fileServerRelativeUrl)}'&@Comment='${(this.coreOptions.checkinMessage)}'` +
+      `&@Type='${this.coreOptions.checkinType}'`;
 
-    this.updateMetaDataRestUrl = this.options.siteUrl + '/_api/web/GetFileByServerRelativeUrl(@FileUrl)/ListItemAllFields' +
+    this.updateMetaDataRestUrl = this.coreOptions.siteUrl + '/_api/web/GetFileByServerRelativeUrl(@FileUrl)/ListItemAllFields' +
       `?@FileUrl='${encodeURIComponent(fileServerRelativeUrl)}'`;
   }
 }

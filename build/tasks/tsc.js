@@ -19,7 +19,7 @@ module.exports = function (gulp, $) {
 
     var tests = tsTestsResult.js
       .pipe($.sourcemaps.write('.'))
-      .pipe(gulp.dest('./lib'));
+      .pipe(gulp.dest('./lib/test'));
 
       return $.merge(sources, tests);
   });

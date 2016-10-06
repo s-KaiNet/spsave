@@ -3,10 +3,11 @@ import * as Promise from 'bluebird';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as _ from 'lodash';
+import {IUserCredentials, IOnpremiseUserCredentials, IAuthOptions} from 'sp-request';
 require('console.table');
 
 import {spsave} from './../../src/core/SPSave';
-import {FileContentOptions, CoreOptions} from './../../src/core/SPSaveOptions';
+import {FileOptions, ICoreOptions} from './../../src/core/SPSaveOptions';
 import {defer, IDeferred} from './../../src/utils/Defer';
 
 let config: any = require('./config');
@@ -15,18 +16,23 @@ let spsaveLegacy: any = require(path.resolve('test/performance/legacy/node_modul
 let filesToSave: string[] = globby.sync('test/performance/files/*.*');
 let folder: string = 'SiteAssets/files';
 
-let onPremOptions: CoreOptions = {
+let onPremCreds: IOnpremiseUserCredentials = {
   username: config.onprem.username,
   password: config.onprem.password,
-  domain: config.env.domain,
-  siteUrl: config.url.onprem
+  domain: config.env.domain
 };
 
-let onlineOptions: CoreOptions = {
+let onlineCreds: IUserCredentials = {
   username: config.online.username,
-  password: config.online.password,
-  domain: config.env.domain,
+  password: config.online.password
+};
+
+let coreOnlineOptions: ICoreOptions = {
   siteUrl: config.url.online
+};
+
+let coreOnpremOptions: ICoreOptions = {
+  siteUrl: config.url.onprem
 };
 
 let legacyOnPremElapsedSeries: number;
@@ -40,48 +46,48 @@ let legacyOnlineElapsedParallel: number;
 let spsaveOnlineElapsedParallel: number;
 
 /* legacy: on-premise series run */
-Promise.all([new Date().getTime(), savesFileArraySeriesLegacy(filesToSave, onPremOptions)])
+Promise.all([new Date().getTime(), savesFileArraySeriesLegacy(filesToSave, onPremCreds)])
   .then((data) => {
     legacyOnPremElapsedSeries = new Date().getTime() - data[0];
 
     /* legacy: on-premise parallel run */
-    return Promise.all([new Date().getTime(), saveFilesArrayInParallelLegacy(filesToSave, onPremOptions)]);
+    return Promise.all([new Date().getTime(), saveFilesArrayInParallelLegacy(filesToSave, onPremCreds)]);
   })
   .then((data) => {
     legacyOnPremElapsedParallel = new Date().getTime() - data[0];
 
     /* legacy: online series run */
-    return Promise.all([new Date().getTime(), savesFileArraySeriesLegacy(filesToSave, onlineOptions)]);
+    return Promise.all([new Date().getTime(), savesFileArraySeriesLegacy(filesToSave, onlineCreds)]);
   })
   .then(data => {
     legacyOnlineElapsedSeries = new Date().getTime() - data[0];
 
     /* legacy: online parallel run */
-    return Promise.all([new Date().getTime(), saveFilesArrayInParallelLegacy(filesToSave, onlineOptions)]);
+    return Promise.all([new Date().getTime(), saveFilesArrayInParallelLegacy(filesToSave, onlineCreds)]);
   })
   .then(data => {
     legacyOnlineElapsedParallel = new Date().getTime() - data[0];
 
     /* spsave 2.x: on-premise parallel run */
-    return Promise.all([new Date().getTime(), saveFilesArrayInParallel(filesToSave, onPremOptions)]);
+    return Promise.all([new Date().getTime(), saveFilesArrayInParallel(filesToSave, coreOnpremOptions, onPremCreds)]);
   })
   .then((data) => {
     spsaveOnPremElapsedParallel = new Date().getTime() - data[0];
 
     /* spsave 2.x: on-premise series run */
-    return Promise.all([new Date().getTime(), saveFilesArraySeries(filesToSave, <FileContentOptions>onPremOptions)]);
+    return Promise.all([new Date().getTime(), saveFilesArraySeries(filesToSave, coreOnpremOptions, onPremCreds)]);
   })
   .then((data) => {
     spsaveOnPremElapsedSeries = new Date().getTime() - data[0];
 
     /* spsave 2.x: online parallel run */
-    return Promise.all([new Date().getTime(), saveFilesArrayInParallel(filesToSave, onlineOptions)]);
+    return Promise.all([new Date().getTime(), saveFilesArrayInParallel(filesToSave, coreOnlineOptions, onlineCreds)]);
   })
   .then(data => {
     spsaveOnlineElapsedParallel = new Date().getTime() - data[0];
 
     /* spsave 2.x: online series run */
-    return Promise.all([new Date().getTime(), saveFilesArraySeries(filesToSave, <FileContentOptions>onlineOptions)]);
+    return Promise.all([new Date().getTime(), saveFilesArraySeries(filesToSave, coreOnlineOptions, onlineCreds)]);
   })
   .then(data => {
     spsaveOnlineElapsedSeries = new Date().getTime() - data[0];
@@ -147,14 +153,17 @@ function saveFilesArrayInParallelLegacy(files: string[], opts: any): Promise<any
   return Promise.all(promises);
 }
 
-function saveFilesArrayInParallel(files: string[], opts: any): Promise<any> {
+function saveFilesArrayInParallel(files: string[], coreOptions: ICoreOptions, creds: IAuthOptions): Promise<any> {
   let promises: Promise<any>[] = [];
 
   files.forEach(file => {
-    opts.fileName = path.basename(file);
-    opts.fileContent = fs.readFileSync(file);
-    opts.folder = folder;
-    promises.push(spsave(opts));
+    let fileOptions: FileOptions = {
+      fileName: path.basename(file),
+      fileContent: fs.readFileSync(file),
+      folder: folder
+    };
+
+    promises.push(spsave(coreOptions, creds, fileOptions));
   });
 
   return Promise.all(promises);
@@ -185,20 +194,21 @@ function savesFileArraySeriesLegacy(files: string[], opts: any, deferred?: IDefe
   return deferred.promise;
 }
 
-function saveFilesArraySeries(files: string[], opts: FileContentOptions, deferred?: IDeferred<any>): Promise<any> {
+function saveFilesArraySeries(files: string[], coreOptions: ICoreOptions, creds: IAuthOptions, deferred?: IDeferred<any>): Promise<any> {
   if (!deferred) {
     deferred = defer<any>();
   }
 
   if (files.length > 0) {
+    let file: FileOptions = {
+      fileName: path.basename(files[0]),
+      fileContent: fs.readFileSync(files[0]),
+      folder: folder
+    };
 
-    opts.fileName = path.basename(files[0]);
-    opts.fileContent = fs.readFileSync(files[0]);
-    opts.folder = folder;
-
-    spsave(opts)
+    spsave(coreOptions, creds, file)
       .then(() => {
-        saveFilesArraySeries(files.slice(1, files.length), opts, deferred);
+        saveFilesArraySeries(files.slice(1, files.length), coreOptions, creds, deferred);
       })
       .catch(err => {
         deferred.reject(err);

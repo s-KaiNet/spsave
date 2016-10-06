@@ -7,7 +7,6 @@
       "lib/global.d.ts",
       "lib/mocha.d.ts"
     ],
-    "global": false,
     "name": "mocha",
     "type": "typings"
   }

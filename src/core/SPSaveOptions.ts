@@ -1,6 +1,5 @@
 import File = require('vinyl');
-
-import {IEnvironment, IUserCredentials} from 'sp-request';
+import {IAuthOptions} from 'sp-request';
 
 export enum CheckinType {
   minor = 0,
@@ -40,20 +39,22 @@ export interface IVinylOptions {
   folder?: string;
 }
 
-export type CoreOptions = ICoreOptions & IEnvironment & IUserCredentials;
-export type GlobOptions = CoreOptions & IGlobOptions;
-export type FileContentOptions = CoreOptions & IFileContentOptions;
-export type VinylOptions = CoreOptions & IVinylOptions;
-export type SPSaveOptions = GlobOptions | FileContentOptions | VinylOptions;
+export type FileOptions = IGlobOptions | IFileContentOptions | IVinylOptions;
 
-export function isGlobOptions(T: any): T is GlobOptions {
+export interface ISPSaveOptions {
+  creds: IAuthOptions;
+  files: IFileContentOptions[];
+  core: ICoreOptions;
+}
+
+export function isGlobOptions(T: any): T is IGlobOptions {
   return !!T.glob;
 }
 
-export function isFileContentOptions(T: any): T is FileContentOptions {
+export function isFileContentOptions(T: any): T is IFileContentOptions {
   return !!T.fileContent || T.fileContent === '';
 }
 
-export function isVinylOptions(T: any): T is VinylOptions {
+export function isVinylOptions(T: any): T is IVinylOptions {
   return !!T.file;
 }

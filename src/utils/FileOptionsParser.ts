@@ -7,22 +7,22 @@ import * as fs from 'fs';
 import * as opts from './../core/SPSaveOptions';
 import {UrlHelper} from './UrlHelper';
 
-export class OptionsParser {
-  public static parseOptions(options: opts.SPSaveOptions): opts.FileContentOptions[] {
+export class FileOptionsParser {
+  public static parseOptions(options: opts.FileOptions): opts.IFileContentOptions[] {
     if (opts.isFileContentOptions(options)) {
       return [options];
     }
 
     if (opts.isGlobOptions(options)) {
-      let fileContentOptions: opts.FileContentOptions[] = [];
+      let fileContentOptions: opts.IFileContentOptions[] = [];
 
       _.defaults(options, {
         folder: ''
       });
 
-      OptionsParser.createVinylFromGlob(options)
+      FileOptionsParser.createVinylFromGlob(options)
         .forEach(file => {
-          fileContentOptions.push(OptionsParser.createFileOptionsFromVinyl(file, options));
+          fileContentOptions.push(FileOptionsParser.createFileOptionsFromVinyl(file, options));
         });
 
       return fileContentOptions;
@@ -33,17 +33,17 @@ export class OptionsParser {
         folder: ''
       });
 
-      return [OptionsParser.createFileOptionsFromVinyl(options.file, options)];
+      return [FileOptionsParser.createFileOptionsFromVinyl(options.file, options)];
     }
 
     return undefined;
   }
 
-  private static createFileOptionsFromVinyl(file: File, options: opts.GlobOptions | opts.VinylOptions): opts.FileContentOptions {
-    let newOptions: opts.FileContentOptions = _.assign<{}, opts.FileContentOptions>({}, options);
+  private static createFileOptionsFromVinyl(file: File, options: opts.IGlobOptions | opts.IVinylOptions): opts.IFileContentOptions {
+    let newOptions: opts.IFileContentOptions = _.assign<{}, opts.IFileContentOptions>({}, options);
     newOptions.fileName = path.basename(file.path);
     newOptions.fileContent = <Buffer>file.contents;
-    newOptions.folder = OptionsParser.getFolderToUpload(file, options.folder);
+    newOptions.folder = FileOptionsParser.getFolderToUpload(file, options.folder);
 
     if (!newOptions.folder || newOptions.folder === '.') {
       throw new Error('Folder option is empty. Either provide folder explicitly, or specify "base" option');
@@ -52,7 +52,7 @@ export class OptionsParser {
     return newOptions;
   }
 
-  private static createVinylFromGlob(options: opts.GlobOptions): File[] {
+  private static createVinylFromGlob(options: opts.IGlobOptions): File[] {
     let cwd: string = process.cwd();
 
     return globby.sync(options.glob, { cwd: cwd }).map(filePath => {

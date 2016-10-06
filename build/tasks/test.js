@@ -10,6 +10,7 @@ module.exports = function (gulp, $) {
   gulp.task('postcoverage', ['testonly'], function () {
     return gulp.src('./reports/coverage/html/coverage-final.json')
       .pipe(remapIstanbul({
+        basePath: './reports/coverage',
         reports: {
           'html': 'reports/coverage/html-remap',
           'lcovonly': 'reports/coverage/lcov.info'

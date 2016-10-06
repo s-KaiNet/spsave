@@ -4,65 +4,53 @@ let map: any = require('map-stream');
 import * as vfs from 'vinyl-fs';
 import File = require('vinyl');
 
-import {OptionsParser} from './../../src/utils/OptionsParser';
-import {FileContentOptions, GlobOptions, VinylOptions} from './../../src/core/SPSaveOptions';
+import {FileOptionsParser} from './../../src/utils/FileOptionsParser';
+import {FileOptions, IFileContentOptions} from './../../src/core/SPSaveOptions';
 
 describe('spsave: OptionsParser test', () => {
   it('should return exact FileContentOptions', () => {
-    let opts: FileContentOptions = {
-      username: '',
-      password: '',
+    let opts: FileOptions = {
       fileContent: 'spsave',
       folder: 'Assets',
-      fileName: 'file.txt',
-      siteUrl: 'http://sp.url'
+      fileName: 'file.txt'
     };
 
-    let fileOptions: FileContentOptions[] = OptionsParser.parseOptions(opts);
+    let fileOptions: IFileContentOptions[] = FileOptionsParser.parseOptions(opts);
 
     expect(fileOptions[0]).to.equal(opts);
   });
 
   it('should return undefined when fileContent not provided', () => {
-    let opts: FileContentOptions = {
-      username: '',
-      password: '',
+    let opts: FileOptions = {
       fileContent: null,
       folder: 'Assets',
-      fileName: 'file.txt',
-      siteUrl: 'http://sp.url'
+      fileName: 'file.txt'
     };
 
-    let fileOptions: FileContentOptions[] = OptionsParser.parseOptions(opts);
+    let fileOptions: IFileContentOptions[] = FileOptionsParser.parseOptions(opts);
 
     expect(fileOptions).to.equal(undefined);
   });
 
   it('should return valid FileContentOptions with glob param', () => {
-    let opts: GlobOptions = {
-      username: '',
-      password: '',
+    let opts: FileOptions = {
       folder: 'Assets',
-      siteUrl: 'http://sp.url',
       glob: ['test/unit/tests.ts']
     };
     let expectedContent: Buffer = fs.readFileSync('test/unit/tests.ts');
-    let fileOptions: FileContentOptions[] = OptionsParser.parseOptions(opts);
+    let fileOptions: IFileContentOptions[] = FileOptionsParser.parseOptions(opts);
 
     expect(fileOptions[0].fileContent).to.be.instanceOf(Buffer);
     expect(expectedContent.equals(<Buffer>fileOptions[0].fileContent)).is.true;
   });
 
   it('should return empty options', () => {
-    let opts: GlobOptions = {
-      username: '',
-      password: '',
+    let opts: FileOptions = {
       folder: 'Assets',
-      siteUrl: 'http://sp.url',
       glob: ['test/unit']
     };
 
-    let fileOptions: FileContentOptions[] = OptionsParser.parseOptions(opts);
+    let fileOptions: IFileContentOptions[] = FileOptionsParser.parseOptions(opts);
 
     expect(fileOptions.length).to.equal(0);
   });
@@ -71,15 +59,12 @@ describe('spsave: OptionsParser test', () => {
     vfs.src(`test/unit/tests.ts`)
       .pipe(map((file: File, cb: Function) => {
 
-        let opts: VinylOptions = {
-          username: '',
-          password: '',
+        let opts: FileOptions = {
           folder: 'Assets',
-          siteUrl: 'http://sp.url',
           file: file
         };
 
-        let fileOptions: FileContentOptions[] = OptionsParser.parseOptions(opts);
+        let fileOptions: IFileContentOptions[] = FileOptionsParser.parseOptions(opts);
         let expectedContent: Buffer = fs.readFileSync('test/unit/tests.ts');
 
         expect(fileOptions[0].fileContent).to.be.instanceOf(Buffer);
@@ -90,31 +75,25 @@ describe('spsave: OptionsParser test', () => {
   });
 
   it('should throw an error when folder option is empty', () => {
-    let opts: GlobOptions = {
-      username: '',
-      password: '',
+    let opts: FileOptions = {
       folder: '',
-      siteUrl: 'http://sp.url',
       glob: ['test/unit/tests.ts']
     };
 
     expect(() => {
-      OptionsParser.parseOptions(opts);
+      FileOptionsParser.parseOptions(opts);
     }).to.throw();
   });
 
   it('should throw an error when invalid base provided', () => {
-    let opts: GlobOptions = {
-      username: '',
-      password: '',
+    let opts: FileOptions = {
       folder: '',
-      siteUrl: 'http://sp.url',
       glob: ['test/unit/tests.ts'],
       base: 'unknown/test'
     };
 
     expect(() => {
-      OptionsParser.parseOptions(opts);
+      FileOptionsParser.parseOptions(opts);
     }).to.throw();
   });
 });
