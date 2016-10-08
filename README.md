@@ -6,16 +6,18 @@
 [![Coverage Status](https://coveralls.io/repos/github/s-KaiNet/spsave/badge.svg?branch=master)](https://coveralls.io/github/s-KaiNet/spsave?branch=master)
 [![npm version](https://badge.fury.io/js/spsave.svg)](https://badge.fury.io/js/spsave)
 
-Nodejs module for saving files in SharePoint (SharePoint 2013\2016, SharePoint Online).
+Nodejs module for saving files in SharePoint: 
+ - SharePoint 2013, 2016 
+  - SharePoint Online
 
 ----------
-# spsave 2.x released!
-`spsave 2.x` doesn't have backward compatibility with `spsave 1.x`, primary because of switching to bluebird's promises instead of callbacks and using TypeScript. It depends heavily on another module [sp-request](https://github.com/s-KaiNet/sp-request) and use it to send REST queries to SharePoint.  
-If you want to migrate to `spsave 2.x`, please refer to this article - [Upgrade to spsave 2.x](https://github.com/s-KaiNet/spsave/tree/master/docs/UpgradeToSPSave2.md).  
-If you just want to use 2.x version, read how to use it below.
-Also take a look at the [CHANGELOG](https://github.com/s-KaiNet/spsave/tree/master/docs/CHANGELOG.md) to see how new version is differs from the previous one.  
+# spsave 3.x released!
+`spsave 3.x` doesn't have backward compatibility with previous versions of `spsave`. It depends heavily on another module [sp-request](https://github.com/s-KaiNet/sp-request) and use it to send REST queries to SharePoint. `sp-request`, in turns, depends on module, responsible for SharePoint authentiation from node js - [node-sp-auth](https://github.com/s-KaiNet/node-sp-auth).  
+If you want to migrate to `spsave 3.x`, please refer to this article - [Upgrade to spsave 3.x](docs/UpgradeToSPSaveLatest.md).  
+If you just want to use 3.x version, read how to use it below.
+Also take a look at the [CHANGELOG](docs/CHANGELOG.md) to see how new version is differs from the previous one.  
 #### Performance
-There is a small performance comparison between 1.x and 2.x versions - [spsave performance comparison](https://github.com/s-KaiNet/spsave/tree/master/docs/PerformanceComparison.md) and performance comparison between `gulp-spsave` and `gulp-spsync` - [gulp-spsave vs gulp-spsync performance](https://github.com/s-KaiNet/gulp-spsave/blob/master/Performance.md)  
+There is a small performance comparison between 1.x and 3.x versions (also includes performance comparison between different authentiation options) - [spsave performance comparison](docs/PerformanceComparison.md).
 
 
 ---
@@ -33,10 +35,7 @@ typings install npm:spsave --save-dev
 ```javascript
 var spsave = require("spsave").spsave;
 
-spsave(options)
-.then(successHandler, errorHandler);
- /* OR */
- spsave(options)
+spsave(coreOptions, creds, fileOptions)
 .then(successHandler)
 .catch(errorHandler);
 ```
@@ -50,7 +49,7 @@ You have following options:
         
         gulp.task('spsave', function(cb) {
             
-          spsave(options)
+          spsave(coreOptions, creds, fileOptions)
           .then(function(){
               cb();
           }).catch(cb);
@@ -61,28 +60,36 @@ You have following options:
 
 
 ## Using with SharePoint hosted apps (uploading to app web)
-Please refer to [this page](https://github.com/s-KaiNet/spsave/tree/master/docs/UpgradeToSPSave2.md) (in the bottom) 
+Please refer to [this page](docs/UpgradeToSPSaveLatest.md) (at the bottom) 
 
 
 ## options:
-##### Core options:
+Since `spsave 3.x` all options divided by logical categories (in order): 
+ - core options 
+ - credentials
+ - file(s) options
+
+#### Core options:
 - `siteUrl` - required, string url of the site
-- `username` - required, string user name
-- `password` - required, string password
-- `domain` - for on premise only, string domain name, for SharePoint on-premise it's better to provide domain or workstation option explicitly
-- `workstation` - for on premise only, string workstation name
-- `checkin` - optional, boolean to allow the files to be checked in/published.
-- `checkinType` - optional number, used when `checkin` options is true.
+- `checkin` - optional, boolean to allow the files to be checked in/published
+- `checkinType` - optional number, used when `checkin` options is true
     - `0` - minor
     - `1` - major
     - `2` - overwrite
-- `checkinMessage` - optional string, you can provide your own checkin message
-- `notification` - optional boolean, when true, `spsave` will notify about successful upload using [node-notifier](https://github.com/mikaelbr/node-notifier) module.
+- `checkinMessage` - optional string, you can provide your own checkin message, otherwise default will be used
+- `notification` - optional boolean, when true, `spsave` will notify about successful upload using [node-notifier](https://github.com/mikaelbr/node-notifier) module
 - `filesMetaData` - optional, array of `IFileMetaData`: 
     - `fileName` - required, string file name
     - `metadata` - metadata object 
 
-File options, used to tell `spsave` how to find\load the file to be uploaded to SharePoint. When one is used, others are ignored. There are three file options supported: file content, glob and vinyl file.
+#### Credentials: 
+
+`spsave 3.x` implicitly depends on another module used for SharePoint authentication from node js - [node-sp-auth](https://github.com/s-KaiNet/node-sp-auth). For `spsave` credentials param you need to pass exactly the same object, as for `node-sp-auth` [credentialsOptions object](https://github.com/s-KaiNet/node-sp-auth#params). That also means that `spsave` supports all authentication options supported by `node-sp-auth`. On [Recipes page](docs/Recipes.md) you can find a bit more samples. 
+
+#### File(s) options: 
+
+File options used to tell `spsave` how to find\load the file to be uploaded to SharePoint. When one is used, others are ignored. There are three file options supported: file content, glob and vinyl file.
+
 ##### File content options:
 - `folder` - required string, site-relative url to folder, which will be used to save your file. For example for library `http://sp2013/sites/dev/SiteAssets` folder will be equal to `SiteAssets`, `SiteAssets/subfolder` for sub folder. If the folder doesn't exist, `spsave` will create that folder and all sub folders if required (full hierarchy)
 - `fileName` - required, string file name
@@ -90,41 +97,46 @@ File options, used to tell `spsave` how to find\load the file to be uploaded to 
 
 ##### Glob options (you can provide a mask to read all or certain files from the file system):
 - `glob` - required, string or string array, i.e. `'build/css/style.css'` or `['build/css/*.*']`. Pattern is similar to [node-glob](https://github.com/isaacs/node-glob) module.
-- `base` - optional string, if you want to preserve folders structure inside SharePoint folder, you can provide a base for you files. For example when using glob `['build/css/*.*']` and `base: 'build'`, all css files will be loaded under [SharePoint folder]/css
+- `base` - optional string, if you want to preserve folders structure inside SharePoint folder, you can provide a base for you files. For example when using glob `['build/css/*.*']` and `base: 'build'`, all css files will be loaded under `[SharePoint folder]/css`
 - `folder` - optional string, site-relative url to folder, which will be used to save your file. The same as for file content options. If the folder is null or empty, `spsave` will try to resolve folder using `base` option provided
 
 ##### Vinyl options. If you are familiar with [vinyl](https://github.com/gulpjs/vinyl) and [vinyl-fs](https://github.com/gulpjs/vinyl-fs) you can provide vinyl file directly:
 - `file` - required, vinyl File object
 - `folder` - optional string, site-relative url to folder, which will be used to save your file. The same as for file content options. If the folder is null or empty, `spsave` will try to resolve the folder using `base` of vinyl file
 
-Don't be scared and confused with a lot of options and take a look at the [Recipes](https://github.com/s-KaiNet/spsave/tree/master/docs/Recipes.md) page. You can find all possible scenarios with `spsave`, input params and expected output.
+Don't be scared and confused with a lot of options and take a look at the [Recipes](docs/Recipes.md) page. You can find all possible scenarios with `spsave`, input params and expected output.
 #### successHandler
 Handler gets called upon successful file upload.
 #### errorHandler
 Handler gets executed in case of exception inside `spsave`. Accepts error object as first argument for callback.
 
 ## Samples
-Use [Recipes](https://github.com/s-KaiNet/spsave/tree/master/docs/Recipes.md) page to see **all** different options available with `spsave`.
+Use [Recipes](docs/Recipes.md) page to see **all** different options available with `spsave`.
 #### Basic usage:
 ```javascript
-spsave({
-	siteUrl: '[sp url]',
+var coreOptions = {
+    siteUrl: '[sp url]',
+    notification: true,
+    checkin: true,
+    checkinType: 1
+};
+var creds = {
     username: '[username]',
     password: '[password]',
-    domain: '[domain (on premise)]',
-    workstation: '[workstation name (on premise)]',
+    domain: '[domain (on premise)]'
+};
+
+var fileOptions = {
     folder: 'SiteAssets',
     fileName: 'file.txt',
-    fileContent: 'hello world',
-	notification: true,
-	checkin: true,
-	checkinType: 1
-})
+    fileContent: 'hello world'
+};
+spsave(coreOptions, creds, fileOptions)
 .then(function(){
-	console.log('saved');
+    console.log('saved');
 })
 .catch(function(err){
-	console.log(err);
+    console.log(err);
 });
 ```
 

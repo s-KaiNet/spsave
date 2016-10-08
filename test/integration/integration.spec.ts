@@ -17,14 +17,24 @@ let config: any = require('./config');
 
 let tests: any[] = [
   {
-    name: 'on-premise',
-    creds: config.onprem,
-    url: config.url.onprem
+    name: 'on-premise user credentials',
+    creds: config.onpremCreds,
+    url: config.onpremNtlmEnabledUrl
   },
   {
-    name: 'online',
-    creds: config.online,
-    url: config.url.online
+    name: 'on-premise addin only',
+    creds: config.onpremAddinOnly,
+    url: config.onpremAdfsEnabledUrl
+  },
+  {
+    name: 'online user credentials',
+    creds: config.onlineCreds,
+    url: config.onlineUrl
+  },
+  {
+    name: 'online addin only',
+    creds: config.onlineAddinOnly,
+    url: config.onlineUrl
   }
 ];
 
@@ -33,7 +43,7 @@ let subFolder: string = 'SiteAssets/files/templates';
 tests.forEach(test => {
   describe(`spsave: integration tests - ${test.name}`, () => {
 
-    let spr: ISPRequest = sprequest.create({ username: test.creds.username, password: test.creds.password }, { domain: test.env.domain });
+    let spr: ISPRequest = sprequest.create(test.creds);
 
     beforeEach('delete folders', function (done: MochaDone): void {
       this.timeout(20 * 1000);

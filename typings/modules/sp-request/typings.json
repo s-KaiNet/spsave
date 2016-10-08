@@ -4,7 +4,7 @@
     "src": "C:\\Projects\\spsave\\node_modules\\sp-request\\package.json",
     "raw": "npm:sp-request",
     "main": "./lib/src/index.js",
-    "version": "2.0.0",
+    "version": "2.0.2",
     "global": false,
     "dependencies": {
       "agentkeepalive": {
@@ -62,7 +62,7 @@
         "src": "C:\\Projects\\spsave\\node_modules\\node-sp-auth\\package.json",
         "raw": "npm:node-sp-auth",
         "main": "./lib/src/index.js",
-        "version": "1.0.4",
+        "version": "1.0.6",
         "global": false,
         "dependencies": {
           "agentkeepalive": {
@@ -665,7 +665,7 @@
                     "src": "C:\\Projects\\spsave\\node_modules\\lodash\\package.json",
                     "raw": "npm:lodash",
                     "main": "lodash.js",
-                    "version": "4.16.3",
+                    "version": "4.16.4",
                     "global": false,
                     "name": "lodash"
                   }
@@ -703,52 +703,6 @@
           }
         },
         "name": "node-sp-auth"
-      },
-      "node-spoauth": {
-        "src": "C:\\Projects\\spsave\\node_modules\\node-spoauth\\package.json",
-        "raw": "npm:node-spoauth",
-        "main": "sharepoint.js",
-        "version": "1.0.0",
-        "global": false,
-        "dependencies": {
-          "xml2js": {
-            "src": "C:\\Projects\\spsave\\node_modules\\xml2js\\package.json",
-            "raw": "npm:xml2js",
-            "main": "./lib/xml2js",
-            "version": "0.4.17",
-            "global": false,
-            "dependencies": {
-              "sax": {
-                "src": "C:\\Projects\\spsave\\node_modules\\sax\\package.json",
-                "raw": "npm:sax",
-                "main": "lib/sax.js",
-                "version": "1.1.6",
-                "global": false,
-                "name": "sax"
-              },
-              "xmlbuilder": {
-                "src": "C:\\Projects\\spsave\\node_modules\\xmlbuilder\\package.json",
-                "raw": "npm:xmlbuilder",
-                "main": "./lib/index",
-                "version": "4.2.1",
-                "global": false,
-                "dependencies": {
-                  "lodash": {
-                    "src": "C:\\Projects\\spsave\\node_modules\\lodash\\package.json",
-                    "raw": "npm:lodash",
-                    "main": "lodash.js",
-                    "version": "4.16.3",
-                    "global": false,
-                    "name": "lodash"
-                  }
-                },
-                "name": "xmlbuilder"
-              }
-            },
-            "name": "xml2js"
-          }
-        },
-        "name": "node-spoauth"
       },
       "request": {
         "src": "https://raw.githubusercontent.com/louy/typed-request/8dbbc8c9c3aee44d1ca00ac82a88a00f37198e1d/typings.json",
@@ -795,7 +749,7 @@
             "src": "C:\\Projects\\spsave\\node_modules\\lodash\\package.json",
             "raw": "npm:lodash",
             "main": "lodash.js",
-            "version": "4.16.3",
+            "version": "4.16.4",
             "global": false,
             "name": "lodash"
           },

@@ -3,7 +3,7 @@ import * as Promise from 'bluebird';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as _ from 'lodash';
-import {IUserCredentials, IOnpremiseUserCredentials, IAuthOptions} from 'sp-request';
+import {IAuthOptions} from 'sp-request';
 require('console.table');
 
 import {spsave} from './../../src/core/SPSave';
@@ -16,24 +16,28 @@ let spsaveLegacy: any = require(path.resolve('test/performance/legacy/node_modul
 let filesToSave: string[] = globby.sync('test/performance/files/*.*');
 let folder: string = 'SiteAssets/files';
 
-let onPremCreds: IOnpremiseUserCredentials = {
-  username: config.onprem.username,
-  password: config.onprem.password,
-  domain: config.env.domain
-};
+let onPremCreds: IAuthOptions = config.onpremCreds;
 
-let onlineCreds: IUserCredentials = {
-  username: config.online.username,
-  password: config.online.password
-};
+let onlineCreds: IAuthOptions = config.onlineCreds;
+
+let onpremAddinOnlyCreds: IAuthOptions = config.onpremAddinOnly;
+
+let onlineAddinOnlyCreds: IAuthOptions = config.onlineAddinOnly;
 
 let coreOnlineOptions: ICoreOptions = {
-  siteUrl: config.url.online
+  siteUrl: config.onlineUrl
 };
 
 let coreOnpremOptions: ICoreOptions = {
-  siteUrl: config.url.onprem
+  siteUrl: config.onpremNtlmEnabledUrl
 };
+
+let coreAddinOnlyOnPremOptions: ICoreOptions = {
+  siteUrl: config.onpremAdfsEnabledUrl
+};
+
+let legacyOnPremCreds: any = _.assign(onPremCreds, coreOnpremOptions);
+let legacyOnlineCreds: any = _.assign(onlineCreds, coreOnlineOptions);
 
 let legacyOnPremElapsedSeries: number;
 let spsaveOnPremElapsedSeries: number;
@@ -45,52 +49,83 @@ let spsaveOnlineElapsedSeries: number;
 let legacyOnlineElapsedParallel: number;
 let spsaveOnlineElapsedParallel: number;
 
+let spsaveOnpremiseAddinOnlyElapsedSeries: number;
+let spsaveOnpremiseAddinOnlyElapsedParallel: number;
+let spsaveOnlineAddinOnlyElapsedSeries: number;
+let spsaveOnlineAddinOnlyElapsedParallel: number;
+
 /* legacy: on-premise series run */
-Promise.all([new Date().getTime(), savesFileArraySeriesLegacy(filesToSave, onPremCreds)])
+Promise.all([new Date().getTime(), savesFileArraySeriesLegacy(filesToSave, legacyOnPremCreds)])
   .then((data) => {
     legacyOnPremElapsedSeries = new Date().getTime() - data[0];
 
     /* legacy: on-premise parallel run */
-    return Promise.all([new Date().getTime(), saveFilesArrayInParallelLegacy(filesToSave, onPremCreds)]);
+    return Promise.all([new Date().getTime(), saveFilesArrayInParallelLegacy(filesToSave, legacyOnPremCreds)]);
   })
   .then((data) => {
     legacyOnPremElapsedParallel = new Date().getTime() - data[0];
 
     /* legacy: online series run */
-    return Promise.all([new Date().getTime(), savesFileArraySeriesLegacy(filesToSave, onlineCreds)]);
+    return Promise.all([new Date().getTime(), savesFileArraySeriesLegacy(filesToSave, legacyOnlineCreds)]);
   })
   .then(data => {
     legacyOnlineElapsedSeries = new Date().getTime() - data[0];
 
     /* legacy: online parallel run */
-    return Promise.all([new Date().getTime(), saveFilesArrayInParallelLegacy(filesToSave, onlineCreds)]);
+    return Promise.all([new Date().getTime(), saveFilesArrayInParallelLegacy(filesToSave, legacyOnlineCreds)]);
   })
   .then(data => {
     legacyOnlineElapsedParallel = new Date().getTime() - data[0];
 
-    /* spsave 2.x: on-premise parallel run */
+    /* spsave 3.x: on-premise parallel run */
     return Promise.all([new Date().getTime(), saveFilesArrayInParallel(filesToSave, coreOnpremOptions, onPremCreds)]);
   })
   .then((data) => {
     spsaveOnPremElapsedParallel = new Date().getTime() - data[0];
 
-    /* spsave 2.x: on-premise series run */
+    /* spsave 3.x: on-premise series run */
     return Promise.all([new Date().getTime(), saveFilesArraySeries(filesToSave, coreOnpremOptions, onPremCreds)]);
   })
   .then((data) => {
     spsaveOnPremElapsedSeries = new Date().getTime() - data[0];
 
-    /* spsave 2.x: online parallel run */
+    /* spsave 3.x: online parallel run */
     return Promise.all([new Date().getTime(), saveFilesArrayInParallel(filesToSave, coreOnlineOptions, onlineCreds)]);
   })
   .then(data => {
     spsaveOnlineElapsedParallel = new Date().getTime() - data[0];
 
-    /* spsave 2.x: online series run */
+    /* spsave 3.x: online series run */
     return Promise.all([new Date().getTime(), saveFilesArraySeries(filesToSave, coreOnlineOptions, onlineCreds)]);
   })
   .then(data => {
     spsaveOnlineElapsedSeries = new Date().getTime() - data[0];
+
+    /* spsave 3.x: on-premise addin only series */
+    return Promise.all([new Date().getTime(), saveFilesArraySeries(filesToSave, coreAddinOnlyOnPremOptions, onpremAddinOnlyCreds)]);
+  })
+  .then(data => {
+    spsaveOnpremiseAddinOnlyElapsedSeries = new Date().getTime() - data[0];
+
+    /* spsave 3.x: on-premise addin only parallel */
+    return Promise.all([new Date().getTime(), saveFilesArrayInParallel(filesToSave, coreAddinOnlyOnPremOptions, onpremAddinOnlyCreds)]);
+  })
+  .then(data => {
+    spsaveOnpremiseAddinOnlyElapsedParallel = new Date().getTime() - data[0];
+
+    /* spsave 3.x: online addin only series */
+    return Promise.all([new Date().getTime(), saveFilesArraySeries(filesToSave, coreOnlineOptions, onlineAddinOnlyCreds)]);
+  })
+  .then(data => {
+    spsaveOnlineAddinOnlyElapsedSeries = new Date().getTime() - data[0];
+
+    /* spsave 3.x: online addin only parallel */
+    return Promise.all([new Date().getTime(), saveFilesArrayInParallel(filesToSave, coreOnlineOptions, onlineAddinOnlyCreds)]);
+  })
+  .then(data => {
+    spsaveOnlineAddinOnlyElapsedParallel = new Date().getTime() - data[0];
+
+    return null;
   })
   .then(printResults)
   .catch(err => {
@@ -104,26 +139,34 @@ function printResults(): void {
   (<any>console).table(`${filesToSave.length} files upload: in series`, [
     {
       'spsave': 'spsave 1.x',
-      'on-premise': `${legacyOnPremElapsedSeries / 1000}s`,
-      'online': `${legacyOnlineElapsedSeries / 1000}s`
+      'on-premise user creds': `${legacyOnPremElapsedSeries / 1000}s`,
+      'on-premise addin only': '-',
+      'online user creds': `${legacyOnlineElapsedSeries / 1000}s`,
+      'online addin only': '-'
     },
     {
-      'spsave': 'spsave 2.x',
-      'on-premise': `${spsaveOnPremElapsedSeries / 1000}s`,
-      'online': `${spsaveOnlineElapsedSeries / 1000}s`
+      'spsave': 'spsave 3.x',
+      'on-premise user creds': `${spsaveOnPremElapsedSeries / 1000}s`,
+      'on-premise addin only': `${spsaveOnpremiseAddinOnlyElapsedSeries / 1000}s`,
+      'online user creds': `${spsaveOnlineElapsedSeries / 1000}s`,
+      'online addin only': `${spsaveOnlineAddinOnlyElapsedSeries / 1000}s`
     }
   ]);
 
   (<any>console).table(`${filesToSave.length} files upload: in parallel`, [
     {
       'spsave': 'spsave 1.x',
-      'on-premise': `${legacyOnPremElapsedParallel / 1000}s`,
-      'online': `${legacyOnlineElapsedParallel / 1000}s`
+      'on-premise user creds': `${legacyOnPremElapsedParallel / 1000}s`,
+      'on-premise addin only': '-',
+      'online user creds': `${legacyOnlineElapsedParallel / 1000}s`,
+      'online addin only': '-'
     },
     {
-      'spsave': 'spsave 2.x',
-      'on-premise': `${spsaveOnPremElapsedParallel / 1000}s`,
-      'online': `${spsaveOnlineElapsedParallel / 1000}s`
+      'spsave': 'spsave 3.x',
+      'on-premise user creds': `${spsaveOnPremElapsedParallel / 1000}s`,
+      'on-premise addin only': `${spsaveOnpremiseAddinOnlyElapsedParallel / 1000}s`,
+      'online user creds': `${spsaveOnlineElapsedParallel / 1000}s`,
+      'online addin only': `${spsaveOnlineAddinOnlyElapsedParallel / 1000}s`
     }
   ]);
 }

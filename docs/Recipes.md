@@ -1,6 +1,64 @@
 ## `spsave` recipes
 
-On this page you can find different options supported by `spsave`. Lets assume we have some core options like `siteUrl`, `username`, `password`. The most interesting options are file content option, so lets take a closer look to all possible scenarios.   
+On this page you can find different options supported by `spsave`.  
+
+As you may noted from [README](../Readme.md), `spsave` supports all authentication options `node-sp-auth` provides. All you need is to pass appropriate credentials object.  
+For example SharePoint on-premise addin only authentication with `spsave` (consider `creds` variable): 
+
+```javascript
+var coreOptions = {
+  siteUrl: '[sp url]'
+};
+var creds = {
+  clientId: '[clientId]',
+  issuerId: '[issuerId]',
+  realm: '[realm]',
+  rsaPrivateKeyPath: '[rsaPrivateKeyPath]',
+  shaThumbprint: '[shaThumbprint]'
+};
+
+var fileOptions = {
+  folder: 'SiteAssets',
+  fileName: 'file.txt',
+  fileContent: 'hello world'
+};
+spsave(coreOptions, creds, fileOptions)
+.then(function(){
+    console.log('saved');
+})
+.catch(function(err){
+    console.log(err);
+});
+```
+... or  SharePoint online user credentials authentication: 
+
+```javascript
+var coreOptions = {
+  siteUrl: '[sp url]'
+};
+var creds = {
+  username: '[user@organization.onmicrosoft.com]',
+  password: '[password]'
+};
+
+var fileOptions = {
+  folder: 'SiteAssets',
+  fileName: 'file.txt',
+  fileContent: 'hello world'
+};
+spsave(coreOptions, creds, fileOptions)
+.then(function(){
+    console.log('saved');
+})
+.catch(function(err){
+    console.log(err);
+});
+``` 
+as simple as that.   
+  
+
+
+Lets assume we have core options like `siteUrl` and creds. The most interesting options are file content option, so lets take a closer look to all possible scenarios.   
 
 As you may know there are three types of file content options - file content, glob, vinyl file. 
 
@@ -9,12 +67,14 @@ As you may know there are three types of file content options - file content, gl
 ##### Save file using its name and content. Additionally perform major checkin:
 ```javascript
 spsave({
-  siteUrl: '[sp url]',  username: '[username]', password: '[password]',
-  folder: 'SiteAssets',
-  fileName: 'file.txt',
-  fileContent: 'hello world',
+  siteUrl: '[sp url]',
   checkin: true,
   checkinType: 1
+}, 
+creds, {
+  folder: 'SiteAssets',
+  fileName: 'file.txt',
+  fileContent: 'hello world'
 })
 ```
 ###### Result: 
@@ -24,10 +84,7 @@ If `SiteAssets` folder doesn't exist, `spsave` will create that folder. Also the
 ##### Save file using its name and content, update metadata for the file:
 ```javascript
 spsave({
-  siteUrl: '[sp url]',  username: '[username]', password: '[password]',
-  folder: 'SiteAssets',
-  fileName: 'file.txt',
-  fileContent: 'hello world',
+  siteUrl: '[sp url]',  
   filesMetaData: [{
           fileName: 'file.txt',
           metadata: {
@@ -35,6 +92,10 @@ spsave({
             Title: title
           }
         }]
+}, creds, {
+  folder: 'SiteAssets',
+  fileName: 'file.txt',
+  fileContent: 'hello world'
 })
 ```
 ###### Result: 
@@ -44,10 +105,7 @@ If `SiteAssets` folder doesn't exist, `spsave` will create that folder. Field "T
 ##### Upload search display template to master page gallery:
 ```javascript
 spsave({
-  siteUrl: '[sp url]',  username: '[username]', password: '[password]',
-  folder: '_catalogs/masterpage/Display Templates/Search',
-  fileName: 'Item_Template.js',
-  fileContent: '<javascript content>',
+  siteUrl: '[sp url]',
   filesMetaData: [{
           fileName: 'Item_Template.js',
           metadata: {
@@ -67,6 +125,10 @@ spsave({
             TemplateHidden: false
           }
         }]
+}, creds, {
+  folder: '_catalogs/masterpage/Display Templates/Search',
+  fileName: 'Item_Template.js',
+  fileContent: '<javascript content>'
 })
 ```
 ###### Result: 
@@ -75,11 +137,12 @@ New display template `Item_Template.js` will be uploaded to master page gallery.
 ##### Save binary file using nodejs `fs.readFileSync` function, show notificatin upon upload (or error if any):
 ```javascript
 spsave({
-  siteUrl: '[sp url]',  username: '[username]', password: '[password]',
+  siteUrl: '[sp url]',
+  notification: true
+}, creds, {
   folder: 'SiteAssets/app/templates',
   fileName: 'file.txt',
-  fileContent: fs.readFileSync('file.txt'),
-  notification: true
+  fileContent: fs.readFileSync('file.txt')
 })
 ```
 ###### Result: 
@@ -90,7 +153,8 @@ New file `file.txt` will be uploaded to `[sp site url]/SiteAssets/app/templates/
 ##### Save file by its path (file content and file name will be extracted automatically):
 ```javascript
 spsave({
-  siteUrl: '[sp url]',  username: '[username]', password: '[password]',
+  siteUrl: '[sp url]'
+}, creds, {
   glob: 'myapp/files/file.txt',
   folder: 'SiteAssets'
 })
@@ -101,7 +165,8 @@ New file `file.txt` will be uploaded to `[sp site url]/SiteAssets`
 ##### Save file by its path with base option:
 ```javascript
 spsave({
-  siteUrl: '[sp url]',  username: '[username]', password: '[password]',
+  siteUrl: '[sp url]'
+}, creds, {
   glob: 'myapp/data/files/file.txt',
   folder: 'SiteAssets',
   base: 'myapp'
@@ -113,7 +178,8 @@ New file `file.txt` will be uploaded to `[sp site url]/SiteAssets/data/files` (b
 ##### Save file by its path without folder option:
 ```javascript
 spsave({
-  siteUrl: '[sp url]',  username: '[username]', password: '[password]',
+  siteUrl: '[sp url]'
+}, creds, {
   glob: 'myapp/data/files/file.txt',
   base: 'myapp'
 })
@@ -124,7 +190,8 @@ New file `file.txt` will be uploaded to `[sp site url]/data/files/` (because of 
 ##### Save multiple files by mask, preserve folder structure (base options is used):
 ```javascript
 spsave({
-  siteUrl: '[sp url]',  username: '[username]', password: '[password]',
+  siteUrl: '[sp url]'
+}, creds, {
   glob: 'myapp/**/*.*',
   base: 'myapp',
   folder: 'SiteAssets'
@@ -136,7 +203,8 @@ All files from `myapp` local folder will be uploaded to `SiteAssets` folder. `sp
 ##### Save multiple files by mask, flatten structure:
 ```javascript
 spsave({
-  siteUrl: '[sp url]',  username: '[username]', password: '[password]',
+  siteUrl: '[sp url]'
+}, creds, {
   glob: 'myapp/**/*.*',
   folder: 'SiteAssets'
 })
@@ -147,7 +215,8 @@ All files from `myapp` local folder will be uploaded to `SiteAssets` folder usin
 ##### Save multiple different files:
 ```javascript
 spsave({
-  siteUrl: '[sp url]',  username: '[username]', password: '[password]',
+  siteUrl: '[sp url]'
+}, creds, {
   glob: ['myapp/files/file.txt', 'myapp/templates/home.html'],
   folder: 'SiteAssets'
 })
@@ -165,7 +234,8 @@ var map = require('map-stream');
 vfs.src('files/file.txt')
   .pipe(map(function(file, cb) {
     spsave({
-      siteUrl: '[sp url]',  username: '[username]', password: '[password]',
+      siteUrl: '[sp url]'
+    }, creds, {
       file: file,
       folder: 'SiteAssets'
     })
@@ -183,7 +253,8 @@ var map = require('map-stream');
 vfs.src('myapp/data/files/file.txt', { base: 'myapp' })
   .pipe(map(function(file, cb) {
     spsave({
-      siteUrl: '[sp url]',  username: '[username]', password: '[password]',
+      siteUrl: '[sp url]'
+    }, creds, {
       file: file,
       folder: 'SiteAssets'
     })
