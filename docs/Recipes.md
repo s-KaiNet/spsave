@@ -2,7 +2,7 @@
 
 On this page you can find different options supported by `spsave`.  
 
-As you may noted from [README](../Readme.md), `spsave` supports all authentication options `node-sp-auth` provides. All you need is to pass appropriate credentials object.  
+As you may noted from [README](https://github.com/s-KaiNet/spsave), `spsave` supports all authentication options `node-sp-auth` provides. All you need is to pass appropriate credentials object. Refer to `node-sp-auth` [credentialsOptions object](https://github.com/s-KaiNet/node-sp-auth#params).  
 For example SharePoint on-premise addin only authentication with `spsave` (consider `creds` variable): 
 
 ```javascript

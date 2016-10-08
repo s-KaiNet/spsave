@@ -12,7 +12,7 @@ Nodejs module for saving files in SharePoint:
 
 ----------
 # spsave 3.x released!
-`spsave 3.x` doesn't have backward compatibility with previous versions of `spsave`. It depends heavily on another module [sp-request](https://github.com/s-KaiNet/sp-request) and use it to send REST queries to SharePoint. `sp-request`, in turns, depends on module, responsible for SharePoint authentiation from node js - [node-sp-auth](https://github.com/s-KaiNet/node-sp-auth).  
+`spsave 3.x` doesn't have backward compatibility with previous versions of `spsave`. It depends heavily on another module [sp-request](https://github.com/s-KaiNet/sp-request) and use it to send REST queries to SharePoint. `sp-request`, in turns, depends on the module, responsible for SharePoint authentiation from node js - [node-sp-auth](https://github.com/s-KaiNet/node-sp-auth).  
 If you want to migrate to `spsave 3.x`, please refer to this article - [Upgrade to spsave 3.x](docs/UpgradeToSPSaveLatest.md).  
 If you just want to use 3.x version, read how to use it below.
 Also take a look at the [CHANGELOG](docs/CHANGELOG.md) to see how new version is differs from the previous one.  
@@ -64,7 +64,7 @@ Please refer to [this page](docs/UpgradeToSPSaveLatest.md) (at the bottom)
 
 
 ## options:
-Since `spsave 3.x` all options divided by logical categories (in order): 
+Starting from `spsave 3.x` all options divided by logical categories (in order): 
  - core options 
  - credentials
  - file(s) options

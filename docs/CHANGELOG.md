@@ -1,7 +1,7 @@
 ## spsave 3.x
 
- - refactored `spsave` parameters. All parameters now split by type - core options for `spsave`, credentials, file(s) options
-  - `spsave` now depends implicitly (throught the `sp-request`) on [node-sp-auth](https://github.com/s-KaiNet/node-sp-auth) module and use the set of credentials which `node-sp-auth` accepts. That means that `spsave` supports all authentication options supported by `node-sp-auth`
+ - refactored `spsave` parameters. All parameters now are divided by type - core options for `spsave`, credentials, file(s) options
+ - `spsave` now depends implicitly (throught the `sp-request`) on [node-sp-auth](https://github.com/s-KaiNet/node-sp-auth) module and use the set of credentials which `node-sp-auth` accepts. That means that `spsave` supports all authentication options supported by `node-sp-auth`
 
 
 ## spsave 2.x
