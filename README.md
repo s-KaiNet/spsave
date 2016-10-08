@@ -8,7 +8,7 @@
 
 Nodejs module for saving files in SharePoint: 
  - SharePoint 2013, 2016 
-  - SharePoint Online
+ - SharePoint Online
 
 ----------
 # spsave 3.x released!
