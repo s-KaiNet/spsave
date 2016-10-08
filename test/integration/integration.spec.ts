@@ -1,17 +1,17 @@
-import {expect} from 'chai';
+import { expect } from 'chai';
 import * as fs from 'fs';
 import * as Promise from 'bluebird';
 import * as url from 'url';
 import * as sprequest from 'sp-request';
-import {ISPRequest} from 'sp-request';
+import { ISPRequest } from 'sp-request';
 let map: any = require('map-stream');
 import * as vfs from 'vinyl-fs';
 import File = require('vinyl');
 import * as sinon from 'sinon';
 
-import {spsave} from './../../src/core/SPSave';
-import {CheckinType, FileOptions, ICoreOptions} from './../../src/core/SPSaveOptions';
-import {UrlHelper} from './../../src/utils/UrlHelper';
+import { spsave } from './../../src/core/SPSave';
+import { CheckinType, FileOptions, ICoreOptions } from './../../src/core/SPSaveOptions';
+import { UrlHelper } from './../../src/utils/UrlHelper';
 
 let config: any = require('./config');
 
@@ -35,6 +35,11 @@ let tests: any[] = [
     name: 'online addin only',
     creds: config.onlineAddinOnly,
     url: config.onlineUrl
+  },
+  {
+    name: 'adfs user credentials',
+    creds: config.adfsCredentials,
+    url: config.onpremAdfsEnabledUrl
   }
 ];
 

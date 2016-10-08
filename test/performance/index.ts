@@ -24,6 +24,8 @@ let onpremAddinOnlyCreds: IAuthOptions = config.onpremAddinOnly;
 
 let onlineAddinOnlyCreds: IAuthOptions = config.onlineAddinOnly;
 
+let adfsCreds: IAuthOptions = config.adfsCredentials;
+
 let coreOnlineOptions: ICoreOptions = {
   siteUrl: config.onlineUrl
 };
@@ -33,6 +35,10 @@ let coreOnpremOptions: ICoreOptions = {
 };
 
 let coreAddinOnlyOnPremOptions: ICoreOptions = {
+  siteUrl: config.onpremAdfsEnabledUrl
+};
+
+let coreAdfsOnPremOptions: ICoreOptions = {
   siteUrl: config.onpremAdfsEnabledUrl
 };
 
@@ -53,6 +59,8 @@ let spsaveOnpremiseAddinOnlyElapsedSeries: number;
 let spsaveOnpremiseAddinOnlyElapsedParallel: number;
 let spsaveOnlineAddinOnlyElapsedSeries: number;
 let spsaveOnlineAddinOnlyElapsedParallel: number;
+let adfsOnpremElapsedSeries: number;
+let adfsOnpremElapsedParallel: number;
 
 /* legacy: on-premise series run */
 Promise.all([new Date().getTime(), savesFileArraySeriesLegacy(filesToSave, legacyOnPremCreds)])
@@ -125,6 +133,18 @@ Promise.all([new Date().getTime(), savesFileArraySeriesLegacy(filesToSave, legac
   .then(data => {
     spsaveOnlineAddinOnlyElapsedParallel = new Date().getTime() - data[0];
 
+    /* spsave 3.x: adfs parallel */
+    return Promise.all([new Date().getTime(), saveFilesArrayInParallel(filesToSave, coreAdfsOnPremOptions, adfsCreds)]);
+  })
+  .then(data => {
+    adfsOnpremElapsedParallel = new Date().getTime() - data[0];
+
+    /* spsave 3.x: adfs parallel */
+    return Promise.all([new Date().getTime(), saveFilesArraySeries(filesToSave, coreAdfsOnPremOptions, adfsCreds)]);
+  })
+  .then(data => {
+    adfsOnpremElapsedSeries = new Date().getTime() - data[0];
+
     return null;
   })
   .then(printResults)
@@ -142,14 +162,16 @@ function printResults(): void {
       'on-premise user creds': `${legacyOnPremElapsedSeries / 1000}s`,
       'on-premise addin only': '-',
       'online user creds': `${legacyOnlineElapsedSeries / 1000}s`,
-      'online addin only': '-'
+      'online addin only': '-',
+      'adfs (on premise)' : '-'
     },
     {
       'spsave': 'spsave 3.x',
       'on-premise user creds': `${spsaveOnPremElapsedSeries / 1000}s`,
       'on-premise addin only': `${spsaveOnpremiseAddinOnlyElapsedSeries / 1000}s`,
       'online user creds': `${spsaveOnlineElapsedSeries / 1000}s`,
-      'online addin only': `${spsaveOnlineAddinOnlyElapsedSeries / 1000}s`
+      'online addin only': `${spsaveOnlineAddinOnlyElapsedSeries / 1000}s`,
+      'adfs (on premise)' : `${adfsOnpremElapsedSeries / 1000}s`
     }
   ]);
 
@@ -159,14 +181,16 @@ function printResults(): void {
       'on-premise user creds': `${legacyOnPremElapsedParallel / 1000}s`,
       'on-premise addin only': '-',
       'online user creds': `${legacyOnlineElapsedParallel / 1000}s`,
-      'online addin only': '-'
+      'online addin only': '-',
+      'adfs (on premise)' : '-'
     },
     {
       'spsave': 'spsave 3.x',
       'on-premise user creds': `${spsaveOnPremElapsedParallel / 1000}s`,
       'on-premise addin only': `${spsaveOnpremiseAddinOnlyElapsedParallel / 1000}s`,
       'online user creds': `${spsaveOnlineElapsedParallel / 1000}s`,
-      'online addin only': `${spsaveOnlineAddinOnlyElapsedParallel / 1000}s`
+      'online addin only': `${spsaveOnlineAddinOnlyElapsedParallel / 1000}s`,
+      'adfs (on premise)' : `${adfsOnpremElapsedParallel / 1000}s`
     }
   ]);
 }

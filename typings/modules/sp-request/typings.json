@@ -62,7 +62,7 @@
         "src": "C:\\Projects\\spsave\\node_modules\\node-sp-auth\\package.json",
         "raw": "npm:node-sp-auth",
         "main": "./lib/src/index.js",
-        "version": "1.0.6",
+        "version": "1.1.0",
         "global": false,
         "dependencies": {
           "agentkeepalive": {
