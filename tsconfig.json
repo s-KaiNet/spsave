@@ -7,7 +7,19 @@
     "declaration": true,
     "noImplicitAny": false,
     "pretty": true,
-    "removeComments": true
+    "removeComments": true,
+    "types": [
+      "bluebird",
+      "chai",
+      "mocha",
+      "sinon",
+      "mockery",
+      "node",
+      "node-notifier",
+      "lodash",
+      "core-js",
+      "colors"
+    ]
   },
   "exclude": [
     "node_modules"

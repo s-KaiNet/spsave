@@ -9,6 +9,11 @@ export var onlineCreds: IAuthOptions = {
   password: '[password]'
 };
 
+export var onlineWithAdfsCreds: IAuthOptions = {
+  username: '[username]',
+  password: '[password]'
+};
+
 export var onpremCreds: IAuthOptions = {
   username: '[username]',
   domain: '[domain]',

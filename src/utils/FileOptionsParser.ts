@@ -40,7 +40,7 @@ export class FileOptionsParser {
   }
 
   private static createFileOptionsFromVinyl(file: File, options: opts.IGlobOptions | opts.IVinylOptions): opts.IFileContentOptions {
-    let newOptions: opts.IFileContentOptions = _.assign<{}, opts.IFileContentOptions>({}, options);
+    let newOptions: opts.IFileContentOptions = _.assign<{}, any>({}, options);
     newOptions.fileName = path.basename(file.path);
     newOptions.fileContent = <Buffer>file.contents;
     newOptions.folder = FileOptionsParser.getFolderToUpload(file, options.folder);

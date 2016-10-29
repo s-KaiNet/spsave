@@ -27,10 +27,6 @@ There is a small performance comparison between 1.x and 3.x versions (also inclu
 ```bash
 npm install spsave --save-dev
 ```
-#### Optionally install definitions if you are developing with TypeScript:
-```bash
-typings install npm:spsave --save-dev
-```
 #### Usage:
 ```javascript
 var spsave = require("spsave").spsave;

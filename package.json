@@ -1,18 +1,20 @@
 {
   "name": "spsave",
   "description": "Save files in SharePoint using node.js easily",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "author": "Sergei Sergeev <sergeev.srg@gmail.com>",
   "main": "./lib/src/index.js",
+  "typings": "./lib/src/index",
   "engines": {
     "node": ">=4.0.0"
   },
   "scripts": {
     "test": "gulp test-ci",
-    "build": "npm install && gulp tsc",
+    "build": "npm install && typings install && gulp tsc",
     "dev": "gulp live-dev",
     "test-int": "gulp test-int",
-    "test-perf": "gulp tsc && node lib/test/performance/index.js"
+    "test-perf": "gulp tsc && node lib/test/performance/index.js",
+    "postinstall": "typings install"
   },
   "bugs": {
     "url": "https://github.com/s-KaiNet/spsave/issues"
@@ -34,6 +36,10 @@
     }
   ],
   "devDependencies": {
+    "@types/chai": "^3.4.34",
+    "@types/mocha": "^2.2.32",
+    "@types/mockery": "^1.4.29",
+    "@types/sinon": "^1.16.31",
     "chai": "^3.5.0",
     "console.table": "^0.7.0",
     "coveralls": "^2.11.9",
@@ -61,6 +67,12 @@
     "yargs": "^4.6.0"
   },
   "dependencies": {
+    "@types/bluebird": "^3.0.35",
+    "@types/colors": "^0.6.33",
+    "@types/core-js": "^0.9.34",
+    "@types/lodash": "^4.14.37",
+    "@types/node": "^6.0.45",
+    "@types/node-notifier": "0.0.28",
     "bluebird": "^3.4.0",
     "colors": "^1.1.2",
     "globby": "^4.1.0",

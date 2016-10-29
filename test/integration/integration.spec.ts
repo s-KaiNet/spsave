@@ -32,6 +32,11 @@ let tests: any[] = [
     url: config.onlineUrl
   },
   {
+    name: 'adfs online user credentials',
+    creds: config.onlineWithAdfsCreds,
+    url: config.onlineUrl
+  },
+  {
     name: 'online addin only',
     creds: config.onlineAddinOnly,
     url: config.onlineUrl
