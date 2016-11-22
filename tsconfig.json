@@ -18,7 +18,9 @@
       "node-notifier",
       "lodash",
       "core-js",
-      "colors"
+      "colors",
+      "vinyl",
+      "vinyl-fs"
     ]
   },
   "exclude": [

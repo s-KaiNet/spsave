@@ -14,15 +14,12 @@
             "src": "https://raw.githubusercontent.com/typed-typings/npm-es6-promise/fb04188767acfec1defd054fc8024fafa5cd4de7/typings.json",
             "raw": "github:typed-typings/npm-es6-promise#fb04188767acfec1defd054fc8024fafa5cd4de7",
             "main": "dist/es6-promise.d.ts",
-            "name": "es6-promise",
-            "type": "typings"
+            "name": "es6-promise"
           }
         },
-        "name": "pinkie-promise",
-        "type": "typings"
+        "name": "pinkie-promise"
       }
     },
-    "name": "globby",
-    "type": "typings"
+    "name": "globby"
   }
 }

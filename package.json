@@ -1,7 +1,7 @@
 {
   "name": "spsave",
   "description": "Save files in SharePoint using node.js easily",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "author": "Sergei Sergeev <sergeev.srg@gmail.com>",
   "main": "./lib/src/index.js",
   "typings": "./lib/src/index",
@@ -13,8 +13,7 @@
     "build": "npm install && typings install && gulp tsc",
     "dev": "gulp live-dev",
     "test-int": "gulp test-int",
-    "test-perf": "gulp tsc && node lib/test/performance/index.js",
-    "postinstall": "typings install"
+    "test-perf": "gulp tsc && node lib/test/performance/index.js"
   },
   "bugs": {
     "url": "https://github.com/s-KaiNet/spsave/issues"
@@ -73,6 +72,8 @@
     "@types/lodash": "^4.14.37",
     "@types/node": "^6.0.45",
     "@types/node-notifier": "0.0.28",
+    "@types/vinyl": "^1.2.30",
+    "@types/vinyl-fs": "0.0.28",
     "bluebird": "^3.4.0",
     "colors": "^1.1.2",
     "globby": "^4.1.0",
