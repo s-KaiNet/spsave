@@ -1,7 +1,7 @@
 {
   "name": "spsave",
   "description": "Save files in SharePoint using node.js easily",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "author": "Sergei Sergeev <sergeev.srg@gmail.com>",
   "main": "./lib/src/index.js",
   "typings": "./lib/src/index",
@@ -14,6 +14,7 @@
     "dev": "gulp live-dev",
     "test-int": "gulp test-int",
     "test-perf": "gulp tsc && node lib/test/performance/index.js",
+    "preinstall": "npm list typings -g || npm install typings -g",
     "postinstall": "typings install"
   },
   "bugs": {
