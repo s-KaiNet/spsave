@@ -1,4 +1,4 @@
-# spsave [![analytics](http://www.google-analytics.com/collect?v=1&t=pageview&tid=UA-87971440-1&cid=168ca941-da73-4e64-9e64-59d044e0f6a3&dl=https%253a%252f%252fgithub.com%252fs-KaiNet%252fspsave)]()
+# spsave [![analytics](http://www.google-analytics.com/collect?v=1&t=pageview&tid=UA-87971440-1&cid=168ca941-da73-4e64-9e64-59d044e0f6a3&dl=https%3A%2F%2Fgithub.com%2Fs-KaiNet%2Fspsave)]()
 
 [![NPM](https://nodei.co/npm/spsave.png?mini=true)](https://nodei.co/npm/spsave/)
 
