@@ -8,6 +8,9 @@
     "noImplicitAny": false,
     "pretty": true,
     "removeComments": true,
+    "lib": [
+      "es2015"
+    ],
     "types": [
       "bluebird",
       "chai",
