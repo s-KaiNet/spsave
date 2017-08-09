@@ -78,7 +78,7 @@ Starting from `spsave 3.x` all options divided by logical categories (in order):
 #### Credentials: 
 
 `spsave 3.x` implicitly depends on another module used for SharePoint authentication from node js - [node-sp-auth](https://github.com/s-KaiNet/node-sp-auth). For `spsave` credentials param you need to pass exactly the same object, as for `node-sp-auth` [credentialsOptions object](https://github.com/s-KaiNet/node-sp-auth#params). That also means that `spsave` supports all authentication options supported by `node-sp-auth`. On [Recipes page](docs/Recipes.md) you can find a bit more samples.   
-You can also pass a null as credentials, in that case spsave will ask you for credentials and will store your credentials in a user folder in an encrypted manner (everything is handled by `node-sp-auth` actually). 
+You can also pass a `null` as credentials, in that case `spsave` will ask you for credentials and will store your credentials in a user folder in an encrypted manner (everything is handled by `node-sp-auth` actually). 
 
 #### File(s) options: 
 
