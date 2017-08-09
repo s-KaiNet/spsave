@@ -1,4 +1,4 @@
-# spsave [![analytics](http://www.google-analytics.com/collect?v=1&t=pageview&tid=UA-87971440-1&cid=168ca941-da73-4e64-9e64-59d044e0f6a3&dl=https%3A%2F%2Fgithub.com%2Fs-KaiNet%2Fspsave)]()
+# spsave 
 
 [![NPM](https://nodei.co/npm/spsave.png?mini=true)](https://nodei.co/npm/spsave/)
 
@@ -6,18 +6,15 @@
 [![Coverage Status](https://coveralls.io/repos/github/s-KaiNet/spsave/badge.svg?branch=master)](https://coveralls.io/github/s-KaiNet/spsave?branch=master)
 [![npm version](https://badge.fury.io/js/spsave.svg)](https://badge.fury.io/js/spsave)
 
+### Need help on SharePoint with Node.JS? Join our gitter chat and ask question! [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/sharepoint-node/Lobby)
+
 Nodejs module for saving files in SharePoint: 
  - SharePoint 2013, 2016 
  - SharePoint Online
 
 ----------
-# spsave 3.x released!
-`spsave 3.x` doesn't have backward compatibility with previous versions of `spsave`. It depends heavily on another module [sp-request](https://github.com/s-KaiNet/sp-request) and use it to send REST queries to SharePoint. `sp-request`, in turns, depends on the module, responsible for SharePoint authentiation from node js - [node-sp-auth](https://github.com/s-KaiNet/node-sp-auth).  
-If you want to migrate to `spsave 3.x`, please refer to this article - [Upgrade to spsave 3.x](docs/UpgradeToSPSaveLatest.md).  
-If you just want to use 3.x version, read how to use it below.
-Also take a look at the [CHANGELOG](docs/CHANGELOG.md) to see how new version is differs from the previous one.  
-#### Performance
-There is a small performance comparison between 1.x and 3.x versions (also includes performance comparison between different authentiation options) - [spsave performance comparison](docs/PerformanceComparison.md).
+ `spsave` depends heavily on another module [sp-request](https://github.com/s-KaiNet/sp-request) and use it to send REST queries to SharePoint. `sp-request`, in turns, depends on the module responsible for SharePoint authentiation from node js - [node-sp-auth](https://github.com/s-KaiNet/node-sp-auth).  
+[CHANGELOG](docs/CHANGELOG.md) 
 
 
 ---
@@ -80,7 +77,8 @@ Starting from `spsave 3.x` all options divided by logical categories (in order):
 
 #### Credentials: 
 
-`spsave 3.x` implicitly depends on another module used for SharePoint authentication from node js - [node-sp-auth](https://github.com/s-KaiNet/node-sp-auth). For `spsave` credentials param you need to pass exactly the same object, as for `node-sp-auth` [credentialsOptions object](https://github.com/s-KaiNet/node-sp-auth#params). That also means that `spsave` supports all authentication options supported by `node-sp-auth`. On [Recipes page](docs/Recipes.md) you can find a bit more samples. 
+`spsave 3.x` implicitly depends on another module used for SharePoint authentication from node js - [node-sp-auth](https://github.com/s-KaiNet/node-sp-auth). For `spsave` credentials param you need to pass exactly the same object, as for `node-sp-auth` [credentialsOptions object](https://github.com/s-KaiNet/node-sp-auth#params). That also means that `spsave` supports all authentication options supported by `node-sp-auth`. On [Recipes page](docs/Recipes.md) you can find a bit more samples.   
+You can also pass a null as credentials, in that case spsave will ask you for credentials and will store your credentials in a user folder in an encrypted manner (everything is handled by `node-sp-auth` actually). 
 
 #### File(s) options: 
 
