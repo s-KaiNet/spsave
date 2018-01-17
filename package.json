@@ -1,7 +1,7 @@
 {
   "name": "spsave",
   "description": "Save files in SharePoint using node.js easily",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "author": "Sergei Sergeev <sergeev.srg@gmail.com>",
   "main": "./lib/src/index.js",
   "typings": "./lib/src/index",
@@ -78,7 +78,7 @@
     "colors": "^1.1.2",
     "globby": "^4.1.0",
     "lodash": "^4.13.1",
-    "node-notifier": "^4.5.0",
+    "node-notifier": "^5.2.1",
     "sp-request": "^2.1.0",
     "vinyl": "^1.1.1"
   }
