@@ -60,7 +60,7 @@
     "run-sequence": "^1.1.5",
     "sinon": "^1.17.4",
     "tslint": "^3.8.1",
-    "typescript": "^2.0.3",
+    "typescript": "^2.6.2",
     "typings": "^1.0.0",
     "vinyl-fs": "^2.4.3",
     "yargs": "^4.6.0"
