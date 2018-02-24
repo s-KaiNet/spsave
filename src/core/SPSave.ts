@@ -60,6 +60,10 @@ export function spsave(coreOptions: ICoreOptions, credentialOptions: IAuthOption
           showError(err, coreOptions.notification);
           reject(err);
         });
+    } else {
+      reject({
+        message: 'No files were uploaded. No files were found which match your criteria.'
+      });
     }
   });
 }

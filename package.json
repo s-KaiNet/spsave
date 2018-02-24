@@ -1,7 +1,7 @@
 {
   "name": "spsave",
   "description": "Save files in SharePoint using node.js easily",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "author": "Sergei Sergeev <sergeev.srg@gmail.com>",
   "main": "./lib/src/index.js",
   "typings": "./lib/src/index",

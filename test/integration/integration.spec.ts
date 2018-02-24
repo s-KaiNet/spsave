@@ -612,5 +612,27 @@ tests.forEach(test => {
           done(err);
         });
     });
+
+    it('should resolve promise if there are no files', function (done: MochaDone): void {
+      this.timeout(20 * 1000);
+
+      let files: FileOptions = {
+        glob: ['test/integration/files/nofile.dat'],
+        base: 'test/integration',
+        folder: 'SiteAssets'
+      };
+
+      let core: ICoreOptions = {
+        siteUrl: test.url
+      };
+
+      spsave(core, test.creds, files)
+        .then(data => {
+          done('Should reject when glob is empty');
+        })
+        .catch(err => {
+          done();
+        });
+    });
   });
 });
