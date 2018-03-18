@@ -5,4 +5,5 @@ test
 /typings
 .vscode
 *.js.map
+npm-shrinkwrap.json
 !/lib
