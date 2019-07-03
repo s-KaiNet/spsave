@@ -14,7 +14,9 @@
     "dev": "gulp live-dev",
     "test-int": "gulp test-int",
     "test-perf": "gulp tsc && node lib/test/performance/index.js",
-    "prepublishOnly": "gulp prepublish"
+    "prepublishOnly": "gulp prepublish",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "bugs": {
     "url": "https://github.com/s-KaiNet/spsave/issues"
@@ -80,6 +82,8 @@
     "lodash": "^4.13.1",
     "node-notifier": "^5.2.1",
     "sp-request": "^2.1.0",
-    "vinyl": "^1.1.1"
-  }
+    "vinyl": "^1.1.1",
+    "snyk": "^1.189.0"
+  },
+  "snyk": true
 }
