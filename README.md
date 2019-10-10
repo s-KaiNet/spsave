@@ -69,6 +69,7 @@ Starting from `spsave 3.x` all options divided by logical categories (in order):
     - `0` - minor
     - `1` - major
     - `2` - overwrite
+    - `3` - nocheckin - special case if you don't want your file to be checked-in on every file upload. In that case you file will remain checked-in after upload and you should either manually upload it, or run `spsave` again with other `checkinType` 
 - `checkinMessage` - optional string, you can provide your own checkin message, otherwise default will be used
 - `notification` - optional boolean, when true, `spsave` will notify about successful upload using [node-notifier](https://github.com/mikaelbr/node-notifier) module
 - `filesMetaData` - optional, array of `IFileMetaData`: 

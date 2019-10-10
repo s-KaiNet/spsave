@@ -1,9 +1,9 @@
 import * as Promise from 'bluebird';
 import * as sprequest from 'sp-request';
-import {ISPRequest} from 'sp-request';
+import { ISPRequest } from 'sp-request';
 import * as url from 'url';
 import * as _ from 'lodash';
-import {IAuthOptions} from 'sp-request';
+import { IAuthOptions } from 'sp-request';
 
 import {
   ICoreOptions,
@@ -11,11 +11,11 @@ import {
   CheckinType,
   IFileMetaData
 } from './SPSaveOptions';
-import {UrlHelper} from './../utils/UrlHelper';
-import {FoldersCreator} from './../utils/FoldersCreator';
-import {ILogger} from './../utils/ILogger';
-import {ConsoleLogger} from './../utils/ConsoleLogger';
-import {defer, IDeferred} from './../utils/Defer';
+import { UrlHelper } from './../utils/UrlHelper';
+import { FoldersCreator } from './../utils/FoldersCreator';
+import { ILogger } from './../utils/ILogger';
+import { ConsoleLogger } from './../utils/ConsoleLogger';
+import { defer, IDeferred } from './../utils/Defer';
 
 export class FileSaver {
   private static saveConfilctCode: string = '-2130246326';
@@ -44,7 +44,7 @@ export class FileSaver {
     this.file = _.assign<{}, IFileContentOptions>({}, fileOptions);
     this.coreOptions = _.assign<{}, ICoreOptions>({}, coreOptions);
 
-    _.defaults<ICoreOptions>(this.coreOptions, {
+    _.defaults<ICoreOptions, any>(this.coreOptions, {
       checkin: false,
       checkinType: CheckinType.minor,
       checkinMessage: 'Checked in by spsave'
@@ -204,6 +204,10 @@ export class FileSaver {
 
   /* checkins files */
   private checkinFile(): Promise<any> {
+    if (this.coreOptions.checkinType && this.coreOptions.checkinType == CheckinType.nocheckin) {
+      return Promise.resolve(true);
+    }
+    
     return new Promise<any>((resolve, reject) => {
       this.sprequest.requestDigest(this.coreOptions.siteUrl)
         .then(digest => {

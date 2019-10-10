@@ -4,7 +4,8 @@ import {IAuthOptions} from 'sp-request';
 export enum CheckinType {
   minor = 0,
   major = 1,
-  overwrite = 2
+  overwrite = 2,
+  nocheckin = 3
 }
 
 export interface ICoreOptions {
