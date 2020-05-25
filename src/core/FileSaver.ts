@@ -1,7 +1,6 @@
 import * as sprequest from 'sp-request';
 import { ISPRequest } from 'sp-request';
 import * as url from 'url';
-import * as _ from 'lodash';
 import { IAuthOptions } from 'sp-request';
 
 import {
@@ -17,13 +16,13 @@ import { ConsoleLogger } from './../utils/ConsoleLogger';
 import { defer, IDeferred } from './../utils/Defer';
 
 export class FileSaver {
-  private static saveConfilctCode: string = '-2130246326';
-  private static cobaltCode: string = '-1597308888';
-  private static directoryNotFoundCode: string = '-2147024893';
-  private static fileDoesNotExistOnpremCode: string = '-2146232832';
-  private static fileDoesNotExistOnlineCode: string = '-2130575338';
-  private static reUploadTimeout: number = 1500;
-  private static maxAttempts: number = 3;
+  private static saveConfilctCode = '-2130246326';
+  private static cobaltCode = '-1597308888';
+  private static directoryNotFoundCode = '-2147024893';
+  private static fileDoesNotExistOnpremCode = '-2146232832';
+  private static fileDoesNotExistOnlineCode = '-2130575338';
+  private static reUploadTimeout = 1500;
+  private static maxAttempts = 3;
 
   private sprequest: ISPRequest;
   private uploadFileRestUrl: string;
@@ -40,14 +39,14 @@ export class FileSaver {
   constructor(coreOptions: ICoreOptions, credentialOptions: IAuthOptions, fileOptions: IFileContentOptions) {
     this.sprequest = sprequest.create(credentialOptions);
 
-    this.file = _.assign<{}, IFileContentOptions>({}, fileOptions);
-    this.coreOptions = _.assign<{}, ICoreOptions>({}, coreOptions);
+    this.file = Object.assign<any, IFileContentOptions>({}, fileOptions);
+    this.coreOptions = Object.assign<any, ICoreOptions>({}, coreOptions);
 
-    _.defaults<ICoreOptions, any>(this.coreOptions, {
+    this.coreOptions = Object.assign<any, ICoreOptions>({
       checkin: false,
       checkinType: CheckinType.minor,
       checkinMessage: 'Checked in by spsave'
-    });
+    }, this.coreOptions);
 
     this.coreOptions.siteUrl = UrlHelper.removeTrailingSlash(this.coreOptions.siteUrl);
     this.file.folder = UrlHelper.trimSlashes(this.file.folder);
@@ -60,7 +59,7 @@ export class FileSaver {
   }
 
   public save(): Promise<any> {
-    let deferred: IDeferred<any> = defer<any>();
+    const deferred: IDeferred<any> = defer<any>();
     if (typeof this.file.fileContent === 'string' && Buffer.byteLength(<string>this.file.fileContent) === 0) {
       this.skipUpload(deferred);
     } else if (this.file.fileContent.length === 0) {
@@ -73,19 +72,19 @@ export class FileSaver {
   }
 
   /* saves file in a folder. If save conflict or cobalt error is thrown, tries to reupload file `maxAttempts` times */
-  private saveFile(requestDeferred: IDeferred<any>, attempts: number = 1): void {
+  private saveFile(requestDeferred: IDeferred<any>, attempts = 1): void {
 
     if (attempts > FileSaver.maxAttempts) {
-      let message: string = `File '${this.file.fileName}' probably is not uploaded: too many errors. Upload process interrupted.`;
+      const message = `File '${this.file.fileName}' probably is not uploaded: too many errors. Upload process interrupted.`;
       this.logger.error(message);
       requestDeferred.reject(new Error(message));
       return;
     }
 
     /* checkout file (only if option checkin provided) */
-    let checkoutResult: Promise<boolean> = this.checkoutFile();
+    const checkoutResult: Promise<boolean> = this.checkoutFile();
 
-    let uploadResult: Promise<any> =
+    const uploadResult: Promise<any> =
       checkoutResult
         .then(() => {
           /* upload file to folder */
@@ -106,8 +105,8 @@ export class FileSaver {
         return this.updateMetaData(result);
       })
       .then(result => {
-        let fileExists: boolean = result[0];
-        let data: any = result[1];
+        const fileExists: boolean = result[0];
+        const data: any = result[1];
 
         /* checkin file if checkin options presented */
         if (this.coreOptions.checkin && fileExists) {
@@ -171,7 +170,7 @@ export class FileSaver {
         return;
       }
 
-      let fileMetaData: IFileMetaData = this.coreOptions.filesMetaData.filter(fileData => {
+      const fileMetaData: IFileMetaData = this.coreOptions.filesMetaData.filter(fileData => {
         return fileData.fileName === this.file.fileName;
       })[0];
 
@@ -227,7 +226,7 @@ export class FileSaver {
 
   /* tries to checkout file. returns true if file exists or false if doesn't */
   private checkoutFile(): Promise<boolean> {
-    let promise: Promise<any> = new Promise<any>((resolve, reject) => {
+    const promise: Promise<any> = new Promise<any>((resolve, reject) => {
       /* if checkin option isn't provided, just resolve to true and return */
       if (!this.coreOptions.checkin) {
         resolve(true);
@@ -289,7 +288,7 @@ export class FileSaver {
       return;
     }
 
-    let reUpload: () => void = (): void => {
+    const reUpload: () => void = (): void => {
       setTimeout(() => {
         this.saveFile(deferred, attempts + 1);
       }, FileSaver.reUploadTimeout);
@@ -312,7 +311,7 @@ export class FileSaver {
   }
 
   private buildRestUrls(): void {
-    let fileServerRelativeUrl: string = `${this.path}/${this.file.folder}/${this.file.fileName}`;
+    const fileServerRelativeUrl = `${this.path}/${this.file.folder}/${this.file.fileName}`;
 
     this.uploadFileRestUrl = this.coreOptions.siteUrl +
       '/_api/web/GetFolderByServerRelativeUrl(@FolderName)/Files/add(url=@FileName,overwrite=true)' +

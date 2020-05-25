@@ -1,14 +1,14 @@
-import {expect} from 'chai';
+import { expect } from 'chai';
 import * as sinon from 'sinon';
 
-import {ConsoleLogger} from './../../src/utils/ConsoleLogger';
+import { ConsoleLogger } from './../../src/utils/ConsoleLogger';
 
-let logger: ConsoleLogger = new ConsoleLogger();
+const logger: ConsoleLogger = new ConsoleLogger();
 
 describe('spsave: ConsoleLogger test', () => {
   it('should write to console', () => {
-    let spy: sinon.SinonStub = sinon.stub(console, 'log');
-    let message: string = 'message';
+    const spy: sinon.SinonStub = sinon.stub(console, 'log');
+    const message = 'message';
 
     logger.info(message);
     logger.error(message);

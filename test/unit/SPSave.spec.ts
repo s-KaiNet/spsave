@@ -1,36 +1,36 @@
-import {expect} from 'chai';
+import { expect } from 'chai';
 import * as sinon from 'sinon';
 import * as notifier from 'node-notifier';
-import {IAuthOptions} from 'sp-request';
+import { IAuthOptions } from 'sp-request';
 
-import {spsave} from './../../src/core/SPSave';
-import {FileSaver} from './../../src/core/FileSaver';
-import {ICoreOptions, FileOptions} from './../../src/core/SPSaveOptions';
-import {defer, IDeferred} from './../../src/utils/Defer';
+import { spsave } from './../../src/core/SPSave';
+import { FileSaver } from './../../src/core/FileSaver';
+import { ICoreOptions, FileOptions } from './../../src/core/SPSaveOptions';
+import { defer, IDeferred } from './../../src/utils/Defer';
 
 describe('spsave: SPSave test', () => {
   it('should save multiple files', done => {
-    let saveDeferred: IDeferred<any> = defer();
+    const saveDeferred: IDeferred<any> = defer();
     saveDeferred.resolve(null);
 
-    let saveStub: sinon.SinonStub = sinon.stub(FileSaver.prototype, 'save').returns(saveDeferred.promise);
+    const saveStub: sinon.SinonStub = sinon.stub(FileSaver.prototype, 'save').returns(saveDeferred.promise);
 
-    let creds: IAuthOptions = {
+    const creds: IAuthOptions = {
       username: '',
       password: ''
     };
 
-    let file: FileOptions = {
+    const file: FileOptions = {
       glob: ['test/unit/*.*'],
       folder: 'Assets'
     };
 
-    let core: ICoreOptions = {
+    const core: ICoreOptions = {
       siteUrl: 'http://sp.url'
     };
 
     spsave(core, creds, file)
-      .then(data => {
+      .then(() => {
         done();
       })
       .catch(done)
@@ -40,23 +40,23 @@ describe('spsave: SPSave test', () => {
   });
 
   it('should save single file', done => {
-    let saveDeferred: IDeferred<any> = defer();
+    const saveDeferred: IDeferred<any> = defer();
     saveDeferred.resolve(null);
 
-    let saveStub: sinon.SinonStub = sinon.stub(FileSaver.prototype, 'save').returns(saveDeferred.promise);
+    const saveStub: sinon.SinonStub = sinon.stub(FileSaver.prototype, 'save').returns(saveDeferred.promise);
 
-    let creds: IAuthOptions = {
+    const creds: IAuthOptions = {
       username: '',
       password: ''
     };
 
-    let file: FileOptions = {
+    const file: FileOptions = {
       fileContent: 'spsave',
       folder: 'Assets',
       fileName: 'file.txt'
     };
 
-    let core: ICoreOptions = {
+    const core: ICoreOptions = {
       siteUrl: 'http://sp.url'
     };
 
@@ -71,24 +71,24 @@ describe('spsave: SPSave test', () => {
   });
 
   it('should show notification', done => {
-    let saveDeferred: IDeferred<any> = defer();
+    const saveDeferred: IDeferred<any> = defer();
     saveDeferred.resolve(null);
 
-    let saveStub: sinon.SinonStub = sinon.stub(FileSaver.prototype, 'save').returns(saveDeferred.promise);
-    let notifyStub: sinon.SinonStub = sinon.stub(notifier, 'notify');
+    const saveStub: sinon.SinonStub = sinon.stub(FileSaver.prototype, 'save').returns(saveDeferred.promise);
+    const notifyStub: sinon.SinonStub = sinon.stub(notifier, 'notify');
 
-    let creds: IAuthOptions = {
+    const creds: IAuthOptions = {
       username: '',
       password: ''
     };
 
-    let file: FileOptions = {
+    const file: FileOptions = {
       fileContent: 'spsave',
       folder: 'Assets',
       fileName: 'file.txt'
     };
 
-    let core: ICoreOptions = {
+    const core: ICoreOptions = {
       siteUrl: 'http://sp.url',
       notification: true
     };
@@ -106,26 +106,26 @@ describe('spsave: SPSave test', () => {
   });
 
   it('should reject deferred', done => {
-    let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
-    let saveDeferred: IDeferred<any> = defer();
-    let error: Error = new Error('failed');
+    const consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
+    const saveDeferred: IDeferred<any> = defer();
+    const error: Error = new Error('failed');
     saveDeferred.reject(error);
 
-    let saveStub: sinon.SinonStub = sinon.stub(FileSaver.prototype, 'save').returns(saveDeferred.promise);
-    let notifyStub: sinon.SinonStub = sinon.stub(notifier, 'notify');
+    const saveStub: sinon.SinonStub = sinon.stub(FileSaver.prototype, 'save').returns(saveDeferred.promise);
+    const notifyStub: sinon.SinonStub = sinon.stub(notifier, 'notify');
 
-    let creds: IAuthOptions = {
+    const creds: IAuthOptions = {
       username: '',
       password: ''
     };
 
-    let file: FileOptions = {
+    const file: FileOptions = {
       fileContent: 'spsave',
       folder: 'Assets',
       fileName: 'file.txt'
     };
 
-    let core: ICoreOptions = {
+    const core: ICoreOptions = {
       siteUrl: 'http://sp.url',
       notification: true
     };
@@ -147,24 +147,24 @@ describe('spsave: SPSave test', () => {
   });
 
   it('should reject deferred with precise error', done => {
-    let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
-    let saveDeferred: IDeferred<any> = defer();
-    let error: Error = new Error();
+    const consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
+    const saveDeferred: IDeferred<any> = defer();
+    const error: Error = new Error();
     saveDeferred.reject(error);
 
-    let saveStub: sinon.SinonStub = sinon.stub(FileSaver.prototype, 'save').returns(saveDeferred.promise);
+    const saveStub: sinon.SinonStub = sinon.stub(FileSaver.prototype, 'save').returns(saveDeferred.promise);
 
-    let creds: IAuthOptions = {
+    const creds: IAuthOptions = {
       username: '',
       password: ''
     };
 
-    let file: FileOptions = {
+    const file: FileOptions = {
       folder: 'Assets',
       glob: ['test/unit/*.*']
     };
 
-    let core: ICoreOptions = {
+    const core: ICoreOptions = {
       siteUrl: 'http://sp.url'
     };
 

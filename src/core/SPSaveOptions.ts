@@ -48,14 +48,14 @@ export interface ISPSaveOptions {
   core: ICoreOptions;
 }
 
-export function isGlobOptions(T: any): T is IGlobOptions {
-  return !!T.glob;
+export function isGlobOptions(T: FileOptions): T is IGlobOptions {
+  return !!(T as IGlobOptions).glob;
 }
 
-export function isFileContentOptions(T: any): T is IFileContentOptions {
-  return !!T.fileContent || T.fileContent === '';
+export function isFileContentOptions(T: FileOptions): T is IFileContentOptions {
+  return !!(T as IFileContentOptions).fileContent || (T as IFileContentOptions).fileContent === '';
 }
 
-export function isVinylOptions(T: any): T is IVinylOptions {
-  return !!T.file;
+export function isVinylOptions(T: FileOptions): T is IVinylOptions {
+  return !!(T as IVinylOptions).file;
 }

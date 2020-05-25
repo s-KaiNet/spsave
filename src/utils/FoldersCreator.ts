@@ -24,19 +24,19 @@ export class FoldersCreator {
 
   public createFoldersHierarchy(): Promise<any> {
     return new Promise<any>((resolve, reject) => {
-      let folderPaths: string[] = [];
-      let paths: string[] = this.folder.split('/').filter(path => { return path !== ''; });
+      const folderPaths: string[] = [];
+      const paths: string[] = this.folder.split('/').filter(path => { return path !== ''; });
 
       this.createFoldersPathArray(paths, folderPaths);
-      let getFolderPromises = [];
+      const getFolderPromises = [];
       folderPaths.forEach(folder => {
-        let getFolderUrl: string = this.getFolderRestUrlBase + `?@FolderName='${encodeURIComponent(folder)}'`;
+        const getFolderUrl: string = this.getFolderRestUrlBase + `?@FolderName='${encodeURIComponent(folder)}'`;
         getFolderPromises.push(this.sprequest.get(getFolderUrl));
       });
 
       Promise.all(getFolderPromises.map(reflect))
         .then(data => {
-          let foldersToCreate: string[] = data.map((promise, index) => {
+          const foldersToCreate: string[] = data.map((promise, index) => {
             /* sp onilne for some reason throws 500 when folder is not found :( */
             if (promise.isRejected && (promise.reason.statusCode === 404 || promise.reason.statusCode === 500)) {
               return index;
@@ -84,7 +84,7 @@ export class FoldersCreator {
             }
           });
         })
-        .then(data => {
+        .then(() => {
           this.createFolders(folders.slice(1, folders.length), deferred);
 
           return null;
@@ -99,7 +99,7 @@ export class FoldersCreator {
     return deferred.promise;
   }
 
-  private createFoldersPathArray(paths: string[], result: string[], index: number = 0): void {
+  private createFoldersPathArray(paths: string[], result: string[], index = 0): void {
     if (index === 0) {
       result.push(paths[index]);
     } else {

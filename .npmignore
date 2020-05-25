@@ -6,4 +6,6 @@ test
 .vscode
 *.js.map
 npm-shrinkwrap.json
+/coverage
+/.nyc_output
 !/lib

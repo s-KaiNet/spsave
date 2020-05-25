@@ -13,17 +13,17 @@ import {ConsoleLogger} from './../utils/ConsoleLogger';
 import {FileOptionsParser} from './../utils/FileOptionsParser';
 import {defer, IDeferred} from './../utils/Defer';
 
-let logger: ILogger = new ConsoleLogger();
+const logger: ILogger = new ConsoleLogger();
 
 export function spsave(coreOptions: ICoreOptions, credentialOptions: IAuthOptions, fileOptions: FileOptions): Promise<any> {
   return new Promise<any>((resolve, reject) => {
 
-    let spSaveOptions: ISPSaveOptions = {
+    const spSaveOptions: ISPSaveOptions = {
       creds: credentialOptions,
       core: coreOptions,
       files: FileOptionsParser.parseOptions(fileOptions)
     };
-    let showNotification: () => void = () => {
+    const showNotification: () => void = () => {
       if (!coreOptions.notification) {
         return;
       }

@@ -1,11 +1,10 @@
 import File = require('vinyl');
-import * as _ from 'lodash';
 import * as path from 'path';
 import * as globby from 'globby';
 import * as fs from 'fs';
 
 import * as opts from './../core/SPSaveOptions';
-import {UrlHelper} from './UrlHelper';
+import { UrlHelper } from './UrlHelper';
 
 export class FileOptionsParser {
   public static parseOptions(options: opts.FileOptions): opts.IFileContentOptions[] {
@@ -14,24 +13,24 @@ export class FileOptionsParser {
     }
 
     if (opts.isGlobOptions(options)) {
-      let fileContentOptions: opts.IFileContentOptions[] = [];
+      const fileContentOptions: opts.IFileContentOptions[] = [];
 
-      _.defaults(options, {
+      options = Object.assign({
         folder: ''
-      });
+      }, options);
 
       FileOptionsParser.createVinylFromGlob(options)
         .forEach(file => {
-          fileContentOptions.push(FileOptionsParser.createFileOptionsFromVinyl(file, options));
+          fileContentOptions.push(FileOptionsParser.createFileOptionsFromVinyl(file, options as any));
         });
 
       return fileContentOptions;
     }
 
     if (opts.isVinylOptions(options)) {
-      _.defaults(options, {
+      options = Object.assign({
         folder: ''
-      });
+      }, options);
 
       return [FileOptionsParser.createFileOptionsFromVinyl(options.file, options)];
     }
@@ -40,7 +39,7 @@ export class FileOptionsParser {
   }
 
   private static createFileOptionsFromVinyl(file: File, options: opts.IGlobOptions | opts.IVinylOptions): opts.IFileContentOptions {
-    let newOptions: opts.IFileContentOptions = _.assign<{}, any>({}, options);
+    const newOptions: opts.IFileContentOptions = Object.assign<any, opts.IGlobOptions | opts.IVinylOptions>({}, options);
     newOptions.fileName = path.basename(file.path);
     newOptions.fileContent = <Buffer>file.contents;
     newOptions.folder = FileOptionsParser.getFolderToUpload(file, options.folder);
@@ -53,10 +52,10 @@ export class FileOptionsParser {
   }
 
   private static createVinylFromGlob(options: opts.IGlobOptions): File[] {
-    let cwd: string = process.cwd();
+    const cwd: string = process.cwd();
 
     return globby.sync(options.glob, { cwd: cwd }).map(filePath => {
-      let stat: fs.Stats = fs.statSync(filePath);
+      const stat: fs.Stats = fs.statSync(filePath);
 
       if (stat.isDirectory()) {
         return undefined;
@@ -76,19 +75,19 @@ export class FileOptionsParser {
   }
 
   private static getFolderToUpload(file: File, folder: string): string {
-    let parsedBase: string = file.base || path.dirname(path.resolve(file.path));
-    let base: string = parsedBase.replace(/\\/g, '/');
-    let filePath: string = file.path.replace(/\\/g, '/');
-    let fileName: string = path.basename(file.path);
-    let indx: number = filePath.indexOf(base);
+    const parsedBase: string = file.base || path.dirname(path.resolve(file.path));
+    const base: string = parsedBase.replace(/\\/g, '/');
+    const filePath: string = file.path.replace(/\\/g, '/');
+    const fileName: string = path.basename(file.path);
+    const indx: number = filePath.indexOf(base);
 
     if (indx === -1) {
       throw new Error(`'base' option has invalid value. 'base' should be a substring of the file path. 'base': ${file.base}` +
         ` file path: ${file.path}`);
     }
 
-    let startIndex: number = indx + base.length;
-    let folderPart: string = filePath.substring(startIndex, filePath.length).replace(fileName, '').replace(/\/\//g, '/');
+    const startIndex: number = indx + base.length;
+    const folderPart: string = filePath.substring(startIndex, filePath.length).replace(fileName, '').replace(/\/\//g, '/');
 
     return UrlHelper.trimSlashes(path.join(folder, folderPart).replace(/\\/g, '/'));
   }

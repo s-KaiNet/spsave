@@ -5,13 +5,13 @@ import * as sprequest from 'sp-request';
 import {FoldersCreator} from './../../src/utils/FoldersCreator';
 import {defer, IDeferred} from './../../src/utils/Defer';
 
-let spr: sprequest.ISPRequest = sprequest.create({ username: '', password: '' });
+const spr: sprequest.ISPRequest = sprequest.create({ username: '', password: '' });
 
 describe('spsave: FoldersCreator test', () => {
   it('should create correct folders hierarchy', () => {
-    let folder: string = `/assets/app/ng/templates/`;
-    let creator: FoldersCreator = new FoldersCreator(spr, folder, 'http://some.sp.url');
-    let result: string[] = [];
+    const folder = '/assets/app/ng/templates/';
+    const creator: FoldersCreator = new FoldersCreator(spr, folder, 'http://some.sp.url');
+    const result: string[] = [];
     creator['createFoldersPathArray'](folder.split('/').filter(path => { return path !== ''; }), result);
 
     expect(result[0]).to.equal('assets');
@@ -21,12 +21,12 @@ describe('spsave: FoldersCreator test', () => {
   });
 
   it('should check folders created', (done) => {
-    let getDeferred: IDeferred<any> = defer();
+    const getDeferred: IDeferred<any> = defer();
     getDeferred.resolve(null);
-    let sprGetStub: sinon.SinonStub = sinon.stub(spr, 'get').returns(getDeferred.promise);
+    const sprGetStub: sinon.SinonStub = sinon.stub(spr, 'get').returns(getDeferred.promise);
 
-    let folder: string = `/assets/app/ng/templates/`;
-    let creator: FoldersCreator = new FoldersCreator(spr, folder, 'http://some.sp.url');
+    const folder = '/assets/app/ng/templates/';
+    const creator: FoldersCreator = new FoldersCreator(spr, folder, 'http://some.sp.url');
     creator.createFoldersHierarchy()
       .then(data => {
         expect(sprGetStub.callCount).to.equal(4);
@@ -39,24 +39,24 @@ describe('spsave: FoldersCreator test', () => {
   });
 
   it('should create folders hierarchy', (done) => {
-    let spy: sinon.SinonStub = sinon.stub(console, 'log');
-    let getDeferred: IDeferred<any> = defer();
-    let getFileError: Error = new Error();
+    const spy: sinon.SinonStub = sinon.stub(console, 'log');
+    const getDeferred: IDeferred<any> = defer();
+    const getFileError: Error = new Error();
     (<any>getFileError).statusCode = 404;
     getDeferred.reject(getFileError);
 
-    let digestDeferred: IDeferred<any> = defer();
+    const digestDeferred: IDeferred<any> = defer();
     digestDeferred.resolve('digest');
 
-    let postDeferred: IDeferred<any> = defer();
+    const postDeferred: IDeferred<any> = defer();
     postDeferred.resolve(null);
 
-    let sprGetStub: sinon.SinonStub = sinon.stub(spr, 'get').returns(getDeferred.promise);
-    let sprPostStub: sinon.SinonStub = sinon.stub(spr, 'post').returns(postDeferred.promise);
-    let sprDigestStub: sinon.SinonStub = sinon.stub(spr, 'requestDigest').returns(digestDeferred.promise);
+    const sprGetStub: sinon.SinonStub = sinon.stub(spr, 'get').returns(getDeferred.promise);
+    const sprPostStub: sinon.SinonStub = sinon.stub(spr, 'post').returns(postDeferred.promise);
+    const sprDigestStub: sinon.SinonStub = sinon.stub(spr, 'requestDigest').returns(digestDeferred.promise);
 
-    let folder: string = `/assets/app/ng/templates/`;
-    let creator: FoldersCreator = new FoldersCreator(spr, folder, 'http://some.sp.url');
+    const folder = '/assets/app/ng/templates/';
+    const creator: FoldersCreator = new FoldersCreator(spr, folder, 'http://some.sp.url');
     creator.createFoldersHierarchy()
       .then(data => {
         expect(sprPostStub.callCount).to.equal(4);
@@ -75,16 +75,16 @@ describe('spsave: FoldersCreator test', () => {
   });
 
   it('should reject if unable to get folder', (done) => {
-    let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
-    let getDeferred: IDeferred<any> = defer();
-    let error: Error = new Error();
+    const consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
+    const getDeferred: IDeferred<any> = defer();
+    const error: Error = new Error();
     (<any>error).statusCode = 0;
     getDeferred.reject(error);
 
-    let sprGetStub: sinon.SinonStub = sinon.stub(spr, 'get').returns(getDeferred.promise);
+    const sprGetStub: sinon.SinonStub = sinon.stub(spr, 'get').returns(getDeferred.promise);
 
-    let folder: string = `/assets/app/ng/templates/`;
-    let creator: FoldersCreator = new FoldersCreator(spr, folder, 'http://some.sp.url');
+    const folder = '/assets/app/ng/templates/';
+    const creator: FoldersCreator = new FoldersCreator(spr, folder, 'http://some.sp.url');
     creator.createFoldersHierarchy()
       .then(data => {
         consoleSpy.restore();
@@ -101,21 +101,21 @@ describe('spsave: FoldersCreator test', () => {
   });
 
   it('should reject deferred if unable to create folders', (done) => {
-    let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
-    let getDeferred: IDeferred<any> = defer();
-    let getFileError: Error = new Error();
+    const consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
+    const getDeferred: IDeferred<any> = defer();
+    const getFileError: Error = new Error();
     (<any>getFileError).statusCode = 404;
     getDeferred.reject(getFileError);
 
-    let digestDeferred: IDeferred<any> = defer();
-    let error: Error = new Error('digest');
+    const digestDeferred: IDeferred<any> = defer();
+    const error: Error = new Error('digest');
     digestDeferred.reject(error);
 
-    let sprGetStub: sinon.SinonStub = sinon.stub(spr, 'get').returns(getDeferred.promise);
-    let sprDigestStub: sinon.SinonStub = sinon.stub(spr, 'requestDigest').returns(digestDeferred.promise);
+    const sprGetStub: sinon.SinonStub = sinon.stub(spr, 'get').returns(getDeferred.promise);
+    const sprDigestStub: sinon.SinonStub = sinon.stub(spr, 'requestDigest').returns(digestDeferred.promise);
 
-    let folder: string = `/assets/app/ng/templates/`;
-    let creator: FoldersCreator = new FoldersCreator(spr, folder, 'http://some.sp.url');
+    const folder = '/assets/app/ng/templates/';
+    const creator: FoldersCreator = new FoldersCreator(spr, folder, 'http://some.sp.url');
     creator.createFoldersHierarchy()
       .then(data => {
         consoleSpy.restore();

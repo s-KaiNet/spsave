@@ -14,7 +14,31 @@
     "dev": "gulp live-dev",
     "test-int": "gulp test-int",
     "test-perf": "gulp tsc && node lib/test/performance/index.js",
-    "prepublishOnly": "gulp prepublish"
+    "prepublishOnly": "gulp prepublish",
+    "lint": "eslint -c .eslintrc.json --ext .ts src test"
+  },
+  "nyc": {
+    "extends": "@istanbuljs/nyc-config-typescript",
+    "all": true,
+    "report-dir": "coverage/integration",
+    "include": [
+      "src/**/*.ts"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "reporter": [
+      "html",
+      "text-summary"
+    ]
+  },
+  "mocha": {
+    "require": [
+      "ts-node/register",
+      "source-map-support/register"
+    ],
+    "full-trace": true,
+    "bail": true
   },
   "bugs": {
     "url": "https://github.com/s-KaiNet/spsave/issues"
@@ -36,48 +60,35 @@
     }
   ],
   "devDependencies": {
-    "@types/chai": "^3.4.34",
-    "@types/mocha": "^2.2.32",
+    "@istanbuljs/nyc-config-typescript": "^1.0.1",
+    "@types/chai": "^4.2.11",
+    "@types/mocha": "^7.0.2",
     "@types/mockery": "^1.4.29",
-    "@types/sinon": "^1.16.31",
-    "chai": "^3.5.0",
-    "console.table": "^0.7.0",
-    "coveralls": "^2.11.9",
-    "del": "^2.2.0",
-    "gulp": "^3.9.1",
-    "gulp-debug": "^2.1.2",
-    "gulp-istanbul": "^0.10.4",
-    "gulp-load-plugins": "^1.2.2",
-    "gulp-mocha": "^2.2.0",
-    "gulp-plumber": "^1.1.0",
-    "gulp-sourcemaps": "^2.0.0-alpha",
-    "gulp-tslint": "^5.0.0",
-    "gulp-typescript": "^3.0.0",
-    "map-stream": "0.0.6",
-    "merge-stream": "^1.0.0",
-    "mocha-junit-reporter": "^1.11.1",
-    "mockery": "^1.6.2",
-    "remap-istanbul": "^0.6.4",
-    "run-sequence": "^1.1.5",
-    "sinon": "^1.17.4",
-    "tslint": "^3.8.1",
-    "typescript": "^2.6.2",
-    "typings": "^1.0.0",
-    "vinyl-fs": "^2.4.3",
-    "yargs": "^4.6.0"
+    "@types/sinon": "^9.0.4",
+    "@typescript-eslint/eslint-plugin": "^3.0.1",
+    "@typescript-eslint/parser": "^3.0.1",
+    "chai": "^4.2.0",
+    "console.table": "^0.10.0",
+    "del": "^5.1.0",
+    "eslint": "^7.1.0",
+    "mocha-junit-reporter": "^1.23.3",
+    "mockery": "^2.1.0",
+    "remap-istanbul": "^0.13.0",
+    "sinon": "^9.0.2",
+    "typescript": "^3.9.3",
+    "vinyl-fs": "^3.0.3"
   },
   "dependencies": {
-    "@types/core-js": "^0.9.34",
-    "@types/lodash": "^4.14.37",
-    "@types/node": "^6.0.45",
-    "@types/node-notifier": "0.0.28",
-    "@types/vinyl": "^1.2.30",
-    "@types/vinyl-fs": "0.0.28",
-    "colors": "1.2.1",
-    "globby": "4.1.0",
-    "lodash": "^4.13.1",
-    "node-notifier": "5.2.1",
+    "@types/core-js": "^2.5.3",
+    "@types/lodash": "^4.14.152",
+    "@types/node": "^14.0.5",
+    "@types/node-notifier": "6.0.1",
+    "@types/vinyl": "^2.0.4",
+    "@types/vinyl-fs": "2.4.11",
+    "colors": "1.4.0",
+    "globby": "11.0.0",
+    "node-notifier": "7.0.1",
     "sp-request": "^3.0.0-beta.2",
-    "vinyl": "1.2.0"
+    "vinyl": "2.2.0"
   }
 }

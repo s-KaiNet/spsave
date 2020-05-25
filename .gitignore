@@ -9,3 +9,6 @@ test/performance/files/*
 *.js.map
 !gulpfile.js
 !build/**
+!.eslintrc.js
+.nyc_output/
+coverage/

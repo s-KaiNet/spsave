@@ -9,7 +9,7 @@ export function defer<T>(): IDeferred<T> {
   let isPending = true;
   let resolve: (result: T) => void;
   let reject: (err: T) => void;
-  let promise: Promise<T> = new Promise<T>((rs, rj): void => {
+  const promise: Promise<T> = new Promise<T>((rs, rj): void => {
     resolve = (result) => {
       isPending = false;
       rs(result);
@@ -23,7 +23,7 @@ export function defer<T>(): IDeferred<T> {
     resolve: resolve,
     reject: reject,
     promise: promise,
-    isPending() {
+    isPending(): boolean {
       return isPending;
     }
   };

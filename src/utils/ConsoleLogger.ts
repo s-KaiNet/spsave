@@ -24,8 +24,8 @@ export class ConsoleLogger implements ILogger {
       console.log('');
       return;
     }
-    let dateNow: Date = new Date();
-    let dateString: string = util.format('[%s:%s:%s]',
+    const dateNow: Date = new Date();
+    const dateString: string = util.format('[%s:%s:%s]',
       ('0' + dateNow.getHours()).slice(-2), ('0' + dateNow.getMinutes()).slice(-2), ('0' + dateNow.getSeconds()).slice(-2));
     console.log(colors[color](`${dateString} spsave: ${message}`));
   }

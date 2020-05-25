@@ -3,7 +3,8 @@ import * as fs from 'fs';
 import * as url from 'url';
 import * as sprequest from 'sp-request';
 import { ISPRequest } from 'sp-request';
-let map: any = require('map-stream');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const map: any = require('map-stream');
 import * as vfs from 'vinyl-fs';
 import File = require('vinyl');
 import * as sinon from 'sinon';
@@ -12,9 +13,10 @@ import { spsave } from './../../src/core/SPSave';
 import { CheckinType, FileOptions, ICoreOptions } from './../../src/core/SPSaveOptions';
 import { UrlHelper } from './../../src/utils/UrlHelper';
 
-let config: any = require('./config');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const config: any = require('./config');
 
-let tests: any[] = [
+const tests: any[] = [
   {
     name: 'on-premise user credentials',
     creds: config.onpremCreds,
@@ -47,12 +49,12 @@ let tests: any[] = [
   }
 ];
 
-let subFolder: string = 'SiteAssets/files/templates';
+const subFolder = 'SiteAssets/files/templates';
 
 tests.forEach(test => {
   describe(`spsave: integration tests - ${test.name}`, () => {
 
-    let spr: ISPRequest = sprequest.create(test.creds);
+    const spr: ISPRequest = sprequest.create(test.creds);
 
     beforeEach('delete folders', function (done: MochaDone): void {
       this.timeout(20 * 1000);
@@ -67,7 +69,7 @@ tests.forEach(test => {
               }
             })]);
         })
-        .then(data => {
+        .then(() => {
           done();
           return null;
         })
@@ -87,35 +89,35 @@ tests.forEach(test => {
               }
             })]);
         })
-        .then(data => {
+        .then(() => {
           done();
           return null;
         })
         .catch(done);
     });
 
-    let path: string = UrlHelper.removeTrailingSlash(url.parse(test.url).path);
+    const path: string = UrlHelper.removeTrailingSlash(url.parse(test.url).path);
 
     it('should upload binary file', function (done: MochaDone): void {
       this.timeout(20 * 1000);
 
-      let fileName: string = 'sp.png';
-      let fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
-      let folder: string = 'SiteAssets/files';
+      const fileName = 'sp.png';
+      const fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
+      const folder = 'SiteAssets/files';
 
-      let files: FileOptions = {
+      const files: FileOptions = {
         fileName: fileName,
         fileContent: fileContent,
         folder: folder
       };
 
-      let core: ICoreOptions = {
+      const core: ICoreOptions = {
         siteUrl: test.url
       };
 
       spsave(core, test.creds, files)
-        .then(data => {
-          let fileRelativeUrl: string = `${path}/${folder}/${fileName}`;
+        .then(() => {
+          const fileRelativeUrl = `${path}/${folder}/${fileName}`;
           return spr.get(`${core.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)/$value` +
             `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`, {
               encoding: null
@@ -132,23 +134,23 @@ tests.forEach(test => {
     it('should upload text file', function (done: MochaDone): void {
       this.timeout(20 * 1000);
 
-      let fileName: string = 'spsave.txt';
-      let fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
-      let folder: string = 'SiteAssets/files';
+      const fileName = 'spsave.txt';
+      const fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
+      const folder = 'SiteAssets/files';
 
-      let files: FileOptions = {
+      const files: FileOptions = {
         fileName: fileName,
         fileContent: fileContent,
         folder: folder
       };
 
-      let core: ICoreOptions = {
+      const core: ICoreOptions = {
         siteUrl: test.url
       };
 
       spsave(core, test.creds, files)
-        .then(data => {
-          let fileRelativeUrl: string = `${path}/${folder}/${fileName}`;
+        .then(() => {
+          const fileRelativeUrl = `${path}/${folder}/${fileName}`;
           return spr.get(`${core.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)/$value` +
             `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`, {
               encoding: null
@@ -165,24 +167,24 @@ tests.forEach(test => {
     it('should create folders before uploading the file', function (done: MochaDone): void {
       this.timeout(20 * 1000);
 
-      let fileName: string = 'sp.png';
-      let fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
+      const fileName = 'sp.png';
+      const fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
 
-      let files: FileOptions = {
+      const files: FileOptions = {
         fileName: fileName,
         fileContent: fileContent,
         folder: subFolder
       };
 
-      let core: ICoreOptions = {
+      const core: ICoreOptions = {
         siteUrl: test.url
       };
 
-      let subFolderRestUrl: string = `${test.url}/_api/web/GetFolderByServerRelativeUrl(@FolderName)` +
+      const subFolderRestUrl: string = `${test.url}/_api/web/GetFolderByServerRelativeUrl(@FolderName)` +
         `?@FolderName='${encodeURIComponent(subFolder)}'`;
 
       spr.get(subFolderRestUrl)
-        .then(data => {
+        .then(() => {
           done(new Error('Folder should be deleted before running this test'));
         })
         .catch(err => {
@@ -191,7 +193,7 @@ tests.forEach(test => {
           }
           done(new Error('Folder should be deleted before running this test'));
         })
-        .then(data => {
+        .then(() => {
           return spr.get(subFolderRestUrl);
         })
         .then(data => {
@@ -205,25 +207,25 @@ tests.forEach(test => {
     it('should upload vinyl file', function (done: MochaDone): void {
       this.timeout(20 * 1000);
 
-      let fileName: string = 'sp.png';
-      let folder: string = 'SiteAssets/files';
-      let fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
+      const fileName = 'sp.png';
+      const folder = 'SiteAssets/files';
+      const fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
 
       vfs.src(`test/integration/files/${fileName}`)
-        .pipe(map((file: File, cb: Function) => {
+        .pipe(map((file: File, cb: () => void) => {
 
-          let files: FileOptions = {
+          const files: FileOptions = {
             file: file,
             folder: folder
           };
 
-          let core: ICoreOptions = {
+          const core: ICoreOptions = {
             siteUrl: test.url
           };
 
           spsave(core, test.creds, files)
-            .then(data => {
-              let fileRelativeUrl: string = `${path}/${folder}/${fileName}`;
+            .then(() => {
+              const fileRelativeUrl = `${path}/${folder}/${fileName}`;
               return spr.get(`${test.url}/_api/web/GetFileByServerRelativeUrl(@FileUrl)/$value` +
                 `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`, {
                   encoding: null
@@ -244,23 +246,23 @@ tests.forEach(test => {
     it('should create subfolders when using vinyl file', function (done: MochaDone): void {
       this.timeout(20 * 1000);
 
-      let fileName: string = 'sp.png';
-      let folder: string = 'SiteAssets';
-      let fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
+      const fileName = 'sp.png';
+      const folder = 'SiteAssets';
+      const fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
 
       vfs.src(`test/integration/files/${fileName}`, { base: 'test/integration' })
-        .pipe(map((file: File, cb: Function) => {
-          let files: FileOptions = {
+        .pipe(map((file: File, cb: () => void) => {
+          const files: FileOptions = {
             file: file,
             folder: folder
           };
 
-          let core: ICoreOptions = {
+          const core: ICoreOptions = {
             siteUrl: test.url
           };
 
           spsave(core, test.creds, files)
-            .then(data => {
+            .then(() => {
               return spr.get(`${test.url}/_api/web/GetFileByServerRelativeUrl(@FileUrl)/$value` +
                 `?@FileUrl='${encodeURIComponent(`${path}/SiteAssets/files/${fileName}`)}'`, {
                   encoding: null
@@ -281,16 +283,16 @@ tests.forEach(test => {
     it('should upload all globs files', function (done: MochaDone): void {
       this.timeout(20 * 1000);
 
-      let pngFile: Buffer = fs.readFileSync('test/integration/files/sp.png');
-      let txtFile: Buffer = fs.readFileSync('test/integration/files/spsave.txt');
+      const pngFile: Buffer = fs.readFileSync('test/integration/files/sp.png');
+      const txtFile: Buffer = fs.readFileSync('test/integration/files/spsave.txt');
 
-      let files: FileOptions = {
+      const files: FileOptions = {
         glob: ['test/integration/files/*.*'],
         base: 'test/integration',
         folder: 'SiteAssets'
       };
 
-      let core: ICoreOptions = {
+      const core: ICoreOptions = {
         siteUrl: test.url
       };
 
@@ -317,26 +319,26 @@ tests.forEach(test => {
     it('should checkin with appropriate comment', function (done: MochaDone): void {
       this.timeout(20 * 1000);
 
-      let fileName: string = 'sp.png';
-      let fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
-      let folder: string = 'SiteAssets/files';
-      let comment: string = 'spsave testing';
+      const fileName = 'sp.png';
+      const fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
+      const folder = 'SiteAssets/files';
+      const comment = 'spsave testing';
 
-      let files: FileOptions = {
+      const files: FileOptions = {
         fileName: fileName,
         fileContent: fileContent,
         folder: folder
       };
 
-      let core: ICoreOptions = {
+      const core: ICoreOptions = {
         siteUrl: test.url,
         checkin: true,
         checkinMessage: comment
       };
 
       spsave(core, test.creds, files)
-        .then(data => {
-          let fileRelativeUrl: string = `${path}/${folder}/${fileName}`;
+        .then(() => {
+          const fileRelativeUrl = `${path}/${folder}/${fileName}`;
           return spr.get(`${core.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)` +
             `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`, {
               encoding: null
@@ -353,18 +355,18 @@ tests.forEach(test => {
     it('should create new minor version', function (done: MochaDone): void {
       this.timeout(20 * 1000);
 
-      let fileName: string = 'sp.png';
-      let fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
-      let folder: string = 'SiteAssets/files';
-      let fileRelativeUrl: string = `${path}/${folder}/${fileName}`;
+      const fileName = 'sp.png';
+      const fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
+      const folder = 'SiteAssets/files';
+      const fileRelativeUrl = `${path}/${folder}/${fileName}`;
 
-      let files: FileOptions = {
+      const files: FileOptions = {
         fileName: fileName,
         fileContent: fileContent,
         folder: folder
       };
 
-      let core: ICoreOptions = {
+      const core: ICoreOptions = {
         siteUrl: test.url,
         checkin: true,
         checkinMessage: 'spsave testing',
@@ -372,7 +374,7 @@ tests.forEach(test => {
       };
 
       spsave(core, test.creds, files)
-        .then(data => {
+        .then(() => {
 
           return spr.get(`${core.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)` +
             `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`, {
@@ -399,18 +401,18 @@ tests.forEach(test => {
     it('should create new major version', function (done: MochaDone): void {
       this.timeout(20 * 1000);
 
-      let fileName: string = 'sp.png';
-      let fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
-      let folder: string = 'SiteAssets/files';
-      let fileRelativeUrl: string = `${path}/${folder}/${fileName}`;
+      const fileName = 'sp.png';
+      const fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
+      const folder = 'SiteAssets/files';
+      const fileRelativeUrl = `${path}/${folder}/${fileName}`;
 
-      let files: FileOptions = {
+      const files: FileOptions = {
         fileName: fileName,
         fileContent: fileContent,
         folder: folder
       };
 
-      let core: ICoreOptions = {
+      const core: ICoreOptions = {
         siteUrl: test.url,
         checkin: true,
         checkinMessage: 'spsave testing',
@@ -418,7 +420,7 @@ tests.forEach(test => {
       };
 
       spsave(core, test.creds, files)
-        .then(data => {
+        .then(() => {
 
           return spr.get(`${core.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)` +
             `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`, {
@@ -445,18 +447,18 @@ tests.forEach(test => {
     it('should overwrite current version', function (done: MochaDone): void {
       this.timeout(20 * 1000);
 
-      let fileName: string = 'sp.png';
-      let fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
-      let folder: string = 'SiteAssets/files';
-      let fileRelativeUrl: string = `${path}/${folder}/${fileName}`;
+      const fileName = 'sp.png';
+      const fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
+      const folder = 'SiteAssets/files';
+      const fileRelativeUrl = `${path}/${folder}/${fileName}`;
 
-      let files: FileOptions = {
+      const files: FileOptions = {
         fileName: fileName,
         fileContent: fileContent,
         folder: folder
       };
 
-      let core: ICoreOptions = {
+      const core: ICoreOptions = {
         siteUrl: test.url,
         checkin: true,
         checkinMessage: 'spsave testing',
@@ -464,7 +466,7 @@ tests.forEach(test => {
       };
 
       spsave(core, test.creds, files)
-        .then(data => {
+        .then(() => {
 
           return spr.get(`${core.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)` +
             `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`, {
@@ -492,18 +494,18 @@ tests.forEach(test => {
     it('should update file metadata', function (done: MochaDone): void {
       this.timeout(20 * 1000);
 
-      let fileName: string = 'spsave.txt';
-      let fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
-      let folder: string = 'SiteAssets/files';
-      let title: string = 'updated by spsave';
+      const fileName = 'spsave.txt';
+      const fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
+      const folder = 'SiteAssets/files';
+      const title = 'updated by spsave';
 
-      let files: FileOptions = {
+      const files: FileOptions = {
         fileName: fileName,
         fileContent: fileContent,
         folder: folder
       };
 
-      let core: ICoreOptions = {
+      const core: ICoreOptions = {
         siteUrl: test.url,
         filesMetaData: [{
           fileName: fileName,
@@ -515,8 +517,8 @@ tests.forEach(test => {
       };
 
       spsave(core, test.creds, files)
-        .then(data => {
-          let fileRelativeUrl: string = `${path}/${folder}/${fileName}`;
+        .then(() => {
+          const fileRelativeUrl = `${path}/${folder}/${fileName}`;
           return spr.get(`${core.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)/ListItemAllFields` +
             `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`);
         })
@@ -532,17 +534,17 @@ tests.forEach(test => {
     it('should update file metadata for display template', function (done: MochaDone): void {
       this.timeout(20 * 1000);
 
-      let fileName: string = 'SPSave.js';
-      let fileContent: Buffer = fs.readFileSync(`lib/src/core/${fileName}`);
-      let folder: string = '_catalogs/masterpage/Display Templates/Search';
+      const fileName = 'SPSave.js';
+      const fileContent: Buffer = fs.readFileSync(`lib/src/core/${fileName}`);
+      const folder = '_catalogs/masterpage/Display Templates/Search';
 
-      let files: FileOptions = {
+      const files: FileOptions = {
         fileName: fileName,
         fileContent: fileContent,
         folder: folder
       };
 
-      let core: ICoreOptions = {
+      const core: ICoreOptions = {
         siteUrl: test.url,
         filesMetaData: [{
           fileName: fileName,
@@ -558,7 +560,7 @@ tests.forEach(test => {
                 'SearchResults'
               ]
             },
-            ManagedPropertyMapping: `'Title':'Title','Path':'Path','Description':'Description'`,
+            ManagedPropertyMapping: '\'Title\':\'Title\',\'Path\':\'Path\',\'Description\':\'Description\'',
             ContentTypeId: '0x0101002039C03B61C64EC4A04F5361F38510660500A0383064C59087438E649B7323C95AF6',
             TemplateHidden: false
           }
@@ -566,12 +568,12 @@ tests.forEach(test => {
       };
 
       spsave(core, test.creds, files)
-        .then(data => {
-          let fileRelativeUrl: string = `${path}/${folder}/${fileName}`;
+        .then(() => {
+          const fileRelativeUrl = `${path}/${folder}/${fileName}`;
           return spr.get(`${core.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)/ListItemAllFields` +
             `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`);
         })
-        .then(data => {
+        .then(() => {
           expect(core.filesMetaData[0].updated).is.true;
           done();
           return null;
@@ -582,26 +584,26 @@ tests.forEach(test => {
     it('should not upload empty file', function (done: MochaDone): void {
       this.timeout(20 * 1000);
 
-      let consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
+      const consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
 
-      let fileName: string = 'spsave.txt';
-      let fileContent: string = '';
-      let folder: string = 'SiteAssets/files';
+      const fileName = 'spsave.txt';
+      const fileContent = '';
+      const folder = 'SiteAssets/files';
 
-      let files: FileOptions = {
+      const files: FileOptions = {
         fileName: fileName,
         fileContent: fileContent,
         folder: folder
       };
 
-      let core: ICoreOptions = {
+      const core: ICoreOptions = {
         siteUrl: test.url
       };
 
       spsave(core, test.creds, files)
-        .then(data => {
+        .then(() => {
           consoleSpy.restore();
-          let call: sinon.SinonSpyCall = consoleSpy.getCall(0);
+          const call: sinon.SinonSpyCall = consoleSpy.getCall(0);
           expect((<string>call.args[0]).indexOf('skipping')).not.to.equal(-1);
 
           done();
@@ -615,21 +617,21 @@ tests.forEach(test => {
     it('should resolve promise if there are no files', function (done: MochaDone): void {
       this.timeout(20 * 1000);
 
-      let files: FileOptions = {
+      const files: FileOptions = {
         glob: ['test/integration/files/nofile.dat'],
         base: 'test/integration',
         folder: 'SiteAssets'
       };
 
-      let core: ICoreOptions = {
+      const core: ICoreOptions = {
         siteUrl: test.url
       };
 
       spsave(core, test.creds, files)
-        .then(data => {
+        .then(() => {
           done('Should reject when glob is empty');
         })
-        .catch(err => {
+        .catch(() => {
           done();
         });
     });
