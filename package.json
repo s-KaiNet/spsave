@@ -1,7 +1,7 @@
 {
   "name": "spsave",
   "description": "Save files in SharePoint using node.js easily",
-  "version": "3.1.6",
+  "version": "4.0.0-beta.0",
   "author": "Sergei Sergeev <sergeev.srg@gmail.com>",
   "main": "./lib/src/index.js",
   "typings": "./lib/src/index",
@@ -10,12 +10,12 @@
   },
   "scripts": {
     "test": "gulp test-ci",
-    "build": "npm install && typings install && gulp tsc",
     "dev": "gulp live-dev",
     "test-int": "gulp test-int",
     "test-perf": "gulp tsc && node lib/test/performance/index.js",
-    "prepublishOnly": "gulp prepublish",
-    "lint": "eslint -c .eslintrc.json --ext .ts src test"
+    "lint": "eslint -c .eslintrc.json --ext .ts src test",
+    "build": "npm run lint && tsc -p .",
+    "prepublishOnly": "rimraf -- lib && npm run build"
   },
   "nyc": {
     "extends": "@istanbuljs/nyc-config-typescript",
@@ -74,6 +74,7 @@
     "mocha-junit-reporter": "^1.23.3",
     "mockery": "^2.1.0",
     "remap-istanbul": "^0.13.0",
+    "rimraf": "^3.0.2",
     "sinon": "^9.0.2",
     "typescript": "^3.9.3",
     "vinyl-fs": "^3.0.3"

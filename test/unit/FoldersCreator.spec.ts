@@ -1,9 +1,9 @@
-import {expect} from 'chai';
+import { expect } from 'chai';
 import * as sinon from 'sinon';
 import * as sprequest from 'sp-request';
 
-import {FoldersCreator} from './../../src/utils/FoldersCreator';
-import {defer, IDeferred} from './../../src/utils/Defer';
+import { FoldersCreator } from './../../src/utils/FoldersCreator';
+import { defer, IDeferred } from './../../src/utils/Defer';
 
 const spr: sprequest.ISPRequest = sprequest.create({ username: '', password: '' });
 
@@ -23,7 +23,7 @@ describe('spsave: FoldersCreator test', () => {
   it('should check folders created', (done) => {
     const getDeferred: IDeferred<any> = defer();
     getDeferred.resolve(null);
-    const sprGetStub: sinon.SinonStub = sinon.stub(spr, 'get').returns(getDeferred.promise);
+    const sprGetStub: sinon.SinonStub = sinon.stub(spr, 'get').returns(getDeferred.promise as any);
 
     const folder = '/assets/app/ng/templates/';
     const creator: FoldersCreator = new FoldersCreator(spr, folder, 'http://some.sp.url');
@@ -51,8 +51,8 @@ describe('spsave: FoldersCreator test', () => {
     const postDeferred: IDeferred<any> = defer();
     postDeferred.resolve(null);
 
-    const sprGetStub: sinon.SinonStub = sinon.stub(spr, 'get').returns(getDeferred.promise);
-    const sprPostStub: sinon.SinonStub = sinon.stub(spr, 'post').returns(postDeferred.promise);
+    const sprGetStub: sinon.SinonStub = sinon.stub(spr, 'get').returns(getDeferred.promise as any);
+    const sprPostStub: sinon.SinonStub = sinon.stub(spr, 'post').returns(postDeferred.promise as any);
     const sprDigestStub: sinon.SinonStub = sinon.stub(spr, 'requestDigest').returns(digestDeferred.promise);
 
     const folder = '/assets/app/ng/templates/';
@@ -81,7 +81,7 @@ describe('spsave: FoldersCreator test', () => {
     (<any>error).statusCode = 0;
     getDeferred.reject(error);
 
-    const sprGetStub: sinon.SinonStub = sinon.stub(spr, 'get').returns(getDeferred.promise);
+    const sprGetStub: sinon.SinonStub = sinon.stub(spr, 'get').returns(getDeferred.promise as any);
 
     const folder = '/assets/app/ng/templates/';
     const creator: FoldersCreator = new FoldersCreator(spr, folder, 'http://some.sp.url');
@@ -111,7 +111,7 @@ describe('spsave: FoldersCreator test', () => {
     const error: Error = new Error('digest');
     digestDeferred.reject(error);
 
-    const sprGetStub: sinon.SinonStub = sinon.stub(spr, 'get').returns(getDeferred.promise);
+    const sprGetStub: sinon.SinonStub = sinon.stub(spr, 'get').returns(getDeferred.promise as any);
     const sprDigestStub: sinon.SinonStub = sinon.stub(spr, 'requestDigest').returns(digestDeferred.promise);
 
     const folder = '/assets/app/ng/templates/';
