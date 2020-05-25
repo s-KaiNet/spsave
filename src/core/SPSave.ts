@@ -1,17 +1,17 @@
 import * as notifier from 'node-notifier';
 import * as path from 'path';
-import {IAuthOptions} from 'sp-request';
+import { IAuthOptions } from 'sp-request';
 
 import {
   ICoreOptions,
   FileOptions,
   ISPSaveOptions
 } from './SPSaveOptions';
-import {FileSaver} from './FileSaver';
-import {ILogger} from './../utils/ILogger';
-import {ConsoleLogger} from './../utils/ConsoleLogger';
-import {FileOptionsParser} from './../utils/FileOptionsParser';
-import {defer, IDeferred} from './../utils/Defer';
+import { FileSaver } from './FileSaver';
+import { ILogger } from './../utils/ILogger';
+import { ConsoleLogger } from './../utils/ConsoleLogger';
+import { FileOptionsParser } from './../utils/FileOptionsParser';
+import { defer, IDeferred } from './../utils/Defer';
 
 const logger: ILogger = new ConsoleLogger();
 

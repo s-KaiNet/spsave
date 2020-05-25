@@ -11,6 +11,7 @@ interface IFakeSPRequest {
   requestDigest?: sinon.SinonStub;
   post?: sinon.SinonStub;
   get?: sinon.SinonStub;
+  fake?: boolean;
 }
 
 describe('spsave: FileSaver test', () => {
@@ -36,8 +37,6 @@ describe('spsave: FileSaver test', () => {
 
   let foldersCreator: any;
   let foldersStub: sinon.SinonStub;
-  let sprequest: any;
-  let sprequestStub: sinon.SinonStub;
   let fileSaver: any;
 
   const fileServerRelativeUrl = `/${file.folder}/${file.fileName}`;
@@ -71,12 +70,15 @@ describe('spsave: FileSaver test', () => {
     fakeSPRequest = {
       post: sinon.stub(),
       get: sinon.stub(),
-      requestDigest: sinon.stub().returns(Promise.resolve('digets'))
+      requestDigest: sinon.stub().returns(Promise.resolve('digets')),
+      fake: true
     };
 
     foldersCreator = require('./../../src/utils/FoldersCreator').FoldersCreator;
-    sprequest = require('sp-request');
-    sprequestStub = sinon.stub(sprequest, 'create').returns(fakeSPRequest);
+    mockery.registerMock('sp-request', {
+      create: () => fakeSPRequest
+    });
+
     foldersStub = sinon.stub(foldersCreator.prototype, 'createFoldersHierarchy').returns(Promise.resolve({}));
 
     fileSaver = require('./../../src/core/FileSaver').FileSaver;
@@ -85,7 +87,6 @@ describe('spsave: FileSaver test', () => {
   afterEach(() => {
     mockery.disable();
     foldersStub.restore();
-    sprequestStub.restore();
   });
 
   it('should perform post request', done => {
@@ -608,7 +609,7 @@ describe('spsave: FileSaver test', () => {
   it('should not upload file if Buffer file content is empty', done => {
     const consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
 
-    file.fileContent = new Buffer('');
+    file.fileContent = Buffer.alloc(0, '');
 
     const saver: FileSaver = new fileSaver(core, creds, file);
 

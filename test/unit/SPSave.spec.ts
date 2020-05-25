@@ -70,41 +70,6 @@ describe('spsave: SPSave test', () => {
       });
   });
 
-  it('should show notification', done => {
-    const saveDeferred: IDeferred<any> = defer();
-    saveDeferred.resolve(null);
-
-    const saveStub: sinon.SinonStub = sinon.stub(FileSaver.prototype, 'save').returns(saveDeferred.promise);
-    const notifyStub: sinon.SinonStub = sinon.stub(notifier, 'notify');
-
-    const creds: IAuthOptions = {
-      username: '',
-      password: ''
-    };
-
-    const file: FileOptions = {
-      fileContent: 'spsave',
-      folder: 'Assets',
-      fileName: 'file.txt'
-    };
-
-    const core: ICoreOptions = {
-      siteUrl: 'http://sp.url',
-      notification: true
-    };
-
-    spsave(core, creds, file)
-      .then(() => {
-        expect(notifyStub.calledOnce).is.true;
-        done();
-      })
-      .catch(done)
-      .finally(() => {
-        saveStub.restore();
-        notifyStub.restore();
-      });
-  });
-
   it('should reject deferred', done => {
     const consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
     const saveDeferred: IDeferred<any> = defer();
