@@ -1,4 +1,3 @@
-import * as Promise from 'bluebird';
 import * as sprequest from 'sp-request';
 import { ISPRequest } from 'sp-request';
 import * as url from 'url';
@@ -98,7 +97,7 @@ export class FileSaver {
               'X-RequestDigest': digest
             },
             body: this.file.fileContent,
-            json: false
+            responseType: typeof this.file.fileContent === 'string' ? 'text' : 'buffer'
           });
         });
 
@@ -130,7 +129,7 @@ export class FileSaver {
           return;
         }
 
-        if (requestDeferred.promise.isPending()) {
+        if (requestDeferred.isPending()) {
           this.logger.success(this.file.fileName +
             ` successfully uploaded to '${this.coreOptions.siteUrl}/${this.file.folder}' and checked in.` +
             ` Checkin type: ${CheckinType[this.coreOptions.checkinType]}`);
@@ -207,7 +206,7 @@ export class FileSaver {
     if (this.coreOptions.checkinType && this.coreOptions.checkinType == CheckinType.nocheckin) {
       return Promise.resolve(true);
     }
-    
+
     return new Promise<any>((resolve, reject) => {
       this.sprequest.requestDigest(this.coreOptions.siteUrl)
         .then(digest => {
@@ -250,7 +249,12 @@ export class FileSaver {
                 headers: {
                   'X-RequestDigest': digest
                 }
-              });
+              })
+                .then(() => {
+                  this.logger.info(`${this.file.fileName} checked out.`);
+                  resolve(true);
+                  return null;
+                });
             });
         }, err => {
           /* file doesn't exist message code, resolve with false */
@@ -261,14 +265,6 @@ export class FileSaver {
             return null;
           }
           reject(err);
-
-          return null;
-        })
-        .then(data => {
-          if (promise.isPending()) {
-            this.logger.info(`${this.file.fileName} checked out.`);
-            resolve(true);
-          }
 
           return null;
         })

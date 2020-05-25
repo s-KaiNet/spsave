@@ -1,14 +1,13 @@
 import * as globby from 'globby';
-import * as Promise from 'bluebird';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as _ from 'lodash';
-import {IAuthOptions} from 'sp-request';
+import { IAuthOptions } from 'sp-request';
 require('console.table');
 
-import {spsave} from './../../src/core/SPSave';
-import {FileOptions, ICoreOptions} from './../../src/core/SPSaveOptions';
-import {defer, IDeferred} from './../../src/utils/Defer';
+import { spsave } from './../../src/core/SPSave';
+import { FileOptions, ICoreOptions } from './../../src/core/SPSaveOptions';
+import { defer, IDeferred } from './../../src/utils/Defer';
 
 let config: any = require('./config');
 let spsaveLegacy: any = require(path.resolve('test/performance/legacy/node_modules/spsave/lib/spsave.js'));
@@ -163,7 +162,7 @@ function printResults(): void {
       'on-premise addin only': '-',
       'online user creds': `${legacyOnlineElapsedSeries / 1000}s`,
       'online addin only': '-',
-      'adfs (on premise)' : '-'
+      'adfs (on premise)': '-'
     },
     {
       'spsave': 'spsave 3.x',
@@ -171,7 +170,7 @@ function printResults(): void {
       'on-premise addin only': `${spsaveOnpremiseAddinOnlyElapsedSeries / 1000}s`,
       'online user creds': `${spsaveOnlineElapsedSeries / 1000}s`,
       'online addin only': `${spsaveOnlineAddinOnlyElapsedSeries / 1000}s`,
-      'adfs (on premise)' : `${adfsOnpremElapsedSeries / 1000}s`
+      'adfs (on premise)': `${adfsOnpremElapsedSeries / 1000}s`
     }
   ]);
 
@@ -182,7 +181,7 @@ function printResults(): void {
       'on-premise addin only': '-',
       'online user creds': `${legacyOnlineElapsedParallel / 1000}s`,
       'online addin only': '-',
-      'adfs (on premise)' : '-'
+      'adfs (on premise)': '-'
     },
     {
       'spsave': 'spsave 3.x',
@@ -190,7 +189,7 @@ function printResults(): void {
       'on-premise addin only': `${spsaveOnpremiseAddinOnlyElapsedParallel / 1000}s`,
       'online user creds': `${spsaveOnlineElapsedParallel / 1000}s`,
       'online addin only': `${spsaveOnlineAddinOnlyElapsedParallel / 1000}s`,
-      'adfs (on premise)' : `${adfsOnpremElapsedParallel / 1000}s`
+      'adfs (on premise)': `${adfsOnpremElapsedParallel / 1000}s`
     }
   ]);
 }

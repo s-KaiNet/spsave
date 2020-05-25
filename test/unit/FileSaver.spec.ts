@@ -1,5 +1,4 @@
 import {expect} from 'chai';
-import * as Promise from 'bluebird';
 import * as sinon from 'sinon';
 import * as mockery from 'mockery';
 import {IUserCredentials} from 'sp-request';

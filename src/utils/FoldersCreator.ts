@@ -1,11 +1,10 @@
-import {ISPRequest} from 'sp-request';
-import * as Promise from 'bluebird';
-import {Inspection} from 'bluebird';
+import { ISPRequest } from 'sp-request';
 
-import {UrlHelper} from './UrlHelper';
-import {ILogger} from './ILogger';
-import {ConsoleLogger} from './ConsoleLogger';
-import {defer, IDeferred} from './Defer';
+import { UrlHelper } from './UrlHelper';
+import { ILogger } from './ILogger';
+import { ConsoleLogger } from './ConsoleLogger';
+import { defer, IDeferred } from './Defer';
+import { reflect } from './promise-reflect';
 
 export class FoldersCreator {
 
@@ -29,20 +28,20 @@ export class FoldersCreator {
       let paths: string[] = this.folder.split('/').filter(path => { return path !== ''; });
 
       this.createFoldersPathArray(paths, folderPaths);
-      let getFolderPromises: Inspection<any>[] = [];
+      let getFolderPromises = [];
       folderPaths.forEach(folder => {
         let getFolderUrl: string = this.getFolderRestUrlBase + `?@FolderName='${encodeURIComponent(folder)}'`;
-        getFolderPromises.push(this.sprequest.get(getFolderUrl).reflect());
+        getFolderPromises.push(this.sprequest.get(getFolderUrl));
       });
 
-      Promise.all(getFolderPromises)
+      Promise.all(getFolderPromises.map(reflect))
         .then(data => {
           let foldersToCreate: string[] = data.map((promise, index) => {
             /* sp onilne for some reason throws 500 when folder is not found :( */
-            if (promise.isRejected() && (promise.reason().statusCode === 404 || promise.reason().statusCode === 500)) {
+            if (promise.isRejected && (promise.reason.statusCode === 404 || promise.reason.statusCode === 500)) {
               return index;
-            } else if (promise.isRejected()) {
-              reject(promise.reason());
+            } else if (promise.isRejected) {
+              reject(promise.reason);
             }
           }).filter(index => {
             return index !== undefined;

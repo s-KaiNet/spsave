@@ -1,6 +1,5 @@
 import { expect } from 'chai';
 import * as fs from 'fs';
-import * as Promise from 'bluebird';
 import * as url from 'url';
 import * as sprequest from 'sp-request';
 import { ISPRequest } from 'sp-request';

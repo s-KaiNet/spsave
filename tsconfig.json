@@ -9,11 +9,11 @@
     "pretty": true,
     "skipLibCheck": true,
     "removeComments": true,
+    "outDir": "lib",
     "lib": [
       "es2015"
     ],
     "types": [
-      "bluebird",
       "chai",
       "mocha",
       "sinon",
@@ -29,5 +29,9 @@
   },
   "exclude": [
     "node_modules"
+  ],
+  "include": [
+    "src/**/*.ts",
+    "test/**/*.ts"
   ]
 }

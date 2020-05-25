@@ -1,4 +1,3 @@
-import * as Promise from 'bluebird';
 import * as notifier from 'node-notifier';
 import * as path from 'path';
 import {IAuthOptions} from 'sp-request';
@@ -13,8 +12,6 @@ import {ILogger} from './../utils/ILogger';
 import {ConsoleLogger} from './../utils/ConsoleLogger';
 import {FileOptionsParser} from './../utils/FileOptionsParser';
 import {defer, IDeferred} from './../utils/Defer';
-
-Promise.longStackTraces();
 
 let logger: ILogger = new ConsoleLogger();
 
