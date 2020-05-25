@@ -61,7 +61,7 @@ describe('spsave: SPSave test', () => {
     };
 
     spsave(core, creds, file)
-      .then(data => {
+      .then(() => {
         done();
       })
       .catch(done)
@@ -94,7 +94,7 @@ describe('spsave: SPSave test', () => {
     };
 
     spsave(core, creds, file)
-      .then(data => {
+      .then(() => {
         expect(notifyStub.calledOnce).is.true;
         done();
       })
@@ -131,7 +131,7 @@ describe('spsave: SPSave test', () => {
     };
 
     spsave(core, creds, file)
-      .then(data => {
+      .then(() => {
         done(new Error('Deferred should be rejected'));
         consoleSpy.restore();
       })
@@ -169,7 +169,7 @@ describe('spsave: SPSave test', () => {
     };
 
     spsave(core, creds, file)
-      .then(data => {
+      .then(() => {
         done(new Error('Deferred should be rejected'));
         consoleSpy.restore();
       })

@@ -28,7 +28,7 @@ describe('spsave: FoldersCreator test', () => {
     const folder = '/assets/app/ng/templates/';
     const creator: FoldersCreator = new FoldersCreator(spr, folder, 'http://some.sp.url');
     creator.createFoldersHierarchy()
-      .then(data => {
+      .then(() => {
         expect(sprGetStub.callCount).to.equal(4);
         done();
       })
@@ -58,7 +58,7 @@ describe('spsave: FoldersCreator test', () => {
     const folder = '/assets/app/ng/templates/';
     const creator: FoldersCreator = new FoldersCreator(spr, folder, 'http://some.sp.url');
     creator.createFoldersHierarchy()
-      .then(data => {
+      .then(() => {
         expect(sprPostStub.callCount).to.equal(4);
         spy.restore();
         done();
@@ -86,7 +86,7 @@ describe('spsave: FoldersCreator test', () => {
     const folder = '/assets/app/ng/templates/';
     const creator: FoldersCreator = new FoldersCreator(spr, folder, 'http://some.sp.url');
     creator.createFoldersHierarchy()
-      .then(data => {
+      .then(() => {
         consoleSpy.restore();
         done(new Error('Deferred should be rejected'));
       })
@@ -117,7 +117,7 @@ describe('spsave: FoldersCreator test', () => {
     const folder = '/assets/app/ng/templates/';
     const creator: FoldersCreator = new FoldersCreator(spr, folder, 'http://some.sp.url');
     creator.createFoldersHierarchy()
-      .then(data => {
+      .then(() => {
         consoleSpy.restore();
         done(new Error('Deferred should be rejected'));
       })

@@ -93,7 +93,7 @@ describe('spsave: FileSaver test', () => {
     const saver: FileSaver = new fileSaver(core, creds, file);
     fakeSPRequest.post.withArgs(uploadFileRestUrl).returns(Promise.resolve({ body: '{}' }));
     saver.save()
-      .then(data => {
+      .then(() => {
         consoleSpy.restore();
         expect(fakeSPRequest.post.called).is.true;
         done();
@@ -120,7 +120,7 @@ describe('spsave: FileSaver test', () => {
       }
     }));
     saver.save()
-      .then(data => {
+      .then(() => {
         consoleSpy.restore();
         expect(fakeSPRequest.post.called).is.true;
         expect(getFileStub.callCount).to.equal(1);
@@ -149,7 +149,7 @@ describe('spsave: FileSaver test', () => {
       }
     }));
     saver.save()
-      .then(data => {
+      .then(() => {
         consoleSpy.restore();
         expect(fakeSPRequest.post.callCount).to.equal(3);
         expect(fakeSPRequest.get.called).is.true;
@@ -178,7 +178,7 @@ describe('spsave: FileSaver test', () => {
     fakeSPRequest.post.withArgs(uploadFileRestUrl).onCall(1).returns(Promise.resolve({ body: '{}' }));
 
     saver.save()
-      .then(data => {
+      .then(() => {
         consoleSpy.restore();
         expect(fakeSPRequest.post.callCount).to.equal(2);
         done();
@@ -212,7 +212,7 @@ describe('spsave: FileSaver test', () => {
     fakeSPRequest.post.withArgs(uploadFileRestUrl).onCall(0).returns(def.promise);
 
     saver.save()
-      .then(data => {
+      .then(() => {
         consoleSpy.restore();
         done(new Error('Deferred should be rejected'));
       })
@@ -241,7 +241,7 @@ describe('spsave: FileSaver test', () => {
     fakeSPRequest.post.withArgs(uploadFileRestUrl).onCall(1).returns(Promise.resolve({ body: '{}' }));
 
     saver.save()
-      .then(data => {
+      .then(() => {
         consoleSpy.restore();
         expect(fakeSPRequest.post.callCount).to.equal(2);
         done();
@@ -268,7 +268,7 @@ describe('spsave: FileSaver test', () => {
     fakeSPRequest.post.withArgs(uploadFileRestUrl).onCall(1).returns(Promise.resolve({ body: '{}' }));
 
     saver.save()
-      .then(data => {
+      .then(() => {
         consoleSpy.restore();
         expect(fakeSPRequest.post.callCount).to.equal(2);
         done();
@@ -296,7 +296,7 @@ describe('spsave: FileSaver test', () => {
     fakeSPRequest.post.withArgs(uploadFileRestUrl).onCall(1).returns(Promise.resolve({ body: '{}' }));
 
     saver.save()
-      .then(data => {
+      .then(() => {
         consoleSpy.restore();
         done(new Error('Deferred should be rejected'));
       })
@@ -322,7 +322,7 @@ describe('spsave: FileSaver test', () => {
     fakeSPRequest.post.withArgs(uploadFileRestUrl).onCall(1).returns(Promise.resolve({ body: '{}' }));
 
     saver.save()
-      .then(data => {
+      .then(() => {
         consoleSpy.restore();
         done(new Error('Deferred should be rejected'));
       })
@@ -350,7 +350,7 @@ describe('spsave: FileSaver test', () => {
     fakeSPRequest.post.withArgs(uploadFileRestUrl).onCall(1).returns(Promise.resolve({ body: '{}' }));
 
     saver.save()
-      .then(data => {
+      .then(() => {
         consoleSpy.restore();
         done(new Error('Deferred should be rejected'));
       })
@@ -378,7 +378,7 @@ describe('spsave: FileSaver test', () => {
     fakeSPRequest.post.withArgs(uploadFileRestUrl).onCall(1).returns(Promise.resolve({ body: '{}' }));
 
     saver.save()
-      .then(data => {
+      .then(() => {
         consoleSpy.restore();
         done(new Error('Deferred should be rejected'));
       })
@@ -410,7 +410,7 @@ describe('spsave: FileSaver test', () => {
       }
     }));
     saver.save()
-      .then(data => {
+      .then(() => {
         consoleSpy.restore();
         expect(fakeSPRequest.post.callCount).to.equal(3);
         expect(fakeSPRequest.get.called).is.true;
@@ -449,11 +449,11 @@ describe('spsave: FileSaver test', () => {
       }
     }));
     saver.save()
-      .then(data => {
+      .then(() => {
         consoleSpy.restore();
         done(new Error('Deferred should be rejected'));
       })
-      .catch(err => {
+      .catch(() => {
         consoleSpy.restore();
         done();
       });
@@ -471,11 +471,11 @@ describe('spsave: FileSaver test', () => {
     fakeSPRequest.get.withArgs(getFileRestUrl).onCall(0).returns(Promise.reject(new Error('-1')));
 
     saver.save()
-      .then(data => {
+      .then(() => {
         consoleSpy.restore();
         done(new Error('Deferred should be rejected'));
       })
-      .catch(err => {
+      .catch(() => {
         consoleSpy.restore();
         done();
       });
@@ -498,11 +498,11 @@ describe('spsave: FileSaver test', () => {
     }));
 
     saver.save()
-      .then(data => {
+      .then(() => {
         consoleSpy.restore();
         done(new Error('Deferred should be rejected'));
       })
-      .catch(err => {
+      .catch(() => {
         consoleSpy.restore();
         done();
       });
@@ -520,11 +520,11 @@ describe('spsave: FileSaver test', () => {
     fakeSPRequest.get.withArgs(getFileRestUrl).returns(Promise.reject(new Error('-2146232832')));
 
     saver.save()
-      .then(data => {
+      .then(() => {
         consoleSpy.restore();
         done(new Error('Deferred should be rejected'));
       })
-      .catch(err => {
+      .catch(() => {
         consoleSpy.restore();
         done();
       });
@@ -544,7 +544,7 @@ describe('spsave: FileSaver test', () => {
     fakeSPRequest.post.withArgs(uploadFileRestUrl).returns(Promise.resolve({ body: '{}' }));
 
     saver.save()
-      .then(data => {
+      .then(() => {
         consoleSpy.restore();
         expect(updateMetaDataStub.callCount).to.equal(1);
         done();
@@ -569,11 +569,11 @@ describe('spsave: FileSaver test', () => {
     fakeSPRequest.post.withArgs(uploadFileRestUrl).returns(Promise.resolve({ body: '{}' }));
 
     saver.save()
-      .then(data => {
+      .then(() => {
         expect(updateMetaDataStub.callCount).to.equal(1);
         return saver.save();
       })
-      .then(data => {
+      .then(() => {
         consoleSpy.restore();
         expect(updateMetaDataStub.callCount).to.equal(1);
         done();
@@ -594,7 +594,7 @@ describe('spsave: FileSaver test', () => {
     const uploadStub: sinon.SinonStub = fakeSPRequest.post.withArgs(uploadFileRestUrl).returns(Promise.resolve({ body: '{}' }));
 
     saver.save()
-      .then(data => {
+      .then(() => {
         consoleSpy.restore();
         expect(uploadStub.callCount).to.equal(0);
         done();
@@ -615,7 +615,7 @@ describe('spsave: FileSaver test', () => {
     const uploadStub: sinon.SinonStub = fakeSPRequest.post.withArgs(uploadFileRestUrl).returns(Promise.resolve({ body: '{}' }));
 
     saver.save()
-      .then(data => {
+      .then(() => {
         consoleSpy.restore();
         expect(uploadStub.callCount).to.equal(0);
         done();
