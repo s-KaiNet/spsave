@@ -18,34 +18,9 @@ const config: any = require('./config');
 
 const tests: any[] = [
   {
-    name: 'on-premise user credentials',
-    creds: config.onpremCreds,
-    url: config.onpremNtlmEnabledUrl
-  },
-  {
-    name: 'on-premise addin only',
-    creds: config.onpremAddinOnly,
-    url: config.onpremAdfsEnabledUrl
-  },
-  {
-    name: 'online user credentials',
-    creds: config.onlineCreds,
-    url: config.onlineUrl
-  },
-  {
-    name: 'adfs online user credentials',
-    creds: config.onlineWithAdfsCreds,
-    url: config.onlineUrl
-  },
-  {
     name: 'online addin only',
     creds: config.onlineAddinOnly,
     url: config.onlineUrl
-  },
-  {
-    name: 'adfs user credentials',
-    creds: config.adfsCredentials,
-    url: config.onpremAdfsEnabledUrl
   }
 ];
 
@@ -61,13 +36,13 @@ tests.forEach(test => {
 
       spr.requestDigest(test.url)
         .then(digest => {
-          return Promise.all([spr.post(`${test.url}/_api/web/GetFolderByServerRelativeUrl(@FolderName)` +
+          return spr.post(`${test.url}/_api/web/GetFolderByServerRelativeUrl(@FolderName)` +
             `?@FolderName='${encodeURIComponent('SiteAssets/files')}'`, {
-              headers: {
-                'X-RequestDigest': digest,
-                'X-HTTP-Method': 'DELETE'
-              }
-            })]);
+            headers: {
+              'X-RequestDigest': digest,
+              'X-HTTP-Method': 'DELETE'
+            }
+          });
         })
         .then(() => {
           done();
@@ -81,13 +56,13 @@ tests.forEach(test => {
 
       spr.requestDigest(test.url)
         .then(digest => {
-          return Promise.all([spr.post(`${test.url}/_api/web/GetFolderByServerRelativeUrl(@FolderName)` +
+          return spr.post(`${test.url}/_api/web/GetFolderByServerRelativeUrl(@FolderName)` +
             `?@FolderName='${encodeURIComponent('SiteAssets/files')}'`, {
-              headers: {
-                'X-RequestDigest': digest,
-                'X-HTTP-Method': 'DELETE'
-              }
-            })]);
+            headers: {
+              'X-RequestDigest': digest,
+              'X-HTTP-Method': 'DELETE'
+            }
+          });
         })
         .then(() => {
           done();
@@ -120,8 +95,8 @@ tests.forEach(test => {
           const fileRelativeUrl = `${path}/${folder}/${fileName}`;
           return spr.get(`${core.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)/$value` +
             `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`, {
-              encoding: null
-            });
+            responseType: 'buffer'
+          });
         })
         .then(data => {
           expect(fileContent.equals(data.body)).is.true;
@@ -153,8 +128,8 @@ tests.forEach(test => {
           const fileRelativeUrl = `${path}/${folder}/${fileName}`;
           return spr.get(`${core.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)/$value` +
             `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`, {
-              encoding: null
-            });
+            responseType: 'buffer'
+          });
         })
         .then(data => {
           expect(fileContent.equals(data.body)).is.true;
@@ -187,8 +162,8 @@ tests.forEach(test => {
         .then(() => {
           done(new Error('Folder should be deleted before running this test'));
         })
-        .catch(err => {
-          if (err.statusCode === 404 || err.statusCode === 500) { /* 500 for online */
+        .catch((err: sprequest.HTTPError) => {
+          if (err.response.statusCode === 404 || err.response.statusCode === 500) { /* 500 for online */
             return spsave(core, test.creds, files);
           }
           done(new Error('Folder should be deleted before running this test'));
@@ -228,8 +203,8 @@ tests.forEach(test => {
               const fileRelativeUrl = `${path}/${folder}/${fileName}`;
               return spr.get(`${test.url}/_api/web/GetFileByServerRelativeUrl(@FileUrl)/$value` +
                 `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`, {
-                  encoding: null
-                });
+                responseType: 'buffer'
+              });
             })
             .then(data => {
               expect(fileContent.equals(data.body)).is.true;
@@ -265,8 +240,8 @@ tests.forEach(test => {
             .then(() => {
               return spr.get(`${test.url}/_api/web/GetFileByServerRelativeUrl(@FileUrl)/$value` +
                 `?@FileUrl='${encodeURIComponent(`${path}/SiteAssets/files/${fileName}`)}'`, {
-                  encoding: null
-                });
+                responseType: 'buffer'
+              });
             })
             .then(data => {
               expect(fileContent.equals(data.body)).is.true;
@@ -300,11 +275,11 @@ tests.forEach(test => {
         .then(() => {
           return Promise.all([spr.get(`${test.url}/_api/web/GetFileByServerRelativeUrl(@FileUrl)/$value` +
             `?@FileUrl='${encodeURIComponent(`${path}/SiteAssets/files/sp.png`)}'`, {
-              encoding: null
-            }), spr.get(`${test.url}/_api/web/GetFileByServerRelativeUrl(@FileUrl)/$value` +
-              `?@FileUrl='${encodeURIComponent(`${path}/SiteAssets/files/spsave.txt`)}'`, {
-                encoding: null
-              })]);
+            responseType: 'buffer'
+          }), spr.get(`${test.url}/_api/web/GetFileByServerRelativeUrl(@FileUrl)/$value` +
+            `?@FileUrl='${encodeURIComponent(`${path}/SiteAssets/files/spsave.txt`)}'`, {
+            responseType: 'buffer'
+          })]);
         })
         .then(data => {
           expect(pngFile.equals(data[0].body)).is.true;
@@ -340,9 +315,7 @@ tests.forEach(test => {
         .then(() => {
           const fileRelativeUrl = `${path}/${folder}/${fileName}`;
           return spr.get(`${core.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)` +
-            `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`, {
-              encoding: null
-            });
+            `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`);
         })
         .then(data => {
           expect(data.body.d.CheckInComment).to.equal(comment);
@@ -377,18 +350,14 @@ tests.forEach(test => {
         .then(() => {
 
           return spr.get(`${core.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)` +
-            `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`, {
-              encoding: null
-            });
+            `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`);
         })
         .then(data => {
           return Promise.all([data.body.d, spsave(core, test.creds, files)]);
         })
         .then(data => {
           return Promise.all([data[0], spr.get(`${core.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)` +
-            `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`, {
-              encoding: null
-            })]);
+            `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`)]);
         })
         .then(data => {
           expect(data[0].MinorVersion + 1).to.equal(data[1].body.d.MinorVersion);
@@ -398,7 +367,7 @@ tests.forEach(test => {
         .catch(done);
     });
 
-    it('should create new major version', function (done: MochaDone): void {
+    it.only('should create new major version', function (done: MochaDone): void {
       this.timeout(20 * 1000);
 
       const fileName = 'sp.png';
@@ -423,18 +392,14 @@ tests.forEach(test => {
         .then(() => {
 
           return spr.get(`${core.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)` +
-            `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`, {
-              encoding: null
-            });
+            `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`);
         })
         .then(data => {
           return Promise.all([data.body.d, spsave(core, test.creds, files)]);
         })
         .then(data => {
           return Promise.all([data[0], spr.get(`${core.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)` +
-            `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`, {
-              encoding: null
-            })]);
+            `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`)]);
         })
         .then(data => {
           expect(data[0].MajorVersion + 1).to.equal(data[1].body.d.MajorVersion);
@@ -469,18 +434,14 @@ tests.forEach(test => {
         .then(() => {
 
           return spr.get(`${core.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)` +
-            `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`, {
-              encoding: null
-            });
+            `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`);
         })
         .then(data => {
           return Promise.all([data.body.d, spsave(core, test.creds, files)]);
         })
         .then(data => {
           return Promise.all([data[0], spr.get(`${core.siteUrl}/_api/web/GetFileByServerRelativeUrl(@FileUrl)` +
-            `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`, {
-              encoding: null
-            })]);
+            `?@FileUrl='${encodeURIComponent(fileRelativeUrl)}'`)]);
         })
         .then(data => {
           expect(data[0].MajorVersion).to.equal(data[1].body.d.MajorVersion);
@@ -534,8 +495,8 @@ tests.forEach(test => {
     it('should update file metadata for display template', function (done: MochaDone): void {
       this.timeout(20 * 1000);
 
-      const fileName = 'SPSave.js';
-      const fileContent: Buffer = fs.readFileSync(`lib/src/core/${fileName}`);
+      const fileName = 'SPSave.ts';
+      const fileContent: Buffer = fs.readFileSync(`src/core/${fileName}`);
       const folder = '_catalogs/masterpage/Display Templates/Search';
 
       const files: FileOptions = {

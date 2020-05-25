@@ -11,10 +11,10 @@
         "-r",
         "ts-node/register",
         "test/integration/tests.ts"
-      ],/*
+      ],
       "env": {
         "http_proxy": "http://127.0.0.1:8888"
-      },*/
+      },
       "cwd": "${workspaceRoot}",
       "protocol": "inspector"
     },
@@ -28,10 +28,7 @@
         "-r",
         "ts-node/register",
         "test/unit/tests.ts"
-      ],/*
-      "env": {
-        "http_proxy": "http://127.0.0.1:8888"
-      },*/
+      ],
       "cwd": "${workspaceRoot}",
       "protocol": "inspector"
     }

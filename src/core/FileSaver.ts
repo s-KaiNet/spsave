@@ -1,5 +1,5 @@
 import * as sprequest from 'sp-request';
-import { ISPRequest } from 'sp-request';
+import { ISPRequest, HTTPError } from 'sp-request';
 import * as url from 'url';
 import { IAuthOptions } from 'sp-request';
 
@@ -136,13 +136,13 @@ export class FileSaver {
           requestDeferred.resolve(data.body);
         }
       })
-      .catch(err => {
-        if (err && (err.statusCode === 500 || err.statusCode === 409)) { /* save conflict or cobalt error */
+      .catch((err: HTTPError) => {
+        if (err && (err.response.statusCode === 500 || err.response.statusCode === 409)) { /* save conflict or cobalt error */
           this.tryReUpload(err, requestDeferred, attempts);
           return;
         }
         /* folder doesn't exist, create and reupload */
-        if (err && err.statusCode === 404 && err.message && err.message.indexOf(FileSaver.directoryNotFoundCode) !== -1) {
+        if (err && err.response.statusCode === 404 && err.response.body && err.response.body.toString().indexOf(FileSaver.directoryNotFoundCode) !== -1) {
           this.foldersCreator.createFoldersHierarchy()
             .then(() => {
               this.saveFile(requestDeferred, attempts + 1);
@@ -257,8 +257,8 @@ export class FileSaver {
             });
         }, err => {
           /* file doesn't exist message code, resolve with false */
-          if (err.message.indexOf(FileSaver.fileDoesNotExistOnpremCode) !== -1 ||
-            err.message.indexOf(FileSaver.fileDoesNotExistOnlineCode) !== -1) {
+          if (err.response.body.error.code.indexOf(FileSaver.fileDoesNotExistOnpremCode) !== -1 ||
+          err.response.body.error.code.indexOf(FileSaver.fileDoesNotExistOnlineCode) !== -1) {
             resolve(false);
 
             return null;
