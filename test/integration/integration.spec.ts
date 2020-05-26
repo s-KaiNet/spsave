@@ -18,10 +18,10 @@ const config: any = require('./config');
 
 const tests: any[] = [
   {
-    name: 'online addin only',
-    creds: config.onlineAddinOnly,
+    name: 'online user password',
+    creds: config.onlineCreds,
     url: config.onlineUrl
-  }
+  },
 ];
 
 const subFolder = 'SiteAssets/files/templates';
@@ -367,7 +367,7 @@ tests.forEach(test => {
         .catch(done);
     });
 
-    it.only('should create new major version', function (done: MochaDone): void {
+    it('should create new major version', function (done: MochaDone): void {
       this.timeout(20 * 1000);
 
       const fileName = 'sp.png';
@@ -492,7 +492,7 @@ tests.forEach(test => {
         .catch(done);
     });
 
-    it('should update file metadata for display template', function (done: MochaDone): void {
+    xit('should update file metadata for display template', function (done: MochaDone): void {
       this.timeout(20 * 1000);
 
       const fileName = 'SPSave.ts';

@@ -1,6 +1,6 @@
 import * as notifier from 'node-notifier';
 import * as path from 'path';
-import { IAuthOptions } from 'sp-request';
+import { IAuthOptions, HTTPError } from 'sp-request';
 
 import {
   ICoreOptions,
@@ -92,7 +92,7 @@ function saveSingleFile(opts: ISPSaveOptions): Promise<any> {
   return new FileSaver(opts.core, opts.creds, opts.files[0]).save();
 }
 
-function showError(err: any, notify: boolean): void {
+function showError(err: HTTPError, notify: boolean): void {
 
   if (notify) {
     notifier.notify({
@@ -117,6 +117,10 @@ function showError(err: any, notify: boolean): void {
 
   if (err.message) {
     logger.error(err.message);
+  }
+
+  if (err.response?.body) {
+    logger.error(err.response.body.toString());
   }
 
   if (err.stack) {
