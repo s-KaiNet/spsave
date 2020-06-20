@@ -1,9 +1,6 @@
 # spsave 
 
 [![NPM](https://nodei.co/npm/spsave.png?mini=true)](https://nodei.co/npm/spsave/)
-
-[![Circle CI](https://circleci.com/gh/s-KaiNet/spsave/tree/master.svg?style=shield&circle-token=07b67ce9b17508e7f4f2a75f6a2e3907260c2fc5)](https://circleci.com/gh/s-KaiNet/spsave/tree/master)
-[![Coverage Status](https://coveralls.io/repos/github/s-KaiNet/spsave/badge.svg?branch=master)](https://coveralls.io/github/s-KaiNet/spsave?branch=master)
 [![npm version](https://badge.fury.io/js/spsave.svg)](https://badge.fury.io/js/spsave)
 
 ### Need help on SharePoint with Node.JS? Join our gitter chat and ask question! [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/sharepoint-node/Lobby)

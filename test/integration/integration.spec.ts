@@ -18,10 +18,69 @@ const config: any = require('./config');
 
 const tests: any[] = [
   {
-    name: 'online user password',
+    name: 'adfs user credentials',
+    creds: config.adfsCredentials,
+    url: config.onpremAdfsEnabledUrl
+  },
+  {
+    name: 'on-premise user credentials',
+    creds: config.onpremCreds,
+    url: config.onpremNtlmEnabledUrl
+  },
+  {
+    name: 'on-premise user UPN credentials',
+    creds: config.onpremUpnCreds,
+    url: config.onpremNtlmEnabledUrl
+  },
+  {
+    name: 'on-premise user+domain credentials',
+    creds: config.onpremUserWithDomainCreds,
+    url: config.onpremNtlmEnabledUrl
+  },
+  {
+    name: 'online user credentials',
     creds: config.onlineCreds,
     url: config.onlineUrl
   },
+  {
+    name: 'on-premise addin only',
+    creds: config.onpremAddinOnly,
+    url: config.onpremAdfsEnabledUrl
+  },
+  {
+    name: 'online addin only',
+    creds: config.onlineAddinOnly,
+    url: config.onlineUrl
+  },
+  {
+    name: 'ondemand - online',
+    creds: {
+      ondemand: true
+    },
+    url: config.onlineUrl
+  },
+  {
+    name: 'ondemand - on-premise with ADFS',
+    creds: {
+      ondemand: true
+    },
+    url: config.onpremAdfsEnabledUrl
+  },
+  {
+    name: 'file creds - online',
+    creds: null,
+    url: config.onlineUrl
+  },
+  {
+    name: 'file creds - on-premise - NTLM',
+    creds: null,
+    url: config.onpremNtlmEnabledUrl
+  },
+  {
+    name: 'file creds - on-premise - ADFS',
+    creds: null,
+    url: config.onpremAdfsEnabledUrl
+  }
 ];
 
 const subFolder = 'SiteAssets/files/templates';
@@ -32,7 +91,7 @@ tests.forEach(test => {
     const spr: ISPRequest = sprequest.create(test.creds);
 
     beforeEach('delete folders', function (done: MochaDone): void {
-      this.timeout(20 * 1000);
+      this.timeout(40 * 1000);
 
       spr.requestDigest(test.url)
         .then(digest => {
@@ -52,7 +111,7 @@ tests.forEach(test => {
     });
 
     after('cleaning', function (done: MochaDone): void {
-      this.timeout(20 * 1000);
+      this.timeout(40 * 1000);
 
       spr.requestDigest(test.url)
         .then(digest => {
@@ -74,7 +133,7 @@ tests.forEach(test => {
     const path: string = UrlHelper.removeTrailingSlash(url.parse(test.url).path);
 
     it('should upload binary file', function (done: MochaDone): void {
-      this.timeout(20 * 1000);
+      this.timeout(40 * 1000);
 
       const fileName = 'sp.png';
       const fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
@@ -107,7 +166,7 @@ tests.forEach(test => {
     });
 
     it('should upload text file', function (done: MochaDone): void {
-      this.timeout(20 * 1000);
+      this.timeout(40 * 1000);
 
       const fileName = 'spsave.txt';
       const fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
@@ -140,7 +199,7 @@ tests.forEach(test => {
     });
 
     it('should create folders before uploading the file', function (done: MochaDone): void {
-      this.timeout(20 * 1000);
+      this.timeout(40 * 1000);
 
       const fileName = 'sp.png';
       const fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
@@ -180,7 +239,7 @@ tests.forEach(test => {
     });
 
     it('should upload vinyl file', function (done: MochaDone): void {
-      this.timeout(20 * 1000);
+      this.timeout(40 * 1000);
 
       const fileName = 'sp.png';
       const folder = 'SiteAssets/files';
@@ -219,7 +278,7 @@ tests.forEach(test => {
     });
 
     it('should create subfolders when using vinyl file', function (done: MochaDone): void {
-      this.timeout(20 * 1000);
+      this.timeout(40 * 1000);
 
       const fileName = 'sp.png';
       const folder = 'SiteAssets';
@@ -256,7 +315,7 @@ tests.forEach(test => {
     });
 
     it('should upload all globs files', function (done: MochaDone): void {
-      this.timeout(20 * 1000);
+      this.timeout(40 * 1000);
 
       const pngFile: Buffer = fs.readFileSync('test/integration/files/sp.png');
       const txtFile: Buffer = fs.readFileSync('test/integration/files/spsave.txt');
@@ -292,7 +351,7 @@ tests.forEach(test => {
     });
 
     it('should checkin with appropriate comment', function (done: MochaDone): void {
-      this.timeout(20 * 1000);
+      this.timeout(40 * 1000);
 
       const fileName = 'sp.png';
       const fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
@@ -326,7 +385,7 @@ tests.forEach(test => {
     });
 
     it('should create new minor version', function (done: MochaDone): void {
-      this.timeout(20 * 1000);
+      this.timeout(40 * 1000);
 
       const fileName = 'sp.png';
       const fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
@@ -368,7 +427,7 @@ tests.forEach(test => {
     });
 
     it('should create new major version', function (done: MochaDone): void {
-      this.timeout(20 * 1000);
+      this.timeout(40 * 1000);
 
       const fileName = 'sp.png';
       const fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
@@ -410,7 +469,7 @@ tests.forEach(test => {
     });
 
     it('should overwrite current version', function (done: MochaDone): void {
-      this.timeout(20 * 1000);
+      this.timeout(40 * 1000);
 
       const fileName = 'sp.png';
       const fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
@@ -453,7 +512,7 @@ tests.forEach(test => {
     });
 
     it('should update file metadata', function (done: MochaDone): void {
-      this.timeout(20 * 1000);
+      this.timeout(40 * 1000);
 
       const fileName = 'spsave.txt';
       const fileContent: Buffer = fs.readFileSync(`test/integration/files/${fileName}`);
@@ -489,11 +548,13 @@ tests.forEach(test => {
           done();
           return null;
         })
-        .catch(done);
+        .catch(err => {
+          done(err);
+        });
     });
 
     xit('should update file metadata for display template', function (done: MochaDone): void {
-      this.timeout(20 * 1000);
+      this.timeout(40 * 1000);
 
       const fileName = 'SPSave.ts';
       const fileContent: Buffer = fs.readFileSync(`src/core/${fileName}`);
@@ -543,7 +604,7 @@ tests.forEach(test => {
     });
 
     it('should not upload empty file', function (done: MochaDone): void {
-      this.timeout(20 * 1000);
+      this.timeout(40 * 1000);
 
       const consoleSpy: sinon.SinonStub = sinon.stub(console, 'log');
 
@@ -576,7 +637,7 @@ tests.forEach(test => {
     });
 
     it('should resolve promise if there are no files', function (done: MochaDone): void {
-      this.timeout(20 * 1000);
+      this.timeout(40 * 1000);
 
       const files: FileOptions = {
         glob: ['test/integration/files/nofile.dat'],
