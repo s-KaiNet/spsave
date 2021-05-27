@@ -137,12 +137,12 @@ export class FileSaver {
         }
       })
       .catch((err: HTTPError) => {
-        if (err && (err.response.statusCode === 500 || err.response.statusCode === 409)) { /* save conflict or cobalt error */
+        if (err && (err.response?.statusCode === 500 || err.response?.statusCode === 409)) { /* save conflict or cobalt error */
           this.tryReUpload(err, requestDeferred, attempts);
           return;
         }
         /* folder doesn't exist, create and reupload */
-        if (err && err.response.statusCode === 404 && err.response.body && err.response.body.toString().indexOf(FileSaver.directoryNotFoundCode) !== -1) {
+        if (err && err.response?.statusCode === 404 && err.response?.body && err.response?.body.toString().indexOf(FileSaver.directoryNotFoundCode) !== -1) {
           this.foldersCreator.createFoldersHierarchy()
             .then(() => {
               this.saveFile(requestDeferred, attempts + 1);
